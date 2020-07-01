@@ -13,14 +13,20 @@ import styled, {createGlobalStyle} from 'styled-components';
     
     height: 100%;
     
+    margin:0;
+    padding:0;
     
   }
   
+  
+  
+  /* layout */
   #root {
-   display: flex;
+   display: grid;
+   
+   
   }
   
- 
  
  @media (max-width:540px) {
   #root {
@@ -44,6 +50,7 @@ import styled, {createGlobalStyle} from 'styled-components';
  justify-content: center;
  align-items: center;
   
+ width: 100%;
 `
 
 

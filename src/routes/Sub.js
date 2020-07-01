@@ -28,7 +28,7 @@ const DivSub = styled(Div)`
 	}
  
 	 @media (min-width: 541px) {
-		width: 160px;
+		width: 120px;
 	  height: 100%;
 	 
 		flex-direction: column;
@@ -38,14 +38,14 @@ const DivSub = styled(Div)`
   
 `;
 
-const DivProfile = styled(Div)`
+const DivLogo = styled(Div)`
 
   @media (max-width: 540px) {
   	
 	}
  
  @media (min-width: 541px) {
-	width: 120px;
+	width: 100px;
 	display: flex;
 	flex-direction: column;
 	
@@ -55,7 +55,7 @@ const DivProfile = styled(Div)`
  }
 `;
 
-const DivProfileImg = styled(Div)`
+const DivLogoImg = styled(Div)`
 	border-radius: 50%;
 	
 	@media (max-width: 540px) {
@@ -64,17 +64,19 @@ const DivProfileImg = styled(Div)`
 	}
  
 	@media (min-width: 541px) {
-		width: 120px;
-		height: 120px;
+		width: 80px;
+		height: 80px;
 	}
 `;
 
-const ImgProfile = styled.img`
+const ImgLogo = styled.img`
 	border-radius: 50%;
 `
 
-const DivProfileName = styled(Div)`
+const DivLogoText = styled(Div)`
 
+	text-align: center;
+	
   @media (max-width: 540px) {
   	display: none;
 	}
@@ -88,7 +90,9 @@ const DivProfileName = styled(Div)`
 
 
 const DivNavItem = styled(Div)`
-	height: 30px; 
+	
+	width:100%;
+	height: 40px; 
 
   @media (max-width: 540px) {
   
@@ -102,10 +106,18 @@ const DivNavItem = styled(Div)`
 const activeClassName = 'nav-link-active';
 
 const NavLinkNavItem = styled(NavLink).attrs({ activeClassName })`
+  width: 90%;
+  height: 100%;
   
 	color: ${props => props.theme.color_normal};
-	text-decoration: none;
 	
+	text-decoration: none;
+	text-align: center;
+	
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
 	
 	&.${activeClassName} {
 		color: ${props => props.theme.color_active};
@@ -120,17 +132,19 @@ function Sub () {
 	
   <DivSub>
   	
-  	<DivProfile>
-	  	<DivProfileImg> 
-	  		<ImgProfile src="" width="100%" height="100%" /> 
-	  	</DivProfileImg>
+  	<DivLogo>
+	  	<DivLogoImg> 
+	  		<ImgLogo src="" width="100%" height="100%" /> 
+	  	</DivLogoImg>
 	  	
-	  	<DivProfileName> msowl 
-	  	</DivProfileName> 
-  	</DivProfile>
+	  	<DivLogoText> 
+	  		Parallel Storm
+	  	</DivLogoText> 
+  	</DivLogo>
   	
   	<DivNavItem > <NavLinkNavItem to="/about"> About </NavLinkNavItem> </DivNavItem>
-		<DivNavItem > <NavLinkNavItem to="/" exact={true}> Library </NavLinkNavItem> </DivNavItem>
+		<DivNavItem > <NavLinkNavItem to="/" exact={true}> Home </NavLinkNavItem> </DivNavItem>
+		<DivNavItem > <NavLinkNavItem to="TeamGenerator" > Team Generator </NavLinkNavItem> </DivNavItem>
 		
 	</DivSub>
 	

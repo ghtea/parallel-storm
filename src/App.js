@@ -12,6 +12,27 @@ import { GlobalStyle, Div} from './styles/DefaultStyles';
 
 import './styles/font.css';
 
+
+const DivSubContainer = styled(Div)`
+  @media (max-width: 540px) {
+    margin-top: 50px; /* height of sub */
+  	
+  	width: 100%;
+	  height: 100%;
+  	
+	}
+ 
+	 @media (min-width: 541px) {
+	  margin-left: 160px; /* width of nav */
+	 
+		width: 100%;
+	  height: 100%;
+	 
+		
+	 }
+
+`
+
 const DivContent = styled(Div)`
    
   
@@ -81,8 +102,10 @@ class App extends React.Component {
       <GlobalStyle/>
       
       <BrowserRouter>
-      
+        
+        <DivSubContainer>
         <Route path="/" component={Sub} />
+        </DivSubContainer>
         
         <DivContent>
         <Switch >

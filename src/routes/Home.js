@@ -46,7 +46,6 @@ function Library() {
   return (
     <DivLibrary>
     
-    <Arrange />
     
     <DivAlbums> 
       {loading && <Div>Loading...</Div>}
