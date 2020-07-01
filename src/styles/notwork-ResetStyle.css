@@ -3,9 +3,6 @@
    License: none (public domain)
 */
 
-import styled, {createGlobalStyle} from 'styled-components';
-
- export const ResetStyle = createGlobalStyle`
 html,
 body,
 div,
@@ -130,4 +127,3 @@ table {
   border-collapse: collapse;
   border-spacing: 0;
 }
-`

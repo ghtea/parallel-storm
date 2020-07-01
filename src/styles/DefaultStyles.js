@@ -1,6 +1,6 @@
 import styled, {createGlobalStyle} from 'styled-components';
 
- const GlobalStyle = createGlobalStyle`
+ export const GlobalStyle = createGlobalStyle`
  
   html, body, #root {
   
@@ -38,7 +38,7 @@ import styled, {createGlobalStyle} from 'styled-components';
   
 `
 
- const Div = styled.div`
+ export const Div = styled.div`
  display: flex;
  flex-direction: row;
  justify-content: center;
@@ -48,19 +48,24 @@ import styled, {createGlobalStyle} from 'styled-components';
 
 
 
- const Button = styled.button`
-	border: none;
-	cursor: pointer;
+ export const Button = styled.button`
+	 cursor: pointer;
 	
+  border: 0;
+		
+`
+
+export const Input = styled.input`
+ 
+ border: 0;
 
 		
 `
 
-const A = styled.a`
+export const A = styled.a`
 	color: ${props => props.theme.color_normal};
 	
 	
 		
 `
 
-export {GlobalStyle, Div, Button, A};

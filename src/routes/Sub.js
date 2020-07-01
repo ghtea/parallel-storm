@@ -122,7 +122,7 @@ function Sub () {
   	
   	<DivProfile>
 	  	<DivProfileImg> 
-	  		<ImgProfile src={require('../images/profile.jpeg')} width="100%" height="100%" /> 
+	  		<ImgProfile src="" width="100%" height="100%" /> 
 	  	</DivProfileImg>
 	  	
 	  	<DivProfileName> msowl 

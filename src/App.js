@@ -4,14 +4,13 @@ import styled from 'styled-components';
 
 import Sub from "./routes/Sub";
 import Home from "./routes/Home";
-
+import TeamGenerator from "./routes/TeamGenerator";
 
 import {ThemeProvider } from 'styled-components';
 import {dark, light} from "./styles/themes"
 import { GlobalStyle, Div} from './styles/DefaultStyles';
-import { ResetStyle} from './styles/ResetStyle';
 
-import './styles/font.css'
+import './styles/font.css';
 
 const DivContent = styled(Div)`
    
@@ -78,7 +77,7 @@ class App extends React.Component {
       <>
       <ThemeProvider theme={themeApp === 'light' ? light : dark }>
       
-      <ResetStyle/>
+      
       <GlobalStyle/>
       
       <BrowserRouter>
@@ -88,7 +87,7 @@ class App extends React.Component {
         <DivContent>
         <Switch >
         <Route path="/" exact={true} component={Home} />
-
+        <Route path="/team-generator"  component={TeamGenerator} />
         </Switch >
         </DivContent>
         
