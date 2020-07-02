@@ -6,19 +6,28 @@ import {Div} from '../styles/DefaultStyles';
 
 
 
-
-
 const DivSub = styled(Div)`
-  background-color: ${props => props.theme.COLOR_normal};
+	
+	background-color: ${props => props.theme.COLOR_normal};
+
+	/*background-image: url("https://www.transparenttextures.com/patterns/worn-dots.png"), linear-gradient(-10deg, hsl(210,100%,33%) 50%, hsl(210,100%,25%) 100%);*/
+	/*background-color: ${props => props.theme.COLOR_normal};*/
+	/*background-color: #22a7f0;*/
+	/*background-image: linear-gradient(-20deg, hsl(233,60%,50%) 50%,hsl(233,60%,45%) 100%);*/
+	/* hsl(233,60%,50%) */
+  
+  
   color: ${props => props.theme.color_strong};
   
+  /*box-shadow: 2px 0px 2px #888;*/
   
   position: fixed;
+  top: 0px;
   
   display: flex;
   
   
-  @media (max-width: 540px) {
+  @media (max-width: 899px) {
   
   	width: 100%;
   	height: 50px; 
@@ -27,7 +36,7 @@ const DivSub = styled(Div)`
   	
 	}
  
-	 @media (min-width: 541px) {
+	 @media (min-width: 900px) {
 		width: 120px;
 	  height: 100%;
 	 
@@ -40,14 +49,18 @@ const DivSub = styled(Div)`
 
 const DivLogo = styled(Div)`
 
-  @media (max-width: 540px) {
+  @media (max-width: 899px) {
   	
 	}
  
- @media (min-width: 541px) {
+ @media (min-width: 900px) {
 	width: 100px;
+	heigth: 250px;
+	
 	display: flex;
 	flex-direction: column;
+	justify-content: center;
+	align-items: center;
 	
 	margin-top: 50px;
 	margin-bottom:100px;
@@ -63,7 +76,7 @@ const DivLogoImg = styled(Div)`
 		height: 40px;
 	}
  
-	@media (min-width: 541px) {
+	@media (min-width: 900px) {
 		width: 80px;
 		height: 80px;
 	}
@@ -74,16 +87,16 @@ const ImgLogo = styled.img`
 `
 
 const DivLogoText = styled(Div)`
-
+	height: 50px;
 	text-align: center;
 	
-  @media (max-width: 540px) {
+  @media (max-width: 899px) {
   	display: none;
 	}
  
- @media (min-width: 541px) {
+	@media (min-width: 900px) {
 	
- }
+	}
 `;
 
 

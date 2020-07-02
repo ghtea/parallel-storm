@@ -14,19 +14,13 @@ import './styles/font.css';
 
 
 const DivSubContainer = styled(Div)`
-  @media (max-width: 540px) {
-    margin-top: 50px; /* height of sub */
-  	
-  	width: 100%;
-	  height: 100%;
+  @media (max-width: 899px) {
+    height: 50px;
   	
 	}
  
-	 @media (min-width: 541px) {
-	  margin-left: 160px; /* width of nav */
-	 
-		width: 100%;
-	  height: 100%;
+	 @media (min-width: 900px)  {
+	  width: 120px;
 	 
 		
 	 }
@@ -35,20 +29,15 @@ const DivSubContainer = styled(Div)`
 
 const DivContent = styled(Div)`
    
+  flex-grow: 1;
   
-  @media (max-width: 540px) {
-    margin-top: 50px; /* height of sub */
-  	
-  	width: 100%;
-	  height: 100%;
+  @media (max-width: 899px) {
+    
   	
 	}
  
-	 @media (min-width: 541px) {
-	  margin-left: 160px; /* width of nav */
-	 
-		width: 100%;
-	  height: 100%;
+	 @media (min-width: 900px) {
+	  
 	 
 		
 	 }

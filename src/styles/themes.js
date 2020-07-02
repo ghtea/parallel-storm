@@ -13,6 +13,7 @@ export const light ={
     
     color_strong: '#000000',
     color_normal: '#222222',
+    color_very_weak: '#ddd',
     
     COLOR_bg: '#f0f0f9',
     
@@ -29,6 +30,7 @@ export const dark ={
     
     color_strong: '#ffffff',
     color_normal: '#dddddd',
+    color_very_weak: '#222',
     
     COLOR_bg: '#000000',
     
