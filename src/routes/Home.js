@@ -47,7 +47,19 @@ function Library() {
     <DivLibrary>
     
     
-    <DivAlbums> 
+   
+    
+    </DivLibrary>
+  );
+}
+
+export default Library;
+
+
+
+/*
+
+ <DivAlbums> 
       {loading && <Div>Loading...</Div>}
       {!loading &&
         data.getAlbums &&
@@ -60,9 +72,5 @@ function Library() {
         
         )}
     </DivAlbums>
-    
-    </DivLibrary>
-  );
-}
 
-export default Library;
+*/
