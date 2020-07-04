@@ -19,10 +19,9 @@ const DivSub = styled(Div)`
   
   color: ${props => props.theme.color_strong};
   
-  /*box-shadow: 2px 0px 2px #888;*/
-  
   position: fixed;
   top: 0px;
+  left:0px;
   
   display: flex;
   
@@ -144,7 +143,7 @@ const NavLinkNavItem = styled(NavLink).attrs({ activeClassName })`
 	
 `;
 
-
+// img (svg) https://www.svgrepo.com/svg/154720/hexagon
 function Sub () {
 	return (
  
@@ -153,6 +152,7 @@ function Sub () {
   	
   	<DivLogo>
 	  	<DivLogoImg> 
+	  	
 	  		<ImgLogo src="" width="100%" height="100%" /> 
 	  	</DivLogoImg>
 	  	
@@ -163,7 +163,9 @@ function Sub () {
   	
   	<DivNavItem > <NavLinkNavItem to="/about"> About </NavLinkNavItem> </DivNavItem>
 		<DivNavItem > <NavLinkNavItem to="/" exact={true}> Home </NavLinkNavItem> </DivNavItem>
-		<DivNavItem > <NavLinkNavItem to="team-generator" > Team Generator </NavLinkNavItem> </DivNavItem>
+		<DivNavItem > <NavLinkNavItem to="/team-generator" 
+										isActive={(match) => (match.url).match(/^\/team-generator/) }
+									> Team Generator </NavLinkNavItem> </DivNavItem>
 		
 	</DivSub>
 	

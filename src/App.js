@@ -12,8 +12,10 @@ import { GlobalStyle, Div} from './styles/DefaultStyles';
 
 import './styles/font.css';
 
-
+/*
 const DivSubContainer = styled(Div)`
+  border-width: 0;
+
   @media (max-width: ${props => (props.theme.media.mid_big -1) }px ) {
     height: 50px;
   	
@@ -21,11 +23,14 @@ const DivSubContainer = styled(Div)`
  
 	 @media (min-width:  ${props => (props.theme.media.mid_big) }px)  {
 	  width: 120px;
-	 
-		
+	  border-width: 0px;
+	  
+	  height: 100%;
+
 	 }
 
 `
+*/
 
 const DivContent = styled(Div)`
   
@@ -38,7 +43,7 @@ const DivContent = styled(Div)`
 	}
  
 	 @media (min-width:  ${props => (props.theme.media.mid_big) }px) {
-	  
+	  margin-left: 120px; /* width of sub */
 	 
 		
 	 }
@@ -93,16 +98,16 @@ class App extends React.Component {
       
       <BrowserRouter>
         
-        <DivSubContainer>
+        
         <Route path="/" component={Sub} />
-        </DivSubContainer>
+        
         
         <DivContent>
         <Switch >
         <Route path="/" exact={true} component={Home} />
         
         <Route path="/team-generator" exact={true} component={TeamGenerator} />
-        <Route path="/team-generator/:idPlanTeam" component={TeamGenerator} />
+        <Route path="/team-generator/:idPlanTeam"  component={TeamGenerator} />
         
         </Switch >
         </DivContent>

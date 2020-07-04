@@ -8,6 +8,7 @@ import {Div, Input, Button} from '../styles/DefaultStyles';
 //import Player from '../components/Player'
 
 import TableEntry from '../components/TableEntry';
+import CreatingPlan from '../components/CreatingPlan';
 
 const DivTeamGenerator = styled(Div)`
   width: 100%;
@@ -40,7 +41,7 @@ const DivTeamGenerator = styled(Div)`
 
 
 
-const DivAdd = styled(Div)`
+const DivAddingPlayer = styled(Div)`
   grid-area: add;
   height:100%;
   
@@ -56,6 +57,11 @@ const DivOption = styled(Div)`
 
 const DivEntry = styled(Div)`
   grid-area: entry;
+  
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
 `;
 
 const DivResult = styled(Div)`
@@ -95,27 +101,30 @@ const ButtonAddFirst = styled(Button)`
 // ~ DivAdd
 
 
+// DivEntry ~
+
+const DivEntryTitle = styled(Div)`
+  font-size: 1.2rem;
+`
+
+// ~ DivEntry
+
 
 // https://ps.avantwing.com/team-generator/sss?ooo 들어가 보기
-function TeamGenerator(prop) {
- console.log(prop)
-  if (prop.match.path === "/team-generator") { return (
+function TeamGenerator({match, location}) {
+
+  console.log(`match: `)
+  console.log(match)
+  
+  console.log(`location: `)
+  console.log(location)
+  
+  if (match.path === "/team-generator") { return (
     
       <DivTeamGenerator>
-        <DivAdd>
-        
-          <DivHeader>
-            <DivTitle> Team Generator </DivTitle>
-            
-            <DivId> {`id: ${idPlanTeam}`} </DivId>
-          </DivHeader>
-          
-          <Div>
-            <InputBattletag placeholder="battletag#1234" />
-            <ButtonAddFirst> Add Battletag and create Plan </ButtonAddFirst>
-          </Div>
-        
-        </DivAdd>
+      
+      
+        <CreatingPlan />
         
       
       </DivTeamGenerator>
@@ -123,13 +132,13 @@ function TeamGenerator(prop) {
     )}
   
   else {
-    const idPlanTeam = prop.match.params.idPlanTeam;
+    const idPlanTeam = match.params.idPlanTeam;
     console.log(`idPlanTeam: ${idPlanTeam}`)
     return (
       <DivTeamGenerator>
         
         
-        <DivAdd>
+        <DivAddingPlayer>
         
           <DivHeader>
             <DivTitle> Team Generator </DivTitle>
@@ -142,7 +151,7 @@ function TeamGenerator(prop) {
             <Button> Add </Button>
           </Div>
         
-        </DivAdd>
+        </DivAddingPlayer>
         
         
         <DivOption>
@@ -150,6 +159,9 @@ function TeamGenerator(prop) {
         </DivOption>
       
         <DivEntry>
+        
+          <DivEntryTitle> Entry </DivEntryTitle>
+        
           <TableEntry />
         </DivEntry>
       

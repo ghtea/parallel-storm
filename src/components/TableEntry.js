@@ -47,8 +47,7 @@ const READ_PLAYER_MMR = gql`
 
 
 const DivTableEntry = styled(Div)`
-  margin-left: 40px;
-  margin-right: 40px;
+  
   
   display: flex;
   flex-direction: column;
@@ -64,7 +63,7 @@ display:grid;
 
 const DivRow = styled(Div)`
   display: grid;
-  grid-template-columns: minmax(200px, 250px) 80px 80px 40px 40px; // min entire = 400 - 40*2
+  grid-template-columns: 1fr 60px ${30*4}px 40px 40px; // min entire = 400 - 20*2 = 360
   grid-template-rows: 40px;
   
   background-color: ${props => props.theme.COLOR_normal};

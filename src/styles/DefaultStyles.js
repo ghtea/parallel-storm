@@ -1,12 +1,6 @@
 import styled, {createGlobalStyle} from 'styled-components';
 
 
-export const layout = {
- min1: 0,
- max1: 899,
- min2: 900,
- max2: 0
-}
 
  export const GlobalStyle = createGlobalStyle`
  
@@ -91,6 +85,10 @@ export const Div = styled.div`
 
 
  export const Button = styled.button`
+  
+  color: ${props => props.theme.color_strong};
+  background-color: ${props => props.theme.COLOR_normal};
+ 
 	 cursor: pointer;
 	
   border: 0;
@@ -98,15 +96,40 @@ export const Div = styled.div`
 		
 		width: auto;
 		height: auto;
+		
+		box-sizing: border-box;
+		
+	
 `
 
 export const Input = styled.input`
- 
+
+ color: ${props => props.theme.color_strong};
+ background-color: ${props => props.theme.COLOR_normal};
+ width: 100%;
  font-size: 1rem;
  border: 0;
-
-		
+ 
+ padding-left: 10px;
+ box-sizing: border-box;
+ 
+ &::placeholder {
+  color: ${props => props.theme.color_weak} !important;
+ }
+ 
 `
+/*
+following doesn't work...
+
+:focus, :active {
+  border-radius: 0 !important;
+  padding-left: 8px !important;
+  border: 2px solid ${props => props.theme.color_active} !important;
+ }
+
+*/
+
+
 
 export const A = styled.a`
 	color: ${props => props.theme.color_normal};
@@ -120,6 +143,7 @@ export const Table = styled.table`
  border-collapse: collapse !important;
  border-spacing: 0;
  
+ width: 100%;
 `
 
 export const Tr = styled.tr`
