@@ -13,12 +13,19 @@ const DivTeamGenerator = styled(Div)`
   width: 100%;
   height:100%;
   
-  @media (max-width:899px) {
-  
+  @media (max-width: ${props => (props.theme.media.mid_big -1) }px ) {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 240px 240px 400px 400px;
+    grid-template-areas: 
+      "add"
+      "option"
+      "entry"
+      "result"
   }
  
 
-  @media (min-width: 900px) {
+  @media (min-width:  ${props => (props.theme.media.mid_big) }px) {
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 300px 1fr;
@@ -31,10 +38,6 @@ const DivTeamGenerator = styled(Div)`
  
 `;
 
-const DivTitle = styled(Div)`
-  font-size: 1.6rem;
-  
-`
 
 
 const DivAdd = styled(Div)`
@@ -60,41 +63,104 @@ const DivResult = styled(Div)`
 `;
 
 
+// DivAdd ~
+const DivHeader = styled(Div)`
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+`
 
-function TeamGenerator() {
+const DivTitle = styled(Div)`
+  font-size: 1.6rem;
+`
+const DivId = styled(Div)`
+  color: ${props => props.theme.color_weak};
+`
+
+const InputBattletag = styled(Input)`
+  width: 25%;  // 400*0.25 = 100
+  max-width: 150px; // entire 400 ~ 600 
   
   
-  return (
-    <DivTeamGenerator>
-      
-      <DivAdd>
-        <DivTitle>
-          Team Generator
-        </DivTitle>
+  
+  &::placeholder {
+    color: ${props => props.theme.color_weak};
+  }
+`
+
+const ButtonAddFirst = styled(Button)`
+  
+`
+// ~ DivAdd
+
+
+
+// https://ps.avantwing.com/team-generator/sss?ooo 들어가 보기
+function TeamGenerator(prop) {
+ console.log(prop)
+  if (prop.match.path === "/team-generator") { return (
+    
+      <DivTeamGenerator>
+        <DivAdd>
         
-        <Div>
-          <Input placeholder="battletag" />
-          <Button> Add </Button>
-        </Div>
+          <DivHeader>
+            <DivTitle> Team Generator </DivTitle>
+            
+            <DivId> {`id: ${idPlanTeam}`} </DivId>
+          </DivHeader>
+          
+          <Div>
+            <InputBattletag placeholder="battletag#1234" />
+            <ButtonAddFirst> Add Battletag and create Plan </ButtonAddFirst>
+          </Div>
+        
+        </DivAdd>
+        
       
-      </DivAdd>
+      </DivTeamGenerator>
+    
+    )}
+  
+  else {
+    const idPlanTeam = prop.match.params.idPlanTeam;
+    console.log(`idPlanTeam: ${idPlanTeam}`)
+    return (
+      <DivTeamGenerator>
+        
+        
+        <DivAdd>
+        
+          <DivHeader>
+            <DivTitle> Team Generator </DivTitle>
+            
+            <DivId> {`id: ${idPlanTeam}`} </DivId>
+          </DivHeader>
+          
+          <Div>
+            <InputBattletag placeholder="battletag#1234" />
+            <Button> Add </Button>
+          </Div>
+        
+        </DivAdd>
+        
+        
+        <DivOption>
+          Option
+        </DivOption>
+      
+        <DivEntry>
+          <TableEntry />
+        </DivEntry>
       
       
-      <DivOption>
-        Option
-      </DivOption>
-    
-      <DivEntry>
-        <TableEntry />
-      </DivEntry>
-    
-    
-      <DivResult>
-        Result
-      </DivResult>
-    
-    </DivTeamGenerator>
-  );
+        <DivResult>
+          Result
+        </DivResult>
+      
+      </DivTeamGenerator>
+    );
+  }
 }
 
 export default TeamGenerator;

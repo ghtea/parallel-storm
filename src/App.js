@@ -14,12 +14,12 @@ import './styles/font.css';
 
 
 const DivSubContainer = styled(Div)`
-  @media (max-width: 899px) {
+  @media (max-width: ${props => (props.theme.media.mid_big -1) }px ) {
     height: 50px;
   	
 	}
  
-	 @media (min-width: 900px)  {
+	 @media (min-width:  ${props => (props.theme.media.mid_big) }px)  {
 	  width: 120px;
 	 
 		
@@ -28,15 +28,16 @@ const DivSubContainer = styled(Div)`
 `
 
 const DivContent = styled(Div)`
-   
-  flex-grow: 1;
   
-  @media (max-width: 899px) {
+  display: block;
+  position: static;
+  
+  @media (max-width: ${props => (props.theme.media.mid_big -1) }px ) {
     
   	
 	}
  
-	 @media (min-width: 900px) {
+	 @media (min-width:  ${props => (props.theme.media.mid_big) }px) {
 	  
 	 
 		
@@ -99,7 +100,10 @@ class App extends React.Component {
         <DivContent>
         <Switch >
         <Route path="/" exact={true} component={Home} />
-        <Route path="/team-generator"  component={TeamGenerator} />
+        
+        <Route path="/team-generator" exact={true} component={TeamGenerator} />
+        <Route path="/team-generator/:idPlanTeam" component={TeamGenerator} />
+        
         </Switch >
         </DivContent>
         

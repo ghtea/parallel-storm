@@ -36,7 +36,7 @@ export const layout = {
   }
   
  
- @media (max-width:899px) {
+ @media (max-width: ${props => (props.theme.media.mid_big -1) }px ) {
   #root {
   
    display: flex;
@@ -48,7 +48,7 @@ export const layout = {
  }
  
 
- @media (min-width: 900px) {
+ @media (min-width:  ${props => (props.theme.media.mid_big) }px) {
   #root {
   
     display: flex;
@@ -94,11 +94,15 @@ export const Div = styled.div`
 	 cursor: pointer;
 	
   border: 0;
+		font-size: 1rem;
 		
+		width: auto;
+		height: auto;
 `
 
 export const Input = styled.input`
  
+ font-size: 1rem;
  border: 0;
 
 		

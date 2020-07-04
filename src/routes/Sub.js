@@ -27,7 +27,7 @@ const DivSub = styled(Div)`
   display: flex;
   
   
-  @media (max-width: 899px) {
+  @media (max-width: ${props => (props.theme.media.mid_big -1) }px ) {
   
   	width: 100%;
   	height: 50px; 
@@ -36,7 +36,7 @@ const DivSub = styled(Div)`
   	
 	}
  
-	 @media (min-width: 900px) {
+	@media (min-width:  ${props => (props.theme.media.mid_big) }px) {
 		width: 120px;
 	  height: 100%;
 	 
@@ -49,11 +49,17 @@ const DivSub = styled(Div)`
 
 const DivLogo = styled(Div)`
 
-  @media (max-width: 899px) {
-  	
+  @media (max-width: ${props => (props.theme.media.mid_big -1) }px ) {
+  	width: 120px;
+		heigth: 100%;
+	
+		display: flex;
+		flex-direction: row;
+		justify-content: flex-start;
+		align-items: center;
 	}
  
- @media (min-width: 900px) {
+ @media (min-width:  ${props => (props.theme.media.mid_big) }px) {
 	width: 100px;
 	heigth: 250px;
 	
@@ -71,12 +77,12 @@ const DivLogo = styled(Div)`
 const DivLogoImg = styled(Div)`
 	border-radius: 50%;
 	
-	@media (max-width: 540px) {
+	@media (max-width: ${props => (props.theme.media.mid_big -1) }px ) {
 		width: 40px;
 		height: 40px;
 	}
  
-	@media (min-width: 900px) {
+	@media (min-width:  ${props => (props.theme.media.mid_big) }px) {
 		width: 80px;
 		height: 80px;
 	}
@@ -90,11 +96,11 @@ const DivLogoText = styled(Div)`
 	height: 50px;
 	text-align: center;
 	
-  @media (max-width: 899px) {
+  @media (max-width: ${props => (props.theme.media.mid_big -1) }px ) {
   	display: none;
 	}
  
-	@media (min-width: 900px) {
+	@media (min-width:  ${props => (props.theme.media.mid_big) }px) {
 	
 	}
 `;
@@ -107,11 +113,11 @@ const DivNavItem = styled(Div)`
 	width:100%;
 	height: 40px; 
 
-  @media (max-width: 540px) {
+  @media (max-width: ${props => (props.theme.media.mid_big -1) }px ) {
   
 	}
  
-	 @media (min-width: 541px) {
+	@media (min-width:  ${props => (props.theme.media.mid_big) }px) {
 	 }
 `;
 
@@ -157,7 +163,7 @@ function Sub () {
   	
   	<DivNavItem > <NavLinkNavItem to="/about"> About </NavLinkNavItem> </DivNavItem>
 		<DivNavItem > <NavLinkNavItem to="/" exact={true}> Home </NavLinkNavItem> </DivNavItem>
-		<DivNavItem > <NavLinkNavItem to="TeamGenerator" > Team Generator </NavLinkNavItem> </DivNavItem>
+		<DivNavItem > <NavLinkNavItem to="team-generator" > Team Generator </NavLinkNavItem> </DivNavItem>
 		
 	</DivSub>
 	
