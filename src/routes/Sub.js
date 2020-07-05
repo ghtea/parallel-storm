@@ -143,8 +143,15 @@ const NavLinkNavItem = styled(NavLink).attrs({ activeClassName })`
 	
 `;
 
+
+const checkActive = () => {
+    
+    return /^(\/team-generator)/.test(window.location.pathname);
+}
+
+
 // img (svg) https://www.svgrepo.com/svg/154720/hexagon
-function Sub () {
+const Sub = ({match, location}) => {
 	return (
  
 	
@@ -163,9 +170,7 @@ function Sub () {
   	
   	<DivNavItem > <NavLinkNavItem to="/about"> About </NavLinkNavItem> </DivNavItem>
 		<DivNavItem > <NavLinkNavItem to="/" exact={true}> Home </NavLinkNavItem> </DivNavItem>
-		<DivNavItem > <NavLinkNavItem to="/team-generator" 
-										isActive={(match) => (match.url).match(/^\/team-generator/) }
-									> Team Generator </NavLinkNavItem> </DivNavItem>
+		<DivNavItem > <NavLinkNavItem to="/team-generator" isActive={checkActive} > Team Generator </NavLinkNavItem> </DivNavItem>
 		
 	</DivSub>
 	
@@ -173,3 +178,10 @@ function Sub () {
 }
 
 export default Sub;
+
+/*
+
+	<DivNavItem > <NavLinkNavItem to="/team-generator" 
+										isActive={(location) => (location.pathname).match(/^(\/team-generator)/) }
+									> Team Generator </NavLinkNavItem> </DivNavItem>
+*/

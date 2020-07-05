@@ -4,6 +4,31 @@ import styled from 'styled-components';
 import { NavLink } from 'react-router-dom';
 import {Div, Input, Button} from '../styles/DefaultStyles';
 
+import { gql } from "apollo-boost";
+import { useMutation } from "@apollo/react-hooks";
+import useInput from '../tools/hooks/useInput';
+
+
+const ADD_PLAN_TEAM = gql` 
+  mutation { 
+    addPlanTeam 
+  } 
+`;
+
+const ADD_PLAYER_MMR = gql` 
+  mutation addPlayerMmr($_id:ID!) { 
+    addPlayerMmr(
+      _id: $_id
+    )
+  } 
+`;
+
+
+/*
+const ADD_PLAYER_TO_LIST_PLAYER_ENTRY = gql` 
+ 
+`;
+*/
 
 
 const DivCreatingPlan = styled(Div)`
@@ -80,8 +105,27 @@ const DivCaution = styled(Div)`
 
 
  const CreatingPlan = () => {
-   
   
+  //{value, onChange}
+  const inputBattletag = useInput("");
+   
+  const [addPlanTeam] = useMutation(ADD_PLAN_TEAM, {
+    variables: { _id: inputBattletag.value}
+  });
+  const [addPlayerMmr] = useMutation(ADD_PLAYER_MMR, {
+    variables: { _id: inputBattletag.value}
+  });
+  
+  const onClick_ButtonAddFirst = (e) => {
+    if (inputBattletag.value) {
+      //e.preventDefault();
+      addPlanTeam();
+      addPlayerMmr();
+      //inputUrlRym.value = ''; 
+      //selectRating.value = 0;
+    }
+  }  
+
   
   return (
   
@@ -96,8 +140,8 @@ const DivCaution = styled(Div)`
     <DivBody>
 	   
 		    <DivInputAdd>
-		      <InputBattletag placeholder="battletag#1234" />
-		      <ButtonAddFirst> Add </ButtonAddFirst>
+		      <InputBattletag {...inputBattletag} placeholder="battletag#1234" />
+		      <ButtonAddFirst onClick = {onClick_ButtonAddFirst} > Add </ButtonAddFirst>
 		    </DivInputAdd>
 		    
 	    

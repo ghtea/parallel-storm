@@ -34,11 +34,9 @@ const DivSubContainer = styled(Div)`
 
 const DivContent = styled(Div)`
   
-  display: block;
-  position: static;
   
   @media (max-width: ${props => (props.theme.media.mid_big -1) }px ) {
-    
+    margin-top: 50px; /* height of sub */
   	
 	}
  

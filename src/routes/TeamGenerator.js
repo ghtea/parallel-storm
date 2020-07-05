@@ -84,19 +84,38 @@ const DivId = styled(Div)`
   color: ${props => props.theme.color_weak};
 `
 
-const InputBattletag = styled(Input)`
-  width: 25%;  // 400*0.25 = 100
-  max-width: 150px; // entire 400 ~ 600 
+
+const DivBody = styled(Div)`
+
+	display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   
+`
+
+const DivInputAdd = styled(Div)`
+
+	height: 2rem;
+	display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
   
-  
-  &::placeholder {
-    color: ${props => props.theme.color_weak};
+  & > * {
+  	margin-left: 5px;
+  	margin-right: 5px;
   }
 `
 
-const ButtonAddFirst = styled(Button)`
-  
+const InputBattletag = styled(Input)`
+	width: 160px;
+	height: 100%;
+`
+
+const ButtonAdd = styled(Button)`
+  width: 60px;
+  height: 100%;
 `
 // ~ DivAdd
 
@@ -146,10 +165,16 @@ function TeamGenerator({match, location}) {
             <DivId> {`id: ${idPlanTeam}`} </DivId>
           </DivHeader>
           
-          <Div>
-            <InputBattletag placeholder="battletag#1234" />
-            <Button> Add </Button>
-          </Div>
+          
+          
+         <DivBody>
+	   
+    		    <DivInputAdd>
+    		      <InputBattletag placeholder="battletag#1234" />
+    		      <ButtonAdd> Add </ButtonAdd>
+    		    </DivInputAdd>
+    		    
+    	   </DivBody>
         
         </DivAddingPlayer>
         

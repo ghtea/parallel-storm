@@ -48,6 +48,9 @@ const READ_PLAYER_MMR = gql`
 
 const DivTableEntry = styled(Div)`
   
+  padding-left: 20px;
+  padding-right: 20px;
+  
   
   display: flex;
   flex-direction: column;
