@@ -1,8 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import { gql } from "apollo-boost";
-import { useQuery } from "@apollo/react-hooks";
 
 import {Div, Input, Button} from '../styles/DefaultStyles';
 //import Player from '../components/Player'
@@ -132,11 +130,11 @@ const DivEntryTitle = styled(Div)`
 // https://ps.avantwing.com/team-generator/sss?ooo 들어가 보기
 function TeamGenerator({match, location}) {
 
-  console.log(`match: `)
-  console.log(match)
+  //console.log(`match: `)
+  //console.log(match)
   
-  console.log(`location: `)
-  console.log(location)
+  //console.log(`location: `)
+  //console.log(location)
   
   if (match.path === "/team-generator") { return (
     

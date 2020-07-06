@@ -4,6 +4,31 @@ import styled from 'styled-components';
 import { NavLink } from 'react-router-dom';
 import {Div, Input, Button} from '../styles/DefaultStyles';
 
+//import { gql } from "apollo-boost";
+//import { useMutation } from "@apollo/react-hooks";
+import useInput from '../tools/hooks/useInput';
+
+
+const ADD_PLAN_TEAM = gql` 
+  mutation { 
+    addPlanTeam 
+  } 
+`;
+
+const ADD_PLAYER_MMR = gql` 
+  mutation addPlayerMmr($_id:ID!) { 
+    addPlayerMmr(
+      _id: $_id
+    )
+  } 
+`;
+
+
+/*
+const ADD_PLAYER_TO_LIST_PLAYER_ENTRY = gql` 
+ 
+`;
+*/
 
 
 const DivCreatingPlan = styled(Div)`
@@ -42,8 +67,9 @@ const DivBody = styled(Div)`
 `
 
 const DivInputAdd = styled(Div)`
-	height: 60px;
 
+	height: 2rem;
+	
 	display: flex;
   flex-direction: row;
   justify-content: center;
@@ -55,25 +81,16 @@ const DivInputAdd = styled(Div)`
   }
 `
 
-const DivInput = styled(Div)`
-	width: 180px;
-	
-	height: 100%;
-	display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-`
 
-const InputPw = styled(Input)`
-	height: 1.5rem;
-  
+const InputBattletag = styled(Input)`
+	width: 160px;
+	height: 100%;
 `
 
 
 
 const ButtonAddFirst = styled(Button)`
-  width: 80px;
+  width: 60px;
   height: 100%;
 `
 
@@ -88,8 +105,27 @@ const DivCaution = styled(Div)`
 
 
  const CreatingPlan = () => {
-   
   
+  //{value, onChange}
+  const inputBattletag = useInput("");
+   
+  const [addPlanTeam] = useMutation(ADD_PLAN_TEAM, {
+    variables: { _id: inputBattletag.value}
+  });
+  const [addPlayerMmr] = useMutation(ADD_PLAYER_MMR, {
+    variables: { _id: inputBattletag.value}
+  });
+  
+  const onClick_ButtonAddFirst = (e) => {
+    if (inputBattletag.value) {
+      //e.preventDefault();
+      addPlanTeam();
+      addPlayerMmr();
+      //inputUrlRym.value = ''; 
+      //selectRating.value = 0;
+    }
+  }  
+
   
   return (
   
@@ -98,22 +134,17 @@ const DivCaution = styled(Div)`
     <DivHeader>
       <DivTitle> Team Generator </DivTitle>
       
-      <DivId> add battletag first to create plan</DivId>
+      <DivId> add battletag first to start </DivId>
     </DivHeader>
     
     <DivBody>
-	    <DivInputAdd>
-	  
-		    <DivInput>
-		      <InputPw placeholder="sharing-password" />
-		      <InputPw placeholder="sharing-password again" />
-		    </DivInput>
+	   
+		    <DivInputAdd>
+		      <InputBattletag {...inputBattletag} placeholder="battletag#1234" />
+		      <ButtonAddFirst onClick = {onClick_ButtonAddFirst} > Add </ButtonAddFirst>
+		    </DivInputAdd>
 		    
-		    <ButtonAddFirst> Create Plan </ButtonAddFirst>
-		     
-	    </DivInputAdd>
 	    
-	    <DivCaution> * developer can see password </DivCaution>
 	   </DivBody>
   
   </DivCreatingPlan>
