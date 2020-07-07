@@ -5,6 +5,9 @@ import axios from 'axios';
 //import path from 'path'
 import { NavLink, useParams } from 'react-router-dom';
 
+import { connect } from "react-redux";
+import { actionCreators } from "../store";
+
 // https://reacttraining.com/blog/react-router-v5-1/
 
 import {Div, Table, Tr, Td} from '../styles/DefaultStyles';
@@ -92,7 +95,7 @@ const RowPlayer = ({_id}) => {
 
 
 
-const TableEntry = ({loading, PlanTeam}) => {
+const TableEntry = ({loading, ready, planTeam, acceptPlanTeam}) => {
   
   let { idPlanTeam } = useParams();
   
@@ -101,7 +104,7 @@ const TableEntry = ({loading, PlanTeam}) => {
   //useEffect(()=> { loadPlanTeam(idPlanTeam) }, []);
   
   /*
-  const {loading, data, error, refetch } = useAxios({
+  const {loading, response, error, refetch } = useAxios({
     url: `https://ahr.avantwing.com/PlanTeam/${idPlanTeam}`
   })
   */
@@ -114,15 +117,15 @@ const TableEntry = ({loading, PlanTeam}) => {
   <DivTableEntry>
     
   
-    { loading &&  <LoadingDots /> }
+    { loading.planTeam &&  <LoadingDots /> }
     
-    { !loading &&
+    { !loading.planTeam && !ready.planTeam && 
     
-      //<Div> { JSON.stringify( data["data"]["listPlayerEntry"] )} </Div>
+      //<Div> { JSON.stringify( response["data"]["listPlayerEntry"] )} </Div>
       <Div> 
       
       { 
-        ( PlanTeam["listPlayerEntry"] ).map( (player, i) => 
+        ( planTeam["listPlayerEntry"] ).map( (player, i) => 
           
             < RowPlayer key={player._id} _id={player._id} /> )
           
@@ -141,4 +144,20 @@ const TableEntry = ({loading, PlanTeam}) => {
 //<button onClick= {refetch} > Refectch </button>
 
 
-export default TableEntry;
+
+function mapStateToProps(state) { 
+  return { 
+    planTeam: state.planTeam
+    ,ready: state.ready 
+    ,loading: state.loading
+  }; 
+} 
+
+function mapDispatchToProps(dispatch) { 
+  return { 
+    acceptPlanTeam: (idPlanTeam) => dispatch(actionCreators.acceptPlanTeam(idPlanTeam)) 
+  }; 
+}
+
+// TableEntry 컴포넌트에서 redux의 state, dispatch 를 일부분 골라서 이용가능하게 된다
+export default connect(mapStateToProps, mapDispatchToProps)(TableEntry);

@@ -2,6 +2,9 @@ import React from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
 
+import { connect } from "react-redux";
+import { actionCreators } from "../store";
+
 import {Div, Input, Button} from '../styles/DefaultStyles';
 //import Player from '../components/Player'
 
@@ -163,13 +166,9 @@ const reqAddPlayerToListPlayerEntry = (idPlanTeam, battletag) => {
   
 
 // https://ps.avantwing.com/team-generator/sss?ooo 들어가 보기
-const TeamGenerator = ({match, location}) => {
+const TeamGenerator = ({match, location, loading, ready, planTeam, acceptPlanTeam}) => {
   
   const idPlanTeam = match.params.idPlanTeam;
-  
-  const {loading, data, error, refetch } = useAxiosGet({
-    url: `${process.env.REACT_APP_URL_AHR}/PlanTeam/${idPlanTeam}`
-  })
   
   const inputBattletag = useInput("");
   
@@ -257,7 +256,7 @@ const TeamGenerator = ({match, location}) => {
         
           <DivEntryTitle> Entry </DivEntryTitle>
         
-          <TableEntry loading={loading} />
+          <TableEntry />
         </DivEntry>
       
       
@@ -270,4 +269,21 @@ const TeamGenerator = ({match, location}) => {
   }
 }
 
-export default TeamGenerator;
+
+
+function mapStateToProps(state) { 
+  return { 
+    planTeam: state.planTeam
+    ,ready: state.ready 
+    ,loading: state.loading
+  }; 
+} 
+
+function mapDispatchToProps(dispatch) { 
+  return { 
+    acceptPlanTeam: (idPlanTeam) => dispatch(actionCreators.acceptPlanTeam(idPlanTeam)) 
+  }; 
+}
+
+// Home 컴포넌트에서 redux의 state, dispatch 를 일부분 골라서 이용가능하게 된다
+export default connect(mapStateToProps, mapDispatchToProps)(TeamGenerator);

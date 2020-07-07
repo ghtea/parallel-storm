@@ -7,7 +7,7 @@ const useAxiosGet = (options, axios = defaultAxios) => {
 	const [state, setState] = useState({
 		loading:true,
 		error: null,
-		data: null
+		response: null
 	});
 	
 	const [trigger, setTrigger] = useState(0);
@@ -15,11 +15,11 @@ const useAxiosGet = (options, axios = defaultAxios) => {
 	// trigger: 내가 리렌더링 하고 싶을 때 변화시키는 존재
 	useEffect( ()=>{
 		
-		axios(options).then(data => {
+		axios(options).then(response => {
 			setState({
 				...state,
 				loading: false,
-				data: data
+				response: response
 			})
 		}).catch(error => {
 			setState({...state, loading: false, error})
