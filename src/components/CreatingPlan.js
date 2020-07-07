@@ -1,5 +1,7 @@
+//import dotenv from 'dotenv';
 import React from 'react';
 import styled from 'styled-components';
+
 
 import { NavLink, useHistory } from 'react-router-dom';
 
@@ -9,10 +11,12 @@ import axios from 'axios';
 import useInput from '../tools/hooks/useInput';
 import {getTimeStamp} from '../tools/vanilla/time';
 
-import {ahr} from '../api';
-
-
-
+//import {ahr} from '../api';
+/*
+dotenv.config({ 
+  path: './.env' 
+});
+*/
 
 const DivCreatingPlan = styled(Div)`
   grid-area: add;
@@ -125,13 +129,13 @@ const reqCreatePlanTeam = (idPlanTeam, battletag) => {
         
         
         
-        await ahr.put('/PlayerMmr', reqPutPlayerMmr(battletag));
+        await axios.put ("https://ahr.avantwing.com/PlayerMmr", reqPutPlayerMmr(battletag));
         // 위에서 에러가 나서 아래로 진행 안시키게 해보자
         
         
         const idPlanTeam = getTimeStamp(); 
-        await ahr.put('/PlanTeam', reqCreatePlanTeam(idPlanTeam, battletag) ); // pass id of new PlanTeam to body of request
-        
+        await axios.put( "https://ahr.avantwing.com/PlanTeam", reqCreatePlanTeam(idPlanTeam, battletag) ); // pass id of new PlanTeam to body of request
+        //process.env.URL_AHR + "/PlanTeam" makes error
         
         console.log("ahr worked well")
         

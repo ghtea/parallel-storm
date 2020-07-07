@@ -12,25 +12,7 @@ import { GlobalStyle, Div} from './styles/DefaultStyles';
 
 import './styles/font.css';
 
-/*
-const DivSubContainer = styled(Div)`
-  border-width: 0;
-
-  @media (max-width: ${props => (props.theme.media.mid_big -1) }px ) {
-    height: 50px;
-  	
-	}
- 
-	 @media (min-width:  ${props => (props.theme.media.mid_big) }px)  {
-	  width: 120px;
-	  border-width: 0px;
-	  
-	  height: 100%;
-
-	 }
-
-`
-*/
+// env 사용할때 각변수 앞에 REACT_APP_ 를 붙혀야한다 https://hello-bryan.tistory.com/134
 
 const DivContent = styled(Div)`
   

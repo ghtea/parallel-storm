@@ -150,7 +150,7 @@ function TeamGenerator({match, location}) {
   
   else {
     const idPlanTeam = match.params.idPlanTeam;
-    console.log(`idPlanTeam: ${idPlanTeam}`)
+    //console.log(`idPlanTeam: ${idPlanTeam}`)
     return (
       <DivTeamGenerator>
         

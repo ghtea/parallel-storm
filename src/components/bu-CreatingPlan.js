@@ -1,34 +1,17 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import { NavLink } from 'react-router-dom';
+import { NavLink, useHistory } from 'react-router-dom';
+
 import {Div, Input, Button} from '../styles/DefaultStyles';
 
-//import { gql } from "apollo-boost";
-//import { useMutation } from "@apollo/react-hooks";
+import axios from 'axios';
 import useInput from '../tools/hooks/useInput';
+import {getTimeStamp} from '../tools/vanilla/time';
+
+import {ahr} from '../api';
 
 
-const ADD_PLAN_TEAM = gql` 
-  mutation { 
-    addPlanTeam 
-  } 
-`;
-
-const ADD_PLAYER_MMR = gql` 
-  mutation addPlayerMmr($_id:ID!) { 
-    addPlayerMmr(
-      _id: $_id
-    )
-  } 
-`;
-
-
-/*
-const ADD_PLAYER_TO_LIST_PLAYER_ENTRY = gql` 
- 
-`;
-*/
 
 
 const DivCreatingPlan = styled(Div)`
@@ -104,25 +87,67 @@ const DivCaution = styled(Div)`
 
 
 
+const reqPutPlayerMmr = (battletag) => {  
+  return {
+    filter: {_id: battletag }
+  }
+};
+
+// "listPlayerEntry._id": { $ne: battletag }  }   //very important  // https://stackoverflow.com/questions/26328891/push-value-to-array-if-key-does-not-exist-mongoose
+
+
+// already know there is no PlaTeam with same id
+const reqCreatePlanTeam = (idPlanTeam, battletag) => {  
+  return {
+    filter: {_id: idPlanTeam }
+    		
+    ,update: {
+      _id: idPlanTeam 
+      ,listPlayerEntry: [ {_id: battletag} ]
+    }
+  }
+};
+
+
  const CreatingPlan = () => {
   
   //{value, onChange}
   const inputBattletag = useInput("");
    
-  const [addPlanTeam] = useMutation(ADD_PLAN_TEAM, {
-    variables: { _id: inputBattletag.value}
-  });
-  const [addPlayerMmr] = useMutation(ADD_PLAYER_MMR, {
-    variables: { _id: inputBattletag.value}
-  });
+  const history = useHistory(); 
   
-  const onClick_ButtonAddFirst = (e) => {
+  const onClick_ButtonAddFirst = async (e) => {
+    
     if (inputBattletag.value) {
+      try {  
+        
+        const battletag = inputBattletag.value;
+        
+        
+        
+        await ahr.put('/PlayerMmr', reqPutPlayerMmr(battletag));
+        // 위에서 에러가 나서 아래로 진행 안시키게 해보자
+        
+        
+        const idPlanTeam = getTimeStamp(); 
+        await ahr.put('/PlanTeam', reqCreatePlanTeam(idPlanTeam, battletag) ); // pass id of new PlanTeam to body of request
+        
+        
+        console.log("ahr worked well")
+        
+        history.push(`/team-generator/${idPlanTeam}`);
+      }
+      catch(e) {console.log(e)}
+      
       //e.preventDefault();
-      addPlanTeam();
-      addPlayerMmr();
+      //addPlayerMmr();
       //inputUrlRym.value = ''; 
       //selectRating.value = 0;
+      
+      
+      
+    } else {
+      console.log("type battletag first")
     }
   }  
 

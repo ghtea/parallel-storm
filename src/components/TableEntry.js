@@ -1,11 +1,19 @@
-import React from 'react';
+import dotenv from 'dotenv';
+import React, {useState, useEffect} from 'react';
 import styled from 'styled-components';
+import axios from 'axios';
+import path from 'path'
+import { NavLink, useParams } from 'react-router-dom';
 
-import { NavLink } from 'react-router-dom';
+// https://reacttraining.com/blog/react-router-v5-1/
+
 import {Div, Table, Tr, Td} from '../styles/DefaultStyles';
 
+import useAxios from '../tools/hooks/useAxios';
 
-
+// 이상하게 dotenv.config() 안해도 된다 (오히려 하면 에러 발생...)
+//dotenv.config() ;
+//dotenv.config({ path: path.join(__dirname, '../../.env') });
 
 
 const DivTableEntry = styled(Div)`
@@ -51,25 +59,6 @@ const DivRow = styled(Div)`
 `
 
 
-
-const RowPlayer = ({_id, mmr}) => {
-  return (
-    
-    <DivRow >
-      
-         <DivBattletag> {_id}</DivBattletag>
-         <Div> {mmr}</Div>
-         
-         <Div> Tank, Bruiser</Div>
-         <Div> A </Div>
-         <Div> View </Div>
-         
-      </DivRow>
-  )
-}
-
-
-
 const DivBattletag = styled(Div)`
   padding-left: 5px;
   display: block;
@@ -82,20 +71,77 @@ const DivBattletag = styled(Div)`
 
 
 
-const TableEntry = () => {
-   
-  
-    return (
+
+
+const RowPlayer = ({_id}) => {
+  return (
     
-    <DivTableEntry>
-    
+    <DivRow >
       
-    
-    </DivTableEntry>
-    )
+         <DivBattletag> {_id}</DivBattletag>
+         <Div> (mmr) </Div>
+         
+         <Div> Tank, Bruiser</Div>
+         <Div> A </Div>
+         <Div> View </Div>
+         
+      </DivRow>
+  )
 }
 
+
+
+
+const TableEntry = () => {
   
+  let { idPlanTeam } = useParams();
+  
+  //console.log(idPlanTeam);
+    
+  //useEffect(()=> { loadPlanTeam(idPlanTeam) }, []);
+  
+  /*
+  const {loading, data, error, refetch } = useAxios({
+    url: `https://ahr.avantwing.com/PlanTeam/${idPlanTeam}`
+  })
+  */
+  
+  
+  const {loading, data, error, refetch } = useAxios({
+    url: `${process.env.REACT_APP_URL_AHR}/PlanTeam/${idPlanTeam}`
+  })
+  
+  console.log(process.env);
+  return (
+  
+  <DivTableEntry>
+    
+  
+    { loading &&  <Div> "Loading" </Div> }
+    
+    { !loading &&
+    
+      //<Div> { JSON.stringify( data["data"]["listPlayerEntry"] )} </Div>
+      <Div> 
+      
+      { 
+        ( data["data"]["listPlayerEntry"] ).map( (player, i) => 
+          
+            < RowPlayer key={player._id} _id={player._id} /> )
+          
+      }
+        
+      </Div>
+    }
+    
+  
+  
+  </DivTableEntry>
+  )
+}
+
 	  
+//<button onClick= {refetch} > Refectch </button>
+
 
 export default TableEntry;
