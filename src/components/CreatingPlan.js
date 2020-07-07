@@ -1,13 +1,13 @@
-//import dotenv from 'dotenv';
+import dotenv from 'dotenv';
 import React from 'react';
 import styled from 'styled-components';
 
-
+import axios from 'axios';
 import { NavLink, useHistory } from 'react-router-dom';
 
 import {Div, Input, Button} from '../styles/DefaultStyles';
 
-import axios from 'axios';
+
 import useInput from '../tools/hooks/useInput';
 import {getTimeStamp} from '../tools/vanilla/time';
 
@@ -129,13 +129,13 @@ const reqCreatePlanTeam = (idPlanTeam, battletag) => {
         
         
         
-        await axios.put ("https://ahr.avantwing.com/PlayerMmr", reqPutPlayerMmr(battletag));
+        await axios.put (`${process.env.REACT_APP_URL_AHR}/PlayerMmr`, reqPutPlayerMmr(battletag));
         // 위에서 에러가 나서 아래로 진행 안시키게 해보자
         
         
         const idPlanTeam = getTimeStamp(); 
-        await axios.put( "https://ahr.avantwing.com/PlanTeam", reqCreatePlanTeam(idPlanTeam, battletag) ); // pass id of new PlanTeam to body of request
-        //process.env.URL_AHR + "/PlanTeam" makes error
+        await axios.put( `${process.env.REACT_APP_URL_AHR}/PlanTeam`, reqCreatePlanTeam(idPlanTeam, battletag) ); // pass id of new PlanTeam to body of request
+        
         
         console.log("ahr worked well")
         

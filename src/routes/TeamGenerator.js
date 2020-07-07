@@ -1,12 +1,15 @@
 import React from 'react';
 import styled from 'styled-components';
-
+import axios from 'axios';
 
 import {Div, Input, Button} from '../styles/DefaultStyles';
 //import Player from '../components/Player'
 
 import TableEntry from '../components/TableEntry';
 import CreatingPlan from '../components/CreatingPlan';
+import useAxiosGet from '../tools/hooks/useAxiosGet';
+import useInput from '../tools/hooks/useInput';
+
 
 const DivTeamGenerator = styled(Div)`
   width: 100%;
@@ -126,9 +129,78 @@ const DivEntryTitle = styled(Div)`
 
 // ~ DivEntry
 
+const reqPutPlayerMmr = (battletag) => {  
+  return {
+    filter: {_id: battletag }
+  }
+};
+
+// "listPlayerEntry._id": { $ne: battletag }  }   //very important  // https://stackoverflow.com/questions/26328891/push-value-to-array-if-key-does-not-exist-mongoose
+
+
+
+// https://stackoverflow.com/questions/26328891/push-value-to-array-if-key-does-not-exist-mongoose
+const reqAddPlayerToListPlayerEntry = (idPlanTeam, battletag) => {  
+  return ({
+    
+    filter: {
+      _id: idPlanTeam,
+    	"listPlayerEntry._id": { $ne: battletag }  // it's important!
+    }		
+    
+    ,update: {
+      $addToSet: { 
+        listPlayerEntry: { _id: battletag }
+    	}
+  	}
+  	
+  })
+};
+
+
+  
+  
+  
 
 // https://ps.avantwing.com/team-generator/sss?ooo 들어가 보기
-function TeamGenerator({match, location}) {
+const TeamGenerator = ({match, location}) => {
+  
+  const idPlanTeam = match.params.idPlanTeam;
+  
+  const {loading, data, error, refetch } = useAxiosGet({
+    url: `${process.env.REACT_APP_URL_AHR}/PlanTeam/${idPlanTeam}`
+  })
+  
+  const inputBattletag = useInput("");
+  
+  
+  
+  const onClick_ButtonAdd = async (event) => {
+    
+    if (inputBattletag.value) {
+      try {  
+        
+        const battletag = inputBattletag.value;
+        
+        
+        await axios.put (`${process.env.REACT_APP_URL_AHR}/PlayerMmr`, reqPutPlayerMmr(battletag));
+        // 위에서 에러가 나서 아래로 진행 안시키게 해보자
+        
+        
+        await axios.put( `${process.env.REACT_APP_URL_AHR}/PlanTeam`, reqAddPlayerToListPlayerEntry(idPlanTeam, battletag) ); 
+        
+        
+        console.log("ahr worked well")
+        
+      }
+      catch(e) {console.log(e)}
+      
+      
+    } else {
+      console.log("type battletag first")
+    }
+  }
+
 
   //console.log(`match: `)
   //console.log(match)
@@ -149,7 +221,7 @@ function TeamGenerator({match, location}) {
     )}
   
   else {
-    const idPlanTeam = match.params.idPlanTeam;
+    
     //console.log(`idPlanTeam: ${idPlanTeam}`)
     return (
       <DivTeamGenerator>
@@ -168,8 +240,8 @@ function TeamGenerator({match, location}) {
          <DivBody>
 	   
     		    <DivInputAdd>
-    		      <InputBattletag placeholder="battletag#1234" />
-    		      <ButtonAdd> Add </ButtonAdd>
+    		      <InputBattletag {...inputBattletag} placeholder="battletag#1234" />
+		          <ButtonAdd onClick = {onClick_ButtonAdd} > Add </ButtonAdd>
     		    </DivInputAdd>
     		    
     	   </DivBody>
@@ -185,7 +257,7 @@ function TeamGenerator({match, location}) {
         
           <DivEntryTitle> Entry </DivEntryTitle>
         
-          <TableEntry />
+          <TableEntry loading={loading} />
         </DivEntry>
       
       

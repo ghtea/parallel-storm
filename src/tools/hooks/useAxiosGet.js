@@ -2,7 +2,7 @@ import defaultAxios from 'axios';
 import React, {useState, useEffect} from 'react';
 
 // if we not use existing axios instance, use default axios instance
-const useAxios = (options, axios = defaultAxios) => {
+const useAxiosGet = (options, axios = defaultAxios) => {
 	
 	const [state, setState] = useState({
 		loading:true,
@@ -47,4 +47,4 @@ const useAxios = (options, axios = defaultAxios) => {
 	return {...state, refetch };
 }
 
-export default useAxios
+export default useAxiosGet

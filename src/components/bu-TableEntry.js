@@ -10,6 +10,7 @@ import { NavLink, useParams } from 'react-router-dom';
 import {Div, Table, Tr, Td} from '../styles/DefaultStyles';
 
 import LoadingDots from './LoadingDots'
+import useAxios from '../tools/hooks/useAxios';
 
 // 이상하게 dotenv.config() 안해도 된다 (오히려 하면 에러 발생...)
 //dotenv.config() ;
@@ -92,7 +93,7 @@ const RowPlayer = ({_id}) => {
 
 
 
-const TableEntry = ({loading, PlanTeam}) => {
+const TableEntry = () => {
   
   let { idPlanTeam } = useParams();
   
@@ -106,7 +107,10 @@ const TableEntry = ({loading, PlanTeam}) => {
   })
   */
   
-
+  
+  const {loading, data, error, refetch } = useAxios({
+    url: `${process.env.REACT_APP_URL_AHR}/PlanTeam/${idPlanTeam}`
+  })
   
   //console.log(process.env);
   return (
@@ -122,7 +126,7 @@ const TableEntry = ({loading, PlanTeam}) => {
       <Div> 
       
       { 
-        ( PlanTeam["listPlayerEntry"] ).map( (player, i) => 
+        ( data["data"]["listPlayerEntry"] ).map( (player, i) => 
           
             < RowPlayer key={player._id} _id={player._id} /> )
           

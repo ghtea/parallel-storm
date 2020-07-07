@@ -14,11 +14,7 @@ const addNewPlayer = async (battletag) => {
     		"listPlayerEntry._id": { $ne: battletag }  // it's important!
     	}
     
-      , update: {
-        $addToSet: { 
-          listPlayerEntry: { _id: battletag }
-      	}
-    	}
+      , 
   		  
     }  // req body
     
