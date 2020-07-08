@@ -4,6 +4,7 @@ import axios from 'axios';
 
 import { connect } from "react-redux";
 import { actionCreators } from "../store";
+import {readPlanTeam} from "../store";
 
 import {Div, Input, Button} from '../styles/DefaultStyles';
 //import Player from '../components/Player'
@@ -166,7 +167,7 @@ const reqAddPlayerToListPlayerEntry = (idPlanTeam, battletag) => {
   
 
 // https://ps.avantwing.com/team-generator/sss?ooo 들어가 보기
-const TeamGenerator = ({match, location, loading, ready, planTeam, acceptPlanTeam}) => {
+const TeamGenerator = ({match, location, loading, ready, planTeam, readPlanTeam}) => {
   
   const idPlanTeam = match.params.idPlanTeam;
   
@@ -281,7 +282,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) { 
   return { 
-    acceptPlanTeam: (idPlanTeam) => dispatch(actionCreators.acceptPlanTeam(idPlanTeam)) 
+    readPlanTeam: (idPlanTeam) => dispatch(readPlanTeam(idPlanTeam)) 
   }; 
 }
 

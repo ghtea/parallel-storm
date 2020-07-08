@@ -7,7 +7,7 @@ import { NavLink, useParams } from 'react-router-dom';
 
 import { connect } from "react-redux";
 import { actionCreators } from "../store";
-
+import {readPlanTeam} from "../store";
 // https://reacttraining.com/blog/react-router-v5-1/
 
 import {Div, Table, Tr, Td} from '../styles/DefaultStyles';
@@ -95,13 +95,12 @@ const RowPlayer = ({_id}) => {
 
 
 
-const TableEntry = ({loading, ready, planTeam, acceptPlanTeam}) => {
+const TableEntry = ({loading, ready, planTeam, readPlanTeam}) => {
   
   let { idPlanTeam } = useParams();
   
-  //console.log(idPlanTeam);
     
-  //useEffect(()=> { loadPlanTeam(idPlanTeam) }, []);
+  useEffect( () => { readPlanTeam(idPlanTeam) }, []);
   
   /*
   const {loading, response, error, refetch } = useAxios({
@@ -111,15 +110,17 @@ const TableEntry = ({loading, ready, planTeam, acceptPlanTeam}) => {
   
 
   
+  
   //console.log(process.env);
   return (
   
   <DivTableEntry>
     
-  
-    { loading.planTeam &&  <LoadingDots /> }
     
-    { !loading.planTeam && !ready.planTeam && 
+  
+    { (loading.planTeam) &&   <LoadingDots /> }
+    
+    { (ready.planTeam) && 
     
       //<Div> { JSON.stringify( response["data"]["listPlayerEntry"] )} </Div>
       <Div> 
@@ -155,9 +156,10 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) { 
   return { 
-    acceptPlanTeam: (idPlanTeam) => dispatch(actionCreators.acceptPlanTeam(idPlanTeam)) 
+    readPlanTeam: (idPlanTeam) => dispatch(readPlanTeam(idPlanTeam)) 
   }; 
 }
+
 
 // TableEntry 컴포넌트에서 redux의 state, dispatch 를 일부분 골라서 이용가능하게 된다
 export default connect(mapStateToProps, mapDispatchToProps)(TableEntry);
