@@ -67,6 +67,23 @@ import styled, {createGlobalStyle} from 'styled-components';
   vertical-align: baseline;
  }
  
+ 
+ /* because of svg */
+ .icon.usingHover:hover {
+   fill: ${props => (props.theme.color_normal) };
+ }
+ 
+ /* message UI */
+ .error {
+  background-color: ${props => props.theme.COLOR_error};
+  color: ${props => props.theme.color_error};
+ }
+ 
+ .success {
+  background-color: ${props => props.theme.COLOR_success};
+  color: ${props => props.theme.color_success};
+ }
+ 
 `
 
 export const Div = styled.div`

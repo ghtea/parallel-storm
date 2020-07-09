@@ -1,14 +1,15 @@
 const REPLACE_READY = "REPLACE_READY";
 const REPLACE_LOADING = "REPLACE_LOADING";
+const REPLACE_WORKING = "REPLACE_WORKING";
+
 const REPLACE_DATA = "REPLACE_DATA";
 
 const ADD_NOTIFICATION = "ADD_NOTIFICATION";
 const REMOVE_NOTIFICATION = "REMOVE_NOTIFICATION";
 
-const reducerRoot = (
-  
-  // 기본값 설정
-  state = { 
+
+
+const stateInitial = { 
     
     // foundamental 
     ready : {
@@ -17,15 +18,29 @@ const reducerRoot = (
     
     loading : {
       planTeam: false
+      ,playerMmr: false
+    }, 
+    
+    working : {
+      putPlayerMmr: false
     }, 
     
     notification : [],
     
     
     // others
-    planTeam: {}
+    planTeam: {},
     
-  }, 
+    themeName: "light"
+    
+  };
+
+
+
+const reducer = (
+  
+  // 기본값 설정
+  state = stateInitial, 
   
   // 액션별로 새로운 state 반환하기
   action) => {
@@ -56,16 +71,28 @@ const reducerRoot = (
       	}
       };
       
+    case REPLACE_WORKING:
+      return {
+      	...state, 
+      	working: {
+      	  ...state.working,
+      	  [action.which]: action.true_false
+      	}
+      };
+      
     case ADD_NOTIFICATION:
       return {
       	...state, 
+      	
       	notification: [
-      	  ...state.notification,
       	  {
       	    situation: action.situation
       	    ,message: action.message
+      	    ,idNotification: action.idNotification
       	  }
+      	  , ...state.notification
       	]
+      	
       };
     
     case REMOVE_NOTIFICATION:
@@ -75,13 +102,10 @@ const reducerRoot = (
       };
     
     
-    
-    
-    
     default:
       return state;
   }
 };
 
 
-export default reducerRoot;
+export default reducer;

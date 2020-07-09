@@ -3,6 +3,11 @@ import React from 'react';
 import styled from 'styled-components';
 
 import axios from 'axios';
+
+import { connect } from "react-redux";
+import addRemoveNotification from "../redux/thunks/addRemoveNotification";
+import {replaceWorking} from "../redux/store";
+
 import { NavLink, useHistory } from 'react-router-dom';
 
 import {Div, Input, Button} from '../styles/DefaultStyles';
@@ -113,47 +118,63 @@ const reqCreatePlanTeam = (idPlanTeam, battletag) => {
 };
 
 
- const CreatingPlan = () => {
+ const CreatingPlan = ({addRemoveNotification, loading, ready, working, replaceWorking}) => {
   
   //{value, onChange}
   const inputBattletag = useInput("");
    
   const history = useHistory(); 
   
+  
+  
+  
   const onClick_ButtonAddFirst = async (e) => {
     
     if (inputBattletag.value) {
-      try {  
+       
         
         const battletag = inputBattletag.value;
         
+        let status = {};
+        
+        try {
+          replaceWorking("putPlayerMmr", true)
+          await axios.put (`${process.env.REACT_APP_URL_AHR}/PlayerMmr`, reqPutPlayerMmr(battletag));
+          
+          replaceWorking("putPlayerMmr", false)
+          addRemoveNotification("success", "player has been added!", 2000);
+          status.mmr = true; // mmr 작업이 잘되었다고 표시
+        }
+        catch (error) {
+          replaceWorking("putPlayerMmr", false)
+          addRemoveNotification("error", "battletag is wrong", 4000);
+          status.mmr = false; // mmr 작업이 정상적으로 끝나지 않았다고 표시 (실제로 에러가 발생하지 않는다)
+        }
         
         
-        await axios.put (`${process.env.REACT_APP_URL_AHR}/PlayerMmr`, reqPutPlayerMmr(battletag));
-        // 위에서 에러가 나서 아래로 진행 안시키게 해보자
+        if (status.mmr === true) {
+          try {
+            const idPlanTeam = getTimeStamp(); 
+            await axios.put( `${process.env.REACT_APP_URL_AHR}/PlanTeam`, reqCreatePlanTeam(idPlanTeam, battletag) ); // pass id of new PlanTeam to body of request
+            history.push(`/team-generator/${idPlanTeam}`);
+            
+            addRemoveNotification("success", "new plan has been created!", 2000);
+          }
+          catch(error) {
+            
+          }
+        }
         
-        
-        const idPlanTeam = getTimeStamp(); 
-        await axios.put( `${process.env.REACT_APP_URL_AHR}/PlanTeam`, reqCreatePlanTeam(idPlanTeam, battletag) ); // pass id of new PlanTeam to body of request
-        
-        
-        console.log("ahr worked well")
-        
-        history.push(`/team-generator/${idPlanTeam}`);
-      }
-      catch(e) {console.log(e)}
       
-      //e.preventDefault();
-      //addPlayerMmr();
-      //inputUrlRym.value = ''; 
-      //selectRating.value = 0;
+      inputBattletag.setValue("");
       
-      
-      
-    } else {
+    } else { // 애초에 battletag를 입력 안했다면.
       console.log("type battletag first")
     }
   }  
+  
+  
+  
 
   
   return (
@@ -170,7 +191,9 @@ const reqCreatePlanTeam = (idPlanTeam, battletag) => {
 	   
 		    <DivInputAdd>
 		      <InputBattletag {...inputBattletag} placeholder="battletag#1234" />
-		      <ButtonAddFirst onClick = {onClick_ButtonAddFirst} > Add </ButtonAddFirst>
+		      
+		      {working.putPlayerMmr ? <ButtonAddFirst> working... </ButtonAddFirst> : <ButtonAddFirst onClick = {onClick_ButtonAddFirst} > Add </ButtonAddFirst> }
+        
 		    </DivInputAdd>
 		    
 	    
@@ -184,4 +207,21 @@ const reqCreatePlanTeam = (idPlanTeam, battletag) => {
   
 	  
 
-export default CreatingPlan;
+
+function mapStateToProps(state) { 
+  return { 
+    ready: state.ready 
+    ,loading: state.loading
+    ,working: state.working
+  }; 
+} 
+
+function mapDispatchToProps(dispatch) { 
+  return { 
+    addRemoveNotification: (situation, message, time) => dispatch( addRemoveNotification(situation, message, time) )
+    ,replaceWorking: (which, true_false) => dispatch(replaceWorking(which, true_false))
+  }; 
+}
+
+// 컴포넌트에서 redux의 state, dispatch 를 일부분 골라서 이용가능하게 된다
+export default connect(mapStateToProps, mapDispatchToProps)(CreatingPlan);

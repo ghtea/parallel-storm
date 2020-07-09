@@ -6,13 +6,13 @@ import axios from 'axios';
 import { NavLink, useParams } from 'react-router-dom';
 
 import { connect } from "react-redux";
-import { actionCreators } from "../store";
-import {readPlanTeam} from "../store";
+import readPlanTeam from "../redux/thunks/readPlanTeam";
 // https://reacttraining.com/blog/react-router-v5-1/
 
 import {Div, Table, Tr, Td} from '../styles/DefaultStyles';
 
-import LoadingDots from './LoadingDots'
+import IconLoading from '../svgs/IconLoading'
+import IconInfo from '../svgs/IconInfo'
 
 // 이상하게 dotenv.config() 안해도 된다 (오히려 하면 에러 발생...)
 //dotenv.config() ;
@@ -32,6 +32,9 @@ const DivTableEntry = styled(Div)`
   
 `
 
+const DivIconLoading = styled(Div)`
+  margin-top: 10px;
+`
 
 /*
 display:grid;
@@ -74,33 +77,47 @@ const DivBattletag = styled(Div)`
 
 
 
-
-
 const RowPlayer = ({_id}) => {
   return (
     
     <DivRow >
       
-         <DivBattletag> {_id}</DivBattletag>
-         <Div> (mmr) </Div>
+      <DivBattletag> 
+        {_id}
+      </DivBattletag>
+      
+      <Div> 
+        (mmr) 
+      </Div>
+       
+      <Div> 
+        Tank, Bruiser
+      </Div>
+      
+      <Div> 
+        A 
+      </Div>
+       
+      <Div> 
+        <IconInfo
+          width={"20px"}
+          height={"20px"}
+        /> 
+      </Div>
          
-         <Div> Tank, Bruiser</Div>
-         <Div> A </Div>
-         <Div> View </Div>
-         
-      </DivRow>
+    </DivRow>
   )
 }
 
 
 
 
-const TableEntry = ({loading, ready, planTeam, readPlanTeam}) => {
+const TableEntry = ({loading, ready, planTeam, readPlanTeam, notification}) => {
   
   let { idPlanTeam } = useParams();
   
     
-  useEffect( () => { readPlanTeam(idPlanTeam) }, []);
+  useEffect( () => { readPlanTeam(idPlanTeam) }, [notification]);
   
   /*
   const {loading, response, error, refetch } = useAxios({
@@ -114,16 +131,23 @@ const TableEntry = ({loading, ready, planTeam, readPlanTeam}) => {
   //console.log(process.env);
   return (
   
-  <DivTableEntry>
+  <>
     
     
   
-    { (loading.planTeam) &&   <LoadingDots /> }
+    { (loading.planTeam) &&   
+    <DivIconLoading>
+      <IconLoading 
+        width={"36px"}
+        height={"36px"}
+      />  
+    </DivIconLoading>
+    }
     
     { (ready.planTeam) && 
     
       //<Div> { JSON.stringify( response["data"]["listPlayerEntry"] )} </Div>
-      <Div> 
+      <DivTableEntry> 
       
       { 
         ( planTeam["listPlayerEntry"] ).map( (player, i) => 
@@ -132,12 +156,12 @@ const TableEntry = ({loading, ready, planTeam, readPlanTeam}) => {
           
       }
         
-      </Div>
+      </DivTableEntry>
     }
     
   
   
-  </DivTableEntry>
+  </>
   )
 }
 
@@ -151,6 +175,7 @@ function mapStateToProps(state) {
     planTeam: state.planTeam
     ,ready: state.ready 
     ,loading: state.loading
+    ,notification: state.notification
   }; 
 } 
 

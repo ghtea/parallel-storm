@@ -1,66 +1,13 @@
-import { createStore, applyMiddleware } from 'redux';
-import thunk from 'redux-thunk';
 import axios from 'axios';
 import dotenv from 'dotenv';
 
-import reducerRoot from './reducers/root';
-
-
-const REPLACE_READY = "REPLACE_READY";
-const REPLACE_LOADING = "REPLACE_LOADING";
-const REPLACE_DATA = "REPLACE_DATA";
-
-const ADD_NOTIFICATION = "ADD_NOTIFICATION";
-const REMOVE_NOTIFICATION = "REMOVE_NOTIFICATION";
-
-
-// fundamental action creator
-const replaceReady = (which, true_false) => {
-  return {
-    type: REPLACE_READY,
-    which: which,
-    true_false: true_false
-  }
-}
-
-const replaceLoading = (which, true_false) => {
-  return {
-    type: REPLACE_LOADING,
-    which: which,
-    true_false: true_false
-  }
-}
-
-const replaceData = (which, newData) => {
-  return {
-    type: REPLACE_DATA,
-    which: which,
-    data: newData
-  }
-  
-}
-
-const addNotification = (situation, message, idNotification) => {
-  return {
-    type: ADD_NOTIFICATION,
-    situation: situation,
-    message: message,
-    idNotification: idNotification
-  }
-}
-
-const removeNotification = (idNotification) => {
-  return {
-    type: REMOVE_NOTIFICATION,
-    idNotification: idNotification
-  }
-}
-
+import {REPLACE_READY, REPLACE_LOADING, REPLACE_DATA, ADD_NOTIFICATION, REMOVE_NOTIFICATION} from '../store';
+import {replaceReady, replaceLoading, replaceData, addNotification, removeNotification} from '../store'
 
 
 
 // functions that dispatch actions which are from return fundamental action creators
-export const readPlanTeam = (idPlanTeam) => {   
+const readPlanTeam = (idPlanTeam) => {   
   
   return async (dispatch, getState, axios) => { 
 
@@ -121,15 +68,4 @@ export const readPlanTeam = (idPlanTeam) => {
   } 
 } // readPlanTeam
     
-
-
-
-const store = createStore(
-  reducerRoot,
-  applyMiddleware(thunk.withExtraArgument(axios))
-)
-
-
-export default store;
-
-//https://github.com/nomadcoders/vanilla-redux/blob/ccaa1acd081f27239f2cc8ad3c571bd0a9923f73/src/store.js
+export default  readPlanTeam;
