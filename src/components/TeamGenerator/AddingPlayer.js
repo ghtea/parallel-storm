@@ -5,20 +5,20 @@ import styled from 'styled-components';
 import axios from 'axios';
 
 import { connect } from "react-redux";
-import {replaceWorking} from "../redux/store";
-import readPlanTeam from "../redux/thunks/readPlanTeam";
-import addRemoveNotification from "../redux/thunks/addRemoveNotification";
+import {replaceWorking} from "../../redux/store";
+import readPlanTeam from "../../redux/thunks/readPlanTeam";
+import addRemoveNotification from "../../redux/thunks/addRemoveNotification";
 
 
 import { NavLink, useHistory } from 'react-router-dom';
 
-import {Div, Input, Button} from '../styles/DefaultStyles';
+import {Div, Input, Button} from '../../styles/DefaultStyles';
 
 
-import useInput from '../tools/hooks/useInput';
-import {getTimeStamp} from '../tools/vanilla/time';
+import useInput from '../../tools/hooks/useInput';
+import {getTimeStamp} from '../../tools/vanilla/time';
 
-import IconWorking from '../svgs/IconWorking'
+import IconWorking from '../../svgs/IconWorking'
 
 
 // STYLES
@@ -96,7 +96,37 @@ const reqPutPlayerMmr = (battletag) => {
 
 
 // https://stackoverflow.com/questions/26328891/push-value-to-array-if-key-does-not-exist-mongoose
+// https://stackoverflow.com/questions/15921700/mongoose-unique-values-in-nested-array-of-objects
 const reqAddPlayerToListPlayerEntry = (idPlanTeam, battletag) => {  
+  return ({
+    
+    filter: {
+      _id: idPlanTeam,
+    	"listPlayerEntry._id": { $ne: battletag }  // it's important! => 나중에 기존에 이미 저장되있던 유저 정보를 통째로 replace 하지 않도록!
+    	// 이거 혹시 큰 문제 있을 수 있다!!! <= api 상에서 filter 만족하지 않으면 바로 추가하는 옵션 설정했는데...!!!
+    }		
+    
+    ,update: {
+      $addToSet: { 
+        listPlayerEntry: { _id: battletag }
+    	}
+  	}
+  	
+  })
+};
+
+
+
+// 브라우저로 playerMmr데이터를 가져온 순간에 그걸 이용해서 데이터베이스 상의 planTeam 속 플레이어의 mmr Standard 추가/수정
+const reqPutPlayerMmrStandardToPlanTeam = (battletag, playerMmr, idPlanTeam) => {
+  
+  const listRegion = ["NA", "EU", "KR", "CN"];
+  let newMmrStandard = {};
+  
+  listRegion.map((element, i) => {
+    newMmrStandard[element] = playerMmr[element]["STANDARD"];
+  });
+  
   return ({
     
     filter: {
@@ -112,8 +142,6 @@ const reqAddPlayerToListPlayerEntry = (idPlanTeam, battletag) => {
   	
   })
 };
-
-
 
 
 

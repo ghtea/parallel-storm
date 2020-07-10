@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 
 import {REPLACE_READY, REPLACE_LOADING, REPLACE_DATA, ADD_NOTIFICATION, REMOVE_NOTIFICATION} from '../store';
 import {replaceReady, replaceLoading, replaceData, addNotification, removeNotification} from '../store'
+import addRemoveNotification from "./addRemoveNotification";
 
 
 
@@ -13,13 +14,10 @@ const readPlanTeam = (idPlanTeam) => {
 
     const onSuccess = (newPlanTeam) => { 
       
-      
       dispatch( replaceData("planTeam", newPlanTeam) );  // 이게 먼저 돼고, 아래 loading, ready 수정해 주어야 한다!!!
       
       dispatch( replaceReady("planTeam", true) );
       dispatch( replaceLoading("planTeam", false) ); 
-      
-      return;
     } 
 
 
@@ -28,13 +26,7 @@ const readPlanTeam = (idPlanTeam) => {
       dispatch( replaceReady("planTeam", false) );
       dispatch( replaceLoading("planTeam", false) ); 
       
-      const idNotification = Date.now();
-      dispatch( addNotification("error", "Reading planTeam has failed", idNotification) );
-      setTimeout(
-        dispatch( removeNotification(idNotification) )
-        , 5000);
-      
-      return; 
+      addRemoveNotification("error", "Reading planTeam has failed", 4000);
     } 
 
 
@@ -43,9 +35,7 @@ const readPlanTeam = (idPlanTeam) => {
       dispatch( replaceReady("planTeam", false) );
       dispatch( replaceLoading("planTeam", true) ); 
       
-      const response = await axios.get( `${process.env.REACT_APP_URL_AHR}/PlanTeam/${idPlanTeam}`);
-      
-      
+      const response = await axios.get( `${process.env.REACT_APP_URL_AHR}/plan-team/${idPlanTeam}`);
       
       const newPlanTeam = response.data;
       
@@ -53,16 +43,10 @@ const readPlanTeam = (idPlanTeam) => {
       
       onSuccess(newPlanTeam);
   
-      return; 
-      
     } // try
     
     catch (error) { 
-      
       onError(error); 
-      
-      return; 
-      
     } //catch
 
   } 

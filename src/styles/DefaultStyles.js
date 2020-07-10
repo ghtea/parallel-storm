@@ -105,6 +105,8 @@ export const Div = styled.div`
   
   color: ${props => props.theme.color_strong};
   background-color: ${props => props.theme.COLOR_normal};
+  
+  /*font-weight: normal;  */
  
 	 cursor: pointer;
 	

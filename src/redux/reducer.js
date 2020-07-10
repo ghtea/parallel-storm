@@ -14,24 +14,32 @@ const stateInitial = {
     // foundamental 
     ready : {
       planTeam: false
-    },
+      ,cPlayerMmr: false
+    }
     
-    loading : {
+    ,loading : {
       planTeam: false
-      ,playerMmr: false
-    }, 
+      ,cPlayerMmr: false
+    }
     
-    working : {
-      putPlayerMmr: false
-    }, 
     
-    notification : [],
+    ,working : {
+      createPlan: false
+      ,putPlayerMmr: false
+    }
+    
+    ,notification : []
     
     
     // others
-    planTeam: {},
+    ,authority: "viewer" // "administrator"
     
-    themeName: "light"
+    ,idPlanTeam: ""
+    ,planTeam: {}
+    
+    ,cPlayerMmrEntry: {}
+    
+    ,themeName: "light"
     
   };
 

@@ -6,18 +6,29 @@ import axios from 'axios';
 import { NavLink, useParams } from 'react-router-dom';
 
 import { connect } from "react-redux";
-import readPlanTeam from "../redux/thunks/readPlanTeam";
+import readPlanTeam from "../../redux/thunks/readPlanTeam";
 // https://reacttraining.com/blog/react-router-v5-1/
 
-import {Div, Table, Tr, Td} from '../styles/DefaultStyles';
+import {Div, Table, Tr, Td} from '../../styles/DefaultStyles';
 
-import IconLoading from '../svgs/IconLoading'
-import IconInfo from '../svgs/IconInfo'
+import IconLoading from '../../svgs/IconLoading'
+import IconInfo from '../../svgs/IconInfo'
 
 // 이상하게 dotenv.config() 안해도 된다 (오히려 하면 에러 발생...)
 //dotenv.config() ;
 //dotenv.config({ path: path.join(__dirname, '../../.env') });
 
+const DivEntry = styled(Div)`
+  
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+`;
+
+const DivEntryTitle = styled(Div)`
+  font-size: 1.2rem;
+`
 
 const DivTableEntry = styled(Div)`
   
@@ -63,6 +74,8 @@ const DivRow = styled(Div)`
     
   }
 `
+
+
 
 
 const DivBattletag = styled(Div)`
@@ -112,7 +125,7 @@ const RowPlayer = ({_id}) => {
 
 
 
-const TableEntry = ({loading, ready, planTeam, readPlanTeam, notification}) => {
+const Entry = ({loading, ready, planTeam, readPlanTeam, notification}) => {
   
   let { idPlanTeam } = useParams();
   
@@ -125,16 +138,14 @@ const TableEntry = ({loading, ready, planTeam, readPlanTeam, notification}) => {
   })
   */
   
-
-  
   
   //console.log(process.env);
   return (
   
-  <>
+  <DivEntry>
     
+    <DivEntryTitle> Entry </DivEntryTitle>
     
-  
     { (loading.planTeam) &&   
     <DivIconLoading>
       <IconLoading 
@@ -159,9 +170,8 @@ const TableEntry = ({loading, ready, planTeam, readPlanTeam, notification}) => {
       </DivTableEntry>
     }
     
-  
-  
-  </>
+  </DivEntry>
+    
   )
 }
 
@@ -187,4 +197,4 @@ function mapDispatchToProps(dispatch) {
 
 
 // TableEntry 컴포넌트에서 redux의 state, dispatch 를 일부분 골라서 이용가능하게 된다
-export default connect(mapStateToProps, mapDispatchToProps)(TableEntry);
+export default connect(mapStateToProps, mapDispatchToProps)(Entry);

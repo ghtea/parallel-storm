@@ -16,6 +16,8 @@ import {Div, Input, Button} from '../styles/DefaultStyles';
 import useInput from '../tools/hooks/useInput';
 import {getTimeStamp} from '../tools/vanilla/time';
 
+import IconWorking from '../svgs/IconWorking'
+
 //import {ahr} from '../api';
 /*
 dotenv.config({ 
@@ -60,7 +62,7 @@ const DivBody = styled(Div)`
 
 const DivInputAdd = styled(Div)`
 
-	height: 2rem;
+	height: 36px;
 	
 	display: flex;
   flex-direction: row;
@@ -86,12 +88,8 @@ const ButtonAddFirst = styled(Button)`
   height: 100%;
 `
 
-const DivCaution = styled(Div)`
-
-	margin-top: 5px;
-	
-	font-size: 0.9rem;
-	color: ${props => props.theme.color_weak};
+const DivIconWorking = styled(Div)`
+  
 `
 
 
@@ -192,7 +190,17 @@ const reqCreatePlanTeam = (idPlanTeam, battletag) => {
 		    <DivInputAdd>
 		      <InputBattletag {...inputBattletag} placeholder="battletag#1234" />
 		      
-		      {working.putPlayerMmr ? <ButtonAddFirst> working... </ButtonAddFirst> : <ButtonAddFirst onClick = {onClick_ButtonAddFirst} > Add </ButtonAddFirst> }
+          {working.putPlayerMmr ? 
+	        <ButtonAddFirst> 
+  	        <DivIconWorking>
+              <IconWorking 
+                width={"27px"}
+                height={"24px"}
+              />  
+            </DivIconWorking>
+	        </ButtonAddFirst> 
+	       : <ButtonAddFirst onClick = {onClick_ButtonAddFirst} > Add </ButtonAddFirst> }
+        
         
 		    </DivInputAdd>
 		    
