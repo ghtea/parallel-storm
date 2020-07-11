@@ -57,7 +57,10 @@ const DivBody = styled(Div)`
 `
 
 const DivInputAdd = styled(Div)`
-
+  
+  margin-top: 30px;
+  margin-bottom: 20px;
+  
 	height: 36px;
 	display: flex;
   flex-direction: row;
@@ -72,6 +75,11 @@ const DivInputAdd = styled(Div)`
 
 const InputBattletag = styled(Input)`
 	width: 160px;
+	height: 100%;
+`
+
+const InputName = styled(Input)`
+	width: 120px;
 	height: 100%;
 `
 
@@ -98,7 +106,7 @@ const reqPutPlayerMmr = (battletag) => {
 
 
 // only add battletag, not mmr (add mmr data later)
-const reqAddPlayerToListPlayerEntry = (idPlanTeam, battletag) => {  
+const reqAddPlayerToListPlayerEntry = (idPlanTeam, battletag, name, status) => {  
   return ({
     
     filter: {
@@ -108,7 +116,15 @@ const reqAddPlayerToListPlayerEntry = (idPlanTeam, battletag) => {
     
     ,update: {
       $addToSet: { 
-        listPlayerEntry: { _id: battletag }
+        listPlayerEntry: 
+        
+        { 
+          _id: battletag
+          , name: name
+          , status: status
+          
+        }
+        
     	}
   	}
   	
@@ -121,7 +137,7 @@ const reqAddPlayerToListPlayerEntry = (idPlanTeam, battletag) => {
 
 
 // 브라우저로 playerMmr데이터를 가져온 순간에 그걸 이용해서 데이터베이스 상의 planTeam 속 플레이어의 mmr Standard 추가/수정
-const reqPutPlayerMmrStandardToPlanTeam = (battletag, playerMmr, idPlanTeam) => {
+const reqPutPlayerMmrStandardToListPlayerEntry = (battletag, playerMmr, idPlanTeam) => {
   
   const listRegion = ["NA", "EU", "KR", "CN"];
   let newMmrStandard = {};
@@ -146,45 +162,54 @@ const reqPutPlayerMmrStandardToPlanTeam = (battletag, playerMmr, idPlanTeam) => 
 
 
 
-
+const FormAdd = () => {
+  
+}
 
 
  const AddingPlayer = ({
    
    workingPutPlayerMmr  
-   , authority
-   , planTeam
    
-   , addRemoveNotification
-   , replaceWorking
+    , loadingPlanTeam
+    , readyPlanTeam
+   
+    , authority
+    , planTeam
+   
+    , addRemoveNotification
+    , replaceWorking
    
  }) => {
 
   const inputBattletag = useInput("");
+  const inputName = useInput("");
   
-  
-  const onClick_ButtonAdd = async (event) => {
+  const onClick_ButtonAdd = async (event, statusPlayer) => {
+    
+    let playerMmr;
     
     if (inputBattletag.value) {
        
       const idPlanTeam = planTeam._id;
       const battletag = inputBattletag.value;
+      const name = inputName.value;
       
       let status = {};
       
       try {
         
         replaceWorking("putPlayerMmr", true)
-        await axios.put (`${process.env.REACT_APP_URL_AHR}/PlayerMmr`, reqPutPlayerMmr(battletag));
-        
+        playerMmr = await axios.put (`${process.env.REACT_APP_URL_AHR}/player-mmr`, reqPutPlayerMmr(battletag));
+        console.log(playerMmr);
         replaceWorking("putPlayerMmr", false)
-        addRemoveNotification("success", "player has been added!", 2000);
-        status.mmr = true; // mmr 작업이 잘되었다고 표시
+        addRemoveNotification("success", "player's mmr has been found!");
+        status.mmr = true; // mmr 작업이 잘되었다고 표시, rerendering 최소화하려고 이렇게 일시적인 변수 이용
         
       }
       catch(error) {
         replaceWorking("putPlayerMmr", false)
-        addRemoveNotification("error", "battletag is wrong", 4000);
+        addRemoveNotification("error", "could not found player");
 
         status.mmr = false; // mmr 작업이 정상적으로 끝나지 않았다고 표시 (실제로 에러가 발생하지 않는다)
       }
@@ -193,24 +218,59 @@ const reqPutPlayerMmrStandardToPlanTeam = (battletag, playerMmr, idPlanTeam) => 
       
       if (status.mmr === true) {
         try {
-          await axios.put( `${process.env.REACT_APP_URL_AHR}/PlanTeam`, reqAddPlayerToListPlayerEntry(idPlanTeam, battletag) ); 
+          replaceWorking("addPlayerToListPlayerEntry", true)
           
+          const requestBody = reqAddPlayerToListPlayerEntry(idPlanTeam, battletag, name, statusPlayer);
+          //console.log(requestBody)
+          await axios.put( `${process.env.REACT_APP_URL_AHR}/plan-team/${idPlanTeam}`, requestBody ); 
+          
+          replaceWorking("addPlayerToListPlayerEntry", false);
+          addRemoveNotification("success", "player has been added!");
+          status.add = true;
         }
         catch(error) {
           //addRemoveNotification("error", "api of Parallel Storm is not working", 5000);
+          
+          replaceWorking("addPlayerToListPlayerEntry", false)
+          addRemoveNotification("error", "could not add player");
+          
+          status.add = false;
           
         }
       }
       
       inputBattletag.setValue("");
+      inputName.setValue("");
+      
+      // 뒤에서 몰래 mmrStandard 작업
+      if (status.add === true) {
+        try {
+          replaceWorking("addPlayerMmrStandardToListPlayerEntry", true)
+          
+          const requestBody = reqPutPlayerMmrStandardToListPlayerEntry(battletag, playerMmr, idPlanTeam);
+          
+          console.log(requestBody); 
+          
+          await axios.put( `${process.env.REACT_APP_URL_AHR}/plan-team/${idPlanTeam}`, requestBody ); 
+          
+          replaceWorking("addPlayerMmrStandardToListPlayerEntry", false);
+          //addRemoveNotification("success", "player has been added!");
+        }
+        catch(error) {
+          //addRemoveNotification("error", "api of Parallel Storm is not working", 5000);
+          
+          replaceWorking("addPlayerMmrStandardToListPlayerEntry", false)
+          //addRemoveNotification("error", "could not add player");
+          
+        }
+      }
       
       // input value 초기화
       
     } else { // 애초에 battletag를 입력 안했다면.
-      console.log("type battletag first")
+      addRemoveNotification("error", "type battletag first");
     }
   }
-  
   
   
   
@@ -229,21 +289,42 @@ const reqPutPlayerMmrStandardToPlanTeam = (battletag, playerMmr, idPlanTeam) => 
 
 	    <DivInputAdd>
 	      <InputBattletag {...inputBattletag} placeholder="battletag#1234" />
+	      <InputName {...inputName} placeholder="name" />
 	      
-	      {workingPutPlayerMmr ? 
-	        <ButtonAdd> 
-  	        <DivIconWorking>
-              <IconWorking 
-                width={"27px"}
-                height={"24px"}
-              />  
+	      { (authority === "viewer") && workingPutPlayerMmr && 
+          <ButtonAdd> 
+            <DivIconWorking>
+              <IconWorking width={"27px"} height={"24px"} />  
             </DivIconWorking>
-	        </ButtonAdd> 
-	       : <ButtonAdd onClick = {onClick_ButtonAdd} > Add </ButtonAdd> }
+          </ButtonAdd>
+        }
+        
+        { (authority === "viewer") && !workingPutPlayerMmr &&
+          <ButtonAdd onClick = {()=> onClick_ButtonAdd("pending")} > Apply </ButtonAdd>
+        }
         
         
+        
+        { (authority === "administrator") && workingPutPlayerMmr && 
+          <ButtonAdd> 
+            <DivIconWorking>
+              <IconWorking width={"27px"} height={"24px"} />  
+            </DivIconWorking>
+          </ButtonAdd>
+        }
+        
+        { (authority === "administrator") && !workingPutPlayerMmr && 
+          <>
+            <ButtonAdd onClick = {(event)=> onClick_ButtonAdd(event, "confirmed")} > Add </ButtonAdd>
+          </>
+        }
+
         
 	    </DivInputAdd>
+	    
+	    <Div>
+	      * name is not necessary
+	    </Div>
 	    
    </DivBody>
   
@@ -261,6 +342,13 @@ function mapStateToProps(state) {
   return { 
    
     workingPutPlayerMmr: state.working.putPlayerMmr
+    
+    //,idPlanTeam: state.idPlanTeam
+    //,passwordPlanTeam: state.planTeam.password
+    
+    , loadingPlanTeam: state.loading.planTeam
+    , readyPlanTeam: state.ready.planTeam
+    
     , authority: state.authority
     , planTeam: state.planTeam
     

@@ -51,6 +51,8 @@ const DivIconLoading = styled(Div)`
 display:grid;
 */
 
+
+
 const DivRow = styled(Div)`
   display: grid;
   grid-template-columns: 1fr 60px ${30*4}px 40px 40px; // min entire = 400 - 20*2 = 360
@@ -90,23 +92,23 @@ const DivBattletag = styled(Div)`
 
 
 
-const RowPlayer = ({_id}) => {
+const RowPlayer = ({battletag, mmr, statusPlayer}) => {
   return (
     
     <DivRow >
       
       <DivBattletag> 
-        {_id}
+        {battletag}
       </DivBattletag>
       
       <Div> 
-        (mmr) 
+        {mmr}
       </Div>
        
       <Div> 
-        Tank, Bruiser
+        {statusPlayer}
       </Div>
-      
+        
       <Div> 
         A 
       </Div>
@@ -125,50 +127,32 @@ const RowPlayer = ({_id}) => {
 
 
 
-const Entry = ({loading, ready, planTeam, readPlanTeam, notification}) => {
-  
-  let { idPlanTeam } = useParams();
-  
-    
-  useEffect( () => { readPlanTeam(idPlanTeam) }, [notification]);
-  
-  /*
-  const {loading, response, error, refetch } = useAxios({
-    url: `https://ahr.avantwing.com/PlanTeam/${idPlanTeam}`
-  })
-  */
+const Entry = ({listPlayerEntry, workingAddPlayerToListPlayerEntry}) => {
   
   
-  //console.log(process.env);
   return (
   
   <DivEntry>
     
     <DivEntryTitle> Entry </DivEntryTitle>
     
-    { (loading.planTeam) &&   
-    <DivIconLoading>
-      <IconLoading 
-        width={"36px"}
-        height={"36px"}
-      />  
-    </DivIconLoading>
-    }
     
-    { (ready.planTeam) && 
+    <DivTableEntry> 
     
-      //<Div> { JSON.stringify( response["data"]["listPlayerEntry"] )} </Div>
-      <DivTableEntry> 
+    { !workingAddPlayerToListPlayerEntry &&
+      ( listPlayerEntry ).map( (player, i) =>
       
-      { 
-        ( planTeam["listPlayerEntry"] ).map( (player, i) => 
-          
-            < RowPlayer key={player._id} _id={player._id} /> )
-          
-      }
-        
-      </DivTableEntry>
+        < RowPlayer 
+          key={player._id} 
+          battletag={player._id} 
+          mmr={222} 
+          statusPlayer={player.status} 
+        /> 
+      )
     }
+      
+    </DivTableEntry>
+    
     
   </DivEntry>
     
@@ -182,16 +166,16 @@ const Entry = ({loading, ready, planTeam, readPlanTeam, notification}) => {
 
 function mapStateToProps(state) { 
   return { 
-    planTeam: state.planTeam
-    ,ready: state.ready 
-    ,loading: state.loading
-    ,notification: state.notification
+    listPlayerEntry: state.planTeam.listPlayerEntry
+    ,workingAddPlayerToListPlayerEntry: state.working.addPlayerToListPlayerEntry
+    //,readyPlanTeam: state.ready.planTeam
+    //,loading: state.loading
   }; 
 } 
 
 function mapDispatchToProps(dispatch) { 
   return { 
-    readPlanTeam: (idPlanTeam) => dispatch(readPlanTeam(idPlanTeam)) 
+    
   }; 
 }
 

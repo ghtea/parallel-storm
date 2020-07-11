@@ -31,13 +31,15 @@ const stateInitial = {
     ,working : {
       createPlan: false
       ,putPlayerMmr: false
+      ,addPlayerToListPlayerEntry: false
+      ,addPlayerMmrStandardToListPlayerEntry: false
     }
     
     ,notification : []
     
     
     // others
-    ,authority: "viewer" // "administrator"
+    ,authority: "" // "administrator" "viewer"
     
     ,idPlanTeam: ""
     ,planTeam: {}

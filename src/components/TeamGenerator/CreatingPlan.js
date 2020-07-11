@@ -138,8 +138,11 @@ const DivIconWorking = styled(Div)`
       addRemoveNotification("success", "new plan has been created!", 3000);
       //status.createPlan = true; //  작업이 잘되었다고 표시
       
+      // move after 2 seconds because of preparing time
       //window.location = `/team-generator/${idPlanTeam}?pw=${pwPlanTeam}`;
-      history.push(`/team-generator/${idPlanTeam}?pw=${pwPlanTeam}`);
+      //setTimeout( ()=>{history.push(`/team-generator/${idPlanTeam}?pw=${pwPlanTeam}`)} , 2000)
+      
+      history.push(`/team-generator/${idPlanTeam}?pw=${pwPlanTeam}`)
     }
     catch (error) {
       replaceWorking("createPlan", false)

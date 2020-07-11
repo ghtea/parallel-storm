@@ -29,14 +29,14 @@ const DivNotification = styled(Div)`
   	max-width: 360px;
   	height: auto;
   	
-  	top: 50px;
+  	top: 60px;
 	}
  
 	@media (min-width:  ${props => (props.theme.media.mid_big) }px) {
 		width: 360px;
 	  height: auto;
 	  
-	  top: 100px;
+	  top: 60px;
 	 
 		
 	 }

@@ -2,6 +2,7 @@ import React, {useEffect, useRef} from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
 import queryString from 'query-string';
+import { NavLink, useHistory } from 'react-router-dom';
 
 import { connect } from "react-redux";
 import readPlanTeam from "../redux/thunks/readPlanTeam";
@@ -13,6 +14,7 @@ import {replaceReady} from "../redux/store";
 import {replaceData} from "../redux/store";
 
 import addRemoveNotification from "../redux/thunks/addRemoveNotification";
+
 
 import {Div, Input, Button} from '../styles/DefaultStyles';
 //import Player from '../components/Player'
@@ -80,55 +82,70 @@ const TeamGenerator = ({
   , readyPlanTeam
   , idPlanTeam, passwordPlanTeam
   
-  , rerenderPlanTeam
+  , rerenderPlanTeamA
   
   , readPlanTeam
+  , replaceData
   , addRemoveNotification
 }) => {
   
   //const [rerender, SetRerender] = useState("");
+  const history = useHistory();
+  const isFirstRun = useRef(true);
+  
   const idPlanTeamTrying = match.params.idPlanTeam;
   
-  const isFirstRun = useRef(true);
   
   useEffect(()=>{
     readPlanTeam(idPlanTeamTrying);
+    
   }, []);
   
   
-  
+  // 처음 마운트 (loading X -> O) 는 무시, 뒤의 O -> X 일때 플랜 아이디 확인
   useEffect(()=>{
-    /*
-    if (idPlanTeamTrying && readyPlanTeam === false)  {  // (readyPlanTeam === false)
+    if (isFirstRun.current) {isFirstRun.current = false; return; }
+    
+    if (!loadingPlanTeam && !readyPlanTeam)  {  // (readyPlanTeam === false)
       replaceData("authority", "viewer");
-      addRemoveNotification("error", "plan id is wrong", 3000);
+      addRemoveNotification("error", "plan id is wrong");
+      
+      history.push(`/team-generator`);
     }
-    */
+  }, [loadingPlanTeam]);
+  
+  
+  // 처음 마운트는 무시, readyPlanTeam X -> O 일때 플랜 비번확인
+  useEffect(()=>{
+    
     const query = queryString.parse(location.search);
     const passwordPlanTeamTrying = query.pw;
     
-    if (isFirstRun.current) {isFirstRun.current = false; return; } // 처음 렌더링 넘어가기 (아직 스토어 업데이트 반영 잘 못해서..)
+    //if (isFirstRun.current) {isFirstRun.current = false; return; } // 처음 렌더링 넘어가기 (아직 스토어 업데이트 반영 잘 못해서..)
     // 참고1 https://stackoverflow.com/questions/53351517/react-hooks-skip-first-run-in-useeffect
     // 참고2 https://reactjs.org/docs/hooks-faq.html#is-there-something-like-instance-variables
     
     
     if (readyPlanTeam === true) {
       
-      if (passwordPlanTeamTrying === passwordPlanTeam) {
-          replaceData("authority", "administrator");
-          addRemoveNotification("success", "welcome administrator!", 3000);
-          
-        }
-        
-      // if password is wrong
-      else if (passwordPlanTeamTrying) {
+      if (!passwordPlanTeamTrying) {
         replaceData("authority", "viewer");
-        addRemoveNotification("error", "password is wrong", 3000);
+        addRemoveNotification("success", "welcome viewer!");
       }
+      
+      else if ( passwordPlanTeamTrying === passwordPlanTeam ) {
+        replaceData("authority", "administrator");
+        addRemoveNotification("success", "welcome administrator!");
+      }
+      
+      // 문제 정상적인 비번인데, 정보를 받는 과정에서 잠시동안 두 비번이 불일치 하는것으로 나와서 => plan 생성시에 조금 지연후에 이곳 페이지로 이동하는 등 시도 중
+      // 정안되면 비번 틀린거는 알람이 아니라 일반 표시로 하기..
+      // if password is wrong
       else {
         replaceData("authority", "viewer");
-        addRemoveNotification("success", "welcome viewer!", 3000);
+        addRemoveNotification("error", "password is wrong");
       }
+      
     }
     
   }, [readyPlanTeam] )
@@ -140,19 +157,33 @@ const TeamGenerator = ({
   } )
   
   
-  if (readyPlanTeam === false) {
+  if (loadingPlanTeam || !readyPlanTeam) {
     return (
       <DivTeamGenerator>
         
         <DivA>
-          incorrect id of plan
+          loading...
         </DivA>
+        
+        <DivB>
+          loading...
+        </DivB>
+      
+      
+        <DivC>
+          loading...
+        </DivC>
+      
+      
+        <DivD>
+          loading...
+        </DivD>
         
       </DivTeamGenerator>
     )
   } 
   
-  else {
+  else  { // (!loadingPlanTeam && readyPlanTeam) 
    return (
    <DivTeamGenerator>
       
@@ -166,7 +197,7 @@ const TeamGenerator = ({
     
     
       <DivC>
-        entry
+        <Entry />
       </DivC>
     
     
@@ -193,7 +224,7 @@ function mapStateToProps(state) {
     , loadingPlanTeam: state.loading.planTeam
     , readyPlanTeam: state.ready.planTeam
     
-    //, rerenderPlanTeam: state.rerender.planTeam
+    , rerenderPlanTeamA: state.rerender.planTeam.A
     
     //,loading: state.loading
     //,authority: state.authority
