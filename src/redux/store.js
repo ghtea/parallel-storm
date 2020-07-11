@@ -6,7 +6,7 @@ import dotenv from 'dotenv';
 
 import reducer from './reducer';
 
-
+const REPLACE_RERENDER = "REPLACE_RERENDER";
 const REPLACE_READY = "REPLACE_READY";
 const REPLACE_LOADING = "REPLACE_LOADING";
 const REPLACE_WORKING = "REPLACE_WORKING";
@@ -19,6 +19,13 @@ const REMOVE_NOTIFICATION = "REMOVE_NOTIFICATION";
 
 
 // fundamental action creator
+export const replaceRerender = (which) => {
+  return {
+    type: REPLACE_RERENDER
+    ,which: which
+  }
+}
+
 export const replaceReady = (which, true_false) => {
   return {
     type: REPLACE_READY,

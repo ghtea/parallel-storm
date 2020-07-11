@@ -2,7 +2,7 @@ import axios from 'axios';
 import dotenv from 'dotenv';
 
 import {REPLACE_READY, REPLACE_LOADING, REPLACE_DATA, ADD_NOTIFICATION, REMOVE_NOTIFICATION} from '../store';
-import {replaceReady, replaceLoading, replaceData, addNotification, removeNotification} from '../store'
+import {replaceRerender, replaceReady, replaceLoading, replaceData, addNotification, removeNotification} from '../store'
 import addRemoveNotification from "./addRemoveNotification";
 
 
@@ -15,18 +15,26 @@ const readPlanTeam = (idPlanTeam) => {
     const onSuccess = (newPlanTeam) => { 
       
       dispatch( replaceData("planTeam", newPlanTeam) );  // 이게 먼저 돼고, 아래 loading, ready 수정해 주어야 한다!!!
+      dispatch( replaceData("idPlanTeam", newPlanTeam._id) );
       
       dispatch( replaceReady("planTeam", true) );
       dispatch( replaceLoading("planTeam", false) ); 
+      
+      dispatch( replaceRerender("idPlanTeam") );
     } 
 
 
     const onError = (error) =>{ 
       
+      dispatch( replaceData("planTeam", {}) );
+      dispatch( replaceData("idPlanTeam", "") );
+      
       dispatch( replaceReady("planTeam", false) );
       dispatch( replaceLoading("planTeam", false) ); 
       
       addRemoveNotification("error", "Reading planTeam has failed", 4000);
+      
+      //dispatch( replaceRerender("planTeam") );
     } 
 
 
@@ -39,7 +47,6 @@ const readPlanTeam = (idPlanTeam) => {
       
       const newPlanTeam = response.data;
       
-      console.log(newPlanTeam);
       
       onSuccess(newPlanTeam);
   

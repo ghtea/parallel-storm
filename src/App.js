@@ -9,6 +9,7 @@ import Sub from "./routes/Sub";
 import Notification from "./routes/Notification";
 import Home from "./routes/Home";
 import TeamGenerator from "./routes/TeamGenerator";
+import TeamGeneratorDoor from "./routes/TeamGeneratorDoor";
 
 import {ThemeProvider } from 'styled-components';
 import themes from "./styles/themes"
@@ -85,7 +86,7 @@ const App = ({themeName, replaceTheme, notification}) => {
       <Switch >
       <Route path="/" exact={true} component={Home} />
       
-      <Route path="/team-generator" exact={true} component={TeamGenerator} />
+      <Route path="/team-generator" exact={true} component={TeamGeneratorDoor} />
       <Route path="/team-generator/:idPlanTeam"  component={TeamGenerator} />
       
       </Switch >

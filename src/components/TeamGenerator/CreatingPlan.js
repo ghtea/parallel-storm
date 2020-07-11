@@ -5,6 +5,8 @@ import styled from 'styled-components';
 import axios from 'axios';
 
 import { connect } from "react-redux";
+import readPlanTeam from "../../redux/thunks/readPlanTeam";
+
 import addRemoveNotification from "../../redux/thunks/addRemoveNotification";
 import {replaceWorking} from "../../redux/store";
 
@@ -64,15 +66,37 @@ const DivBody = styled(Div)`
 
 
 
-const ButtonCreatePlan = styled(Button)`
-  font-size: 1.2rem;
+
+const DivInput = styled(Div)`
   
-  width: 80px;
-  height: 40px;
-  
-  margin-top: 10px;
+  margin-top: 20px;
   margin-bottom: 10px;
+  
+	height: 36px;
+	display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  
+  & > * {
+  	margin-left: 5px;
+  	margin-right: 5px;
+  }
 `
+
+const InputTitle = styled(Input)`
+	width: 160px;
+	height: 100%;
+`
+
+const ButtonCreatePlan = styled(Button)`
+  width: 60px;
+  height: 100%;
+`
+
+
+
+
 
 const DivIconWorking = styled(Div)`
   
@@ -81,11 +105,10 @@ const DivIconWorking = styled(Div)`
 
 
 
- const CreatingPlan = ({addRemoveNotification, loading, ready, working, replaceWorking}) => {
+ const CreatingPlan = ({addRemoveNotification, loading, ready, working, readPlanTeam, replaceWorking}) => {
   
   //{value, onChange}
-  const inputPassword = useInput("");
-   
+  const inputTitle = useInput("");
   const history = useHistory(); 
   
   
@@ -94,7 +117,12 @@ const DivIconWorking = styled(Div)`
     
     const idPlanTeam = getTimeStamp();
     const pwPlanTeam = generatePassword(4);  // ex: "5y7o"
-     
+    
+    
+    let titlePlanTeam;
+    if (inputTitle.value) { titlePlanTeam = inputTitle.value }
+    else {titlePlanTeam = "(no title)"}
+    
     
     //let status = {};
     
@@ -103,17 +131,19 @@ const DivIconWorking = styled(Div)`
       await axios.post (`${process.env.REACT_APP_URL_AHR}/plan-team`, {
         _id: idPlanTeam
         ,password: pwPlanTeam
+        ,title: titlePlanTeam
       });
       
       replaceWorking("createPlan", false);
-      addRemoveNotification("success", "new plan has been created!", 4000);
+      addRemoveNotification("success", "new plan has been created!", 3000);
       //status.createPlan = true; //  작업이 잘되었다고 표시
       
+      //window.location = `/team-generator/${idPlanTeam}?pw=${pwPlanTeam}`;
       history.push(`/team-generator/${idPlanTeam}?pw=${pwPlanTeam}`);
     }
     catch (error) {
       replaceWorking("createPlan", false)
-      addRemoveNotification("error", "plan has not been created!", 4000);
+      addRemoveNotification("error", "plan has not been created!", 3000);
       //status.createPlan = false; //  작업이 정상적으로 끝나지 않았다고 표시 (실제로 에러가 발생하지 않는다)
     }
     
@@ -135,22 +165,23 @@ const DivIconWorking = styled(Div)`
     
     <DivBody>
 	   
-		  
-      {working.createPlan ? 
-      <ButtonCreatePlan> 
-      
-        <DivIconWorking>
-          <IconWorking 
-            width={"27px"}
-            height={"24px"}
-          />  
-        </DivIconWorking>
+		  <DivInput>
+	      <InputTitle {...inputTitle} placeholder="title of plan" />
+        {working.createPlan ? 
+        <ButtonCreatePlan> 
         
-      </ButtonCreatePlan> 
-      
-     : <ButtonCreatePlan onClick = {onClick_ButtonCreatePlan} > START </ButtonCreatePlan> }
+          <DivIconWorking>
+            <IconWorking 
+              width={"27px"}
+              height={"24px"}
+            />  
+          </DivIconWorking>
+          
+        </ButtonCreatePlan> 
         
-		    
+       : <ButtonCreatePlan onClick = {onClick_ButtonCreatePlan} > START </ButtonCreatePlan> }
+        
+		  </DivInput>
 	    
 	   </DivBody>
   
@@ -208,7 +239,8 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) { 
   return { 
-    addRemoveNotification: (situation, message, time) => dispatch( addRemoveNotification(situation, message, time) )
+    readPlanTeam: (idPlanTeam) => dispatch(readPlanTeam(idPlanTeam)) 
+    ,addRemoveNotification: (situation, message, time) => dispatch( addRemoveNotification(situation, message, time) )
     ,replaceWorking: (which, true_false) => dispatch(replaceWorking(which, true_false))
   }; 
 }

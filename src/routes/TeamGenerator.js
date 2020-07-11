@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useRef} from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
 import queryString from 'query-string';
@@ -6,6 +6,7 @@ import queryString from 'query-string';
 import { connect } from "react-redux";
 import readPlanTeam from "../redux/thunks/readPlanTeam";
 
+import {replaceRerender} from "../redux/store";
 import {replaceWorking} from "../redux/store";
 import {replaceLoading} from "../redux/store";
 import {replaceReady} from "../redux/store";
@@ -72,79 +73,86 @@ const DivD = styled(Div)`
 
 
 // https://ps.avantwing.com/team-generator/sss?ooo 들어가 보기
-const TeamGenerator = ({match, location, loading, ready, authority, replaceData, planTeam, readPlanTeam, addRemoveNotification, replaceReady, replaceLoading}) => {
+const TeamGenerator = ({
+  match, location
   
-  const onAccess = async () => {
-    
-    if (match.path === "/team-generator/:idPlanTeam") {
-      
-      const idPlanTeamTrying = match.params.idPlanTeam;
-
-      
-      try {
-        // below includes replaceLoading, etc...
-        readPlanTeam(idPlanTeamTrying);
-      }
-      catch (error) {
-        addRemoveNotification("error", "failed to load plan", 4000);
-      }
-      
+  , loadingPlanTeam
+  , readyPlanTeam
+  , idPlanTeam, passwordPlanTeam
+  
+  , rerenderPlanTeam
+  
+  , readPlanTeam
+  , addRemoveNotification
+}) => {
+  
+  //const [rerender, SetRerender] = useState("");
+  const idPlanTeamTrying = match.params.idPlanTeam;
+  
+  const isFirstRun = useRef(true);
+  
+  useEffect(()=>{
+    readPlanTeam(idPlanTeamTrying);
+  }, []);
+  
+  
+  
+  useEffect(()=>{
+    /*
+    if (idPlanTeamTrying && readyPlanTeam === false)  {  // (readyPlanTeam === false)
+      replaceData("authority", "viewer");
+      addRemoveNotification("error", "plan id is wrong", 3000);
     }
-  }  
-  
-  useEffect( () => {onAccess()}, []);
-  
-  
-  // ready.planTeam 이 변동되었을 때, ready.planTeam === true 인지 확인하고, 맞으면 비밀번호 확인
-  const onPlanTeam = async () => {
+    */
+    const query = queryString.parse(location.search);
+    const passwordPlanTeamTrying = query.pw;
     
-    if (ready.planTeam === true) {
-      const idPlanTeamTrying = match.params.idPlanTeam;
-      const query = queryString.parse(location.search);
-      const passwordPlanTeamTrying = query.pw;
-  
-      replaceData("idPlanTeam", idPlanTeamTrying);
+    if (isFirstRun.current) {isFirstRun.current = false; return; } // 처음 렌더링 넘어가기 (아직 스토어 업데이트 반영 잘 못해서..)
+    // 참고1 https://stackoverflow.com/questions/53351517/react-hooks-skip-first-run-in-useeffect
+    // 참고2 https://reactjs.org/docs/hooks-faq.html#is-there-something-like-instance-variables
     
+    
+    if (readyPlanTeam === true) {
       
-      // if password is right
-      if (passwordPlanTeamTrying === planTeam.password) {
-        replaceData("authority", "administrator");
-        addRemoveNotification("success", "welcome administrator!", 2000);
-      }
-      
+      if (passwordPlanTeamTrying === passwordPlanTeam) {
+          replaceData("authority", "administrator");
+          addRemoveNotification("success", "welcome administrator!", 3000);
+          
+        }
+        
       // if password is wrong
+      else if (passwordPlanTeamTrying) {
+        replaceData("authority", "viewer");
+        addRemoveNotification("error", "password is wrong", 3000);
+      }
       else {
         replaceData("authority", "viewer");
-        addRemoveNotification("error", "password is wrong", 4000);
+        addRemoveNotification("success", "welcome viewer!", 3000);
       }
     }
     
-  }  
-  
-  useEffect( () => {onPlanTeam()}, [ready.planTeam]);
-  
-  
-  //console.log(`idPlanTeam: ${idPlanTeam}`)
-  if (match.path === "/team-generator") {
+  }, [readyPlanTeam] )
     
+    
+    
+  useEffect(()=>{
+    console.log("rerendered")
+  } )
+  
+  
+  if (readyPlanTeam === false) {
     return (
-    
-    <DivTeamGenerator>
-      
-      <DivA>
-        <CreatingPlan /> 
-      </DivA>
-      
-      <DivB>
-        <SearchingPlan />
-      </DivB>
-    
-    </DivTeamGenerator>
+      <DivTeamGenerator>
+        
+        <DivA>
+          incorrect id of plan
+        </DivA>
+        
+      </DivTeamGenerator>
     )
-  } // if
-    
-    
-  else if (match.path === "/team-generator/:idPlanTeam") { 
+  } 
+  
+  else {
    return (
    <DivTeamGenerator>
       
@@ -153,7 +161,7 @@ const TeamGenerator = ({match, location, loading, ready, authority, replaceData,
       </DivA>
       
       <DivB>
-        {authority === "administrator" ? "welcome administrator" : "hi viewer" }
+        option 
       </DivB>
     
     
@@ -168,7 +176,8 @@ const TeamGenerator = ({match, location, loading, ready, authority, replaceData,
     
     </DivTeamGenerator>
     )
-  } // else
+  }
+
  
     
 } //TeamGenerator
@@ -177,16 +186,24 @@ const TeamGenerator = ({match, location, loading, ready, authority, replaceData,
 
 function mapStateToProps(state) { 
   return { 
-    planTeam: state.planTeam
-    ,ready: state.ready 
-    ,loading: state.loading
-    ,authority: state.authority
+    
+    idPlanTeam: state.idPlanTeam
+    ,passwordPlanTeam: state.planTeam.password
+    
+    , loadingPlanTeam: state.loading.planTeam
+    , readyPlanTeam: state.ready.planTeam
+    
+    //, rerenderPlanTeam: state.rerender.planTeam
+    
+    //,loading: state.loading
+    //,authority: state.authority
   }; 
 } 
 
 function mapDispatchToProps(dispatch) { 
   return { 
     readPlanTeam: (idPlanTeam) => dispatch(readPlanTeam(idPlanTeam)) 
+    //,replaceRerender: (which) => dispatch(replaceRerender(which))
     ,replaceData: (which, newData) => dispatch(replaceData(which, newData))
     ,replaceLoading: (which, true_false) => dispatch(replaceLoading(which, true_false)) 
     ,replaceReady: (which, true_false) => dispatch(replaceReady(which, true_false)) 

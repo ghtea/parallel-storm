@@ -95,16 +95,16 @@ const reqPutPlayerMmr = (battletag) => {
 // "listPlayerEntry._id": { $ne: battletag }  }   //very important  // https://stackoverflow.com/questions/26328891/push-value-to-array-if-key-does-not-exist-mongoose
 
 
-// https://stackoverflow.com/questions/26328891/push-value-to-array-if-key-does-not-exist-mongoose
-// https://stackoverflow.com/questions/15921700/mongoose-unique-values-in-nested-array-of-objects
+
+
+// only add battletag, not mmr (add mmr data later)
 const reqAddPlayerToListPlayerEntry = (idPlanTeam, battletag) => {  
   return ({
     
     filter: {
       _id: idPlanTeam,
     	"listPlayerEntry._id": { $ne: battletag }  // it's important! => 나중에 기존에 이미 저장되있던 유저 정보를 통째로 replace 하지 않도록!
-    	// 이거 혹시 큰 문제 있을 수 있다!!! <= api 상에서 filter 만족하지 않으면 바로 추가하는 옵션 설정했는데...!!!
-    }		
+    }
     
     ,update: {
       $addToSet: { 
@@ -114,6 +114,9 @@ const reqAddPlayerToListPlayerEntry = (idPlanTeam, battletag) => {
   	
   })
 };
+// https://stackoverflow.com/questions/26328891/push-value-to-array-if-key-does-not-exist-mongoose
+// https://stackoverflow.com/questions/15921700/mongoose-unique-values-in-nested-array-of-objects
+
 
 
 
@@ -130,14 +133,12 @@ const reqPutPlayerMmrStandardToPlanTeam = (battletag, playerMmr, idPlanTeam) => 
   return ({
     
     filter: {
-      _id: idPlanTeam,
-    	"listPlayerEntry._id": { $ne: battletag }  // it's important!
+      _id: idPlanTeam
+      , "listPlayerEntry._id": battletag
     }		
     
     ,update: {
-      $addToSet: { 
-        listPlayerEntry: { _id: battletag }
-    	}
+      $set: { "listPlayerEntry.$.mmr" : newMmrStandard }
   	}
   	
   })
@@ -146,17 +147,27 @@ const reqPutPlayerMmrStandardToPlanTeam = (battletag, playerMmr, idPlanTeam) => 
 
 
 
- const AddingPlayer = ({idPlanTeam, loading, ready, readPlanTeam, addRemoveNotification, notification, replaceWorking, working}) => {
+
+
+ const AddingPlayer = ({
+   
+   workingPutPlayerMmr  
+   , authority
+   , planTeam
+   
+   , addRemoveNotification
+   , replaceWorking
+   
+ }) => {
 
   const inputBattletag = useInput("");
-  
   
   
   const onClick_ButtonAdd = async (event) => {
     
     if (inputBattletag.value) {
        
-        
+      const idPlanTeam = planTeam._id;
       const battletag = inputBattletag.value;
       
       let status = {};
@@ -207,9 +218,9 @@ const reqPutPlayerMmrStandardToPlanTeam = (battletag, playerMmr, idPlanTeam) => 
   <DivAddingPlayer>
         
     <DivHeader>
-      <DivTitle> Team Generator </DivTitle>
+      <DivTitle> {`${planTeam.title}`} </DivTitle>
       
-      <DivId> {`id: ${idPlanTeam}`} </DivId>
+      <DivId> {`id: ${planTeam._id}`} </DivId>
     </DivHeader>
     
     
@@ -219,7 +230,7 @@ const reqPutPlayerMmrStandardToPlanTeam = (battletag, playerMmr, idPlanTeam) => 
 	    <DivInputAdd>
 	      <InputBattletag {...inputBattletag} placeholder="battletag#1234" />
 	      
-	      {working.putPlayerMmr ? 
+	      {workingPutPlayerMmr ? 
 	        <ButtonAdd> 
   	        <DivIconWorking>
               <IconWorking 
@@ -248,16 +259,18 @@ const reqPutPlayerMmrStandardToPlanTeam = (battletag, playerMmr, idPlanTeam) => 
 
 function mapStateToProps(state) { 
   return { 
-    ready: state.ready 
-    ,loading: state.loading
-    ,working: state.working
+   
+    workingPutPlayerMmr: state.working.putPlayerMmr
+    , authority: state.authority
+    , planTeam: state.planTeam
+    
   }; 
 } 
 
 function mapDispatchToProps(dispatch) { 
   return { 
-    readPlanTeam: (idPlanTeam) => dispatch(readPlanTeam(idPlanTeam)) 
-    ,addRemoveNotification: (situation, message, time) => dispatch( addRemoveNotification(situation, message, time) )
+    
+    addRemoveNotification: (situation, message, time) => dispatch( addRemoveNotification(situation, message, time) )
     ,replaceWorking: (which, true_false) => dispatch(replaceWorking(which, true_false))
   }; 
 }

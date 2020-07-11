@@ -1,3 +1,6 @@
+import {getTimeStamp} from '../tools/vanilla/time'
+
+const REPLACE_RERENDER = "REPLACE_RERENDER";
 const REPLACE_READY = "REPLACE_READY";
 const REPLACE_LOADING = "REPLACE_LOADING";
 const REPLACE_WORKING = "REPLACE_WORKING";
@@ -12,14 +15,16 @@ const REMOVE_NOTIFICATION = "REMOVE_NOTIFICATION";
 const stateInitial = { 
     
     // foundamental 
-    ready : {
+    rerender: {
+      planTeam: ""
+    }
+    
+    ,ready : {
       planTeam: false
-      ,cPlayerMmr: false
     }
     
     ,loading : {
       planTeam: false
-      ,cPlayerMmr: false
     }
     
     
@@ -37,7 +42,6 @@ const stateInitial = {
     ,idPlanTeam: ""
     ,planTeam: {}
     
-    ,cPlayerMmrEntry: {}
     
     ,themeName: "light"
     
@@ -55,11 +59,36 @@ const reducer = (
     
   switch (action.type) {
     
-    case REPLACE_DATA:
+    case REPLACE_RERENDER:
       return {
       	...state, 
-      	[action.which]: action.data
+      	rerender: {
+      	  ...state.rerender
+      	  ,[action.which]: getTimeStamp()
+      	}
       };
+      
+    case REPLACE_DATA:
+      
+      if ( (!!action.data) && (action.data.constructor === Array) ) {
+        return {
+      	...state, 
+      	[action.which]: [...action.data]
+        }
+      }
+      
+      else if ( (!!action.data) && (action.data.constructor === Object) ) {
+        return {
+      	...state, 
+      	[action.which]: {...action.data}
+        }
+      }
+      else {
+        return {
+        	...state, 
+        	[action.which]: action.data
+        }
+      }
       
     case REPLACE_READY:
       return {
