@@ -77,7 +77,7 @@ const DivD = styled(Div)`
 // https://ps.avantwing.com/team-generator/sss?ooo 들어가 보기
 const TeamGenerator = ({
   match, location
-  
+  , authority
   , loadingPlanTeam
   , readyPlanTeam
   , idPlanTeam, passwordPlanTeam
@@ -95,10 +95,8 @@ const TeamGenerator = ({
   
   const idPlanTeamTrying = match.params.idPlanTeam;
   
-  
   useEffect(()=>{
     readPlanTeam(idPlanTeamTrying);
-    
   }, []);
   
   
@@ -107,7 +105,7 @@ const TeamGenerator = ({
     if (isFirstRun.current) {isFirstRun.current = false; return; }
     
     if (!loadingPlanTeam && !readyPlanTeam)  {  // (readyPlanTeam === false)
-      replaceData("authority", "viewer");
+      replaceData("authority", "unknown");
       addRemoveNotification("error", "plan id is wrong");
       
       history.push(`/team-generator`);
@@ -126,7 +124,7 @@ const TeamGenerator = ({
     // 참고2 https://reactjs.org/docs/hooks-faq.html#is-there-something-like-instance-variables
     
     
-    if (readyPlanTeam === true) {
+    if (!loadingPlanTeam && readyPlanTeam && (authority === "unknown") ) {
       
       if (!passwordPlanTeamTrying) {
         replaceData("authority", "viewer");
@@ -142,13 +140,13 @@ const TeamGenerator = ({
       // 정안되면 비번 틀린거는 알람이 아니라 일반 표시로 하기..
       // if password is wrong
       else {
-        replaceData("authority", "viewer");
+        replaceData("authority", "unknown");
         addRemoveNotification("error", "password is wrong");
       }
       
     }
     
-  }, [readyPlanTeam] )
+  }, [loadingPlanTeam, readyPlanTeam] )
     
     
     
@@ -217,8 +215,9 @@ const TeamGenerator = ({
 
 function mapStateToProps(state) { 
   return { 
+    authority: state.authority
     
-    idPlanTeam: state.idPlanTeam
+    ,idPlanTeam: state.idPlanTeam
     ,passwordPlanTeam: state.planTeam.password
     
     , loadingPlanTeam: state.loading.planTeam

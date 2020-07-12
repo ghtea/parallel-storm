@@ -30,6 +30,8 @@ const stateInitial = {
     
     ,working : {
       createPlan: false
+      
+      ,addPlayer: false
       ,putPlayerMmr: false
       ,addPlayerToListPlayerEntry: false
       ,addPlayerMmrStandardToListPlayerEntry: false
@@ -39,7 +41,7 @@ const stateInitial = {
     
     
     // others
-    ,authority: "" // "administrator" "viewer"
+    ,authority: "unknown" // "administrator" "viewer"
     
     ,idPlanTeam: ""
     ,planTeam: {}

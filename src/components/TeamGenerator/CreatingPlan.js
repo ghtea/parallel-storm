@@ -116,7 +116,7 @@ const DivIconWorking = styled(Div)`
   const onClick_ButtonCreatePlan = async (event) => {
     
     const idPlanTeam = getTimeStamp();
-    const pwPlanTeam = generatePassword(4);  // ex: "5y7o"
+    const pwPlanTeam = generatePassword(8);  // ex: "5y7o"
     
     
     let titlePlanTeam;

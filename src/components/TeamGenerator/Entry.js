@@ -93,6 +93,9 @@ const DivBattletag = styled(Div)`
 
 
 const RowPlayer = ({battletag, mmr, statusPlayer}) => {
+  
+  useEffect(()=>{console.log("Each row has been rerendered")})
+  
   return (
     
     <DivRow >
@@ -127,7 +130,9 @@ const RowPlayer = ({battletag, mmr, statusPlayer}) => {
 
 
 
-const Entry = ({listPlayerEntry, workingAddPlayerToListPlayerEntry}) => {
+const Entry = ({listPlayerEntry}) => {
+  
+  useEffect(()=>{console.log("Entry has been rerendered")})
   
   
   return (
@@ -139,13 +144,13 @@ const Entry = ({listPlayerEntry, workingAddPlayerToListPlayerEntry}) => {
     
     <DivTableEntry> 
     
-    { !workingAddPlayerToListPlayerEntry &&
+    { 
       ( listPlayerEntry ).map( (player, i) =>
       
         < RowPlayer 
-          key={player._id} 
+          key={ `${player._id}_${(new Date().getTime()).toString()}` }
           battletag={player._id} 
-          mmr={222} 
+          mmr={player.mmr.standard.NA} 
           statusPlayer={player.status} 
         /> 
       )
@@ -166,8 +171,8 @@ const Entry = ({listPlayerEntry, workingAddPlayerToListPlayerEntry}) => {
 
 function mapStateToProps(state) { 
   return { 
-    listPlayerEntry: state.planTeam.listPlayerEntry
-    ,workingAddPlayerToListPlayerEntry: state.working.addPlayerToListPlayerEntry
+    listPlayerEntry: [...state.planTeam.listPlayerEntry]
+    //,workingAddPlayerToListPlayerEntry: state.working.addPlayerToListPlayerEntry
     //,readyPlanTeam: state.ready.planTeam
     //,loading: state.loading
   }; 

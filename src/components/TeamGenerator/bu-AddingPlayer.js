@@ -93,12 +93,97 @@ const DivIconWorking = styled(Div)`
 `
 
 
+// REQUSTS
+const reqPutPlayerMmr = (battletag) => {  
+  return {
+    filter: {_id: battletag }
+  }
+};
 
+// "listPlayerEntry._id": { $ne: battletag }  }   //very important  // https://stackoverflow.com/questions/26328891/push-value-to-array-if-key-does-not-exist-mongoose
+
+
+
+
+// only add battletag, not mmr (add mmr data later)
+const reqAddPlayerToListPlayerEntry = (idPlanTeam, battletag, name, status) => {  
+  return ({
+    
+    filter: {
+      _id: idPlanTeam,
+    	"listPlayerEntry._id": { $ne: battletag }  // it's important! => 나중에 기존에 이미 저장되있던 유저 정보를 통째로 replace 하지 않도록!
+    }
+    
+    ,update: {
+      $addToSet: { 
+        listPlayerEntry: 
+        
+        { 
+          _id: battletag
+          , name: name
+          , status: status
+          
+        }
+        
+    	}
+  	}
+  	
+  })
+};
+// https://stackoverflow.com/questions/26328891/push-value-to-array-if-key-does-not-exist-mongoose
+// https://stackoverflow.com/questions/15921700/mongoose-unique-values-in-nested-array-of-objects
+
+
+
+
+// 브라우저로 playerMmr데이터를 가져온 순간에 그걸 이용해서 데이터베이스 상의 planTeam 속 플레이어의 mmr Standard 추가/수정
+const reqPutPlayerMmrStandardToListPlayerEntry = (battletag, playerMmr, idPlanTeam) => {
+  
+  console.log("reqPut..standard...")
+  const listRegion = ["NA", "EU", "KR", "CN"];
+  
+  let newMmr = {
+    standard: {}
+    ,manual: {}
+  };
+  
+  newMmr["standard"]["NA"] = playerMmr["NA"]["STANDARD"];
+  
+  /*
+  listRegion.map((element, i) => {
+    newMmr["standard"][element]  = playerMmr[element]["STANDARD"];
+  });
+  */
+  
+  console.log(newMmr);
+  
+  return (
+    {
+    
+      filter: {
+        _id: idPlanTeam
+        , "listPlayerEntry._id": battletag
+      }		
+      
+      ,update: {
+        $set: { "listPlayerEntry.$.mmr" : newMmr }
+    	}
+  	
+    }
+  )
+};
+
+
+
+const FormAdd = () => {
+  
+}
 
 
  const AddingPlayer = ({
    
-  workingAddPlayer 
+  workingAddPlayer
+  , workingPutPlayerMmr  
   
   , loadingPlanTeam
   , readyPlanTeam
@@ -115,71 +200,40 @@ const DivIconWorking = styled(Div)`
   const inputBattletag = useInput("");
   const inputName = useInput("");
   
+  let idPlanTeam = planTeam._id;
+  let battletag = inputBattletag.value;
+  let name = inputName.value;
+  let playerMmr;
   
-  // heroes profile 에서 mmr 가져오기, cPlanTeam 에 플레이어 추가, cPlanTeam 의 플레이의 mmr 추가 모두
   const onClick_ButtonAdd = async (event, statusPlayer) => {
     
-    let battletag = inputBattletag.value;
-    let name = inputName.value;
-    const idPlanTeam = planTeam._id;
-    
-    //console.log(battletag, name, idPlanTeam, statusPlayer)
     
     if (inputBattletag.value) {
+       
+      
+      let status = {};
       
       try {
-        
         replaceWorking("addPlayer", true) // playermmr 옮기고, playerEntry 를 plan에 추가하고, 이후에 mmrStandar 도 추가하는 전체 작업 시작
         
-        // /add/:battletag/:idPlanTeam/:status
-        await axios.put (`${process.env.REACT_APP_URL_AHR}/player/add`,
-          {
-            battletag: battletag
-            , idPlanTeam: idPlanTeam
-            , name: name
-            , status: statusPlayer
-          }
-        );
-        
-        replaceWorking("addPlayer", false)
-        addRemoveNotification("success", "player has been added!");
-        
-        inputBattletag.setValue("");
-        inputName.setValue("");
-        
-        readPlanTeam(idPlanTeam);  // important! need new data in redux for rernedering (ex: entry)
-
-        
-      } //try
-      
-      catch(error) {
-        replaceWorking("addPlayer", false)
-        addRemoveNotification("error", "check your battletag");
-        // 1. battlelog 잘못입력
-        // 2. 게임수가 극히 적은 battletag
-        // 3. 내 백엔드 문제
+        replaceWorking("putPlayerMmr", true)
+        const data = await axios.put (`${process.env.REACT_APP_URL_AHR}/player-mmr`, reqPutPlayerMmr(battletag));
+        playerMmr = {...data};
+        console.log(playerMmr)
+        replaceWorking("putPlayerMmr", false)
+        addRemoveNotification("success", "player's mmr has been found!");
+        status.mmr = true; // mmr 작업이 잘되었다고 표시, rerendering 최소화하려고 이렇게 일시적인 변수 이용
         
       }
+      catch(error) {
+        replaceWorking("putPlayerMmr", false)
+        addRemoveNotification("error", "could not found player");
+
+        status.mmr = false; // mmr 작업이 정상적으로 끝나지 않았다고 표시 (실제로 에러가 발생하지 않는다)
+      }
       
-    } else { // 애초에 battletag를 입력 안했다면.
-      addRemoveNotification("error", "type battletag first");
-    }
-    
-   
-  }
-  
-  /*
-  // workingAddPlayer 가 O -> X 로 바뀌었을 때! <= 예상과 다르게 무한반복된다...
-  useEffect(()=>{
-    if(!workingAddPlayer){
-      const idPlanTeam = planTeam._id;
-      readPlanTeam(idPlanTeam);  // important! need new data in redux for rernedering (ex: entry)
-    }
-  }, [workingAddPlayer]
-  )
-  */
-  
-  /*
+      
+      
       if (status.mmr === true) {
         try {
           replaceWorking("addPlayerToListPlayerEntry", true)
@@ -208,13 +262,12 @@ const DivIconWorking = styled(Div)`
       }
       
       
-    
-  */
+    } else { // 애초에 battletag를 입력 안했다면.
+      addRemoveNotification("error", "type battletag first");
+    }
+  }
   
-
   
-  
-  /*
   // using async in useEffect is special case (need self invoking)
   // https://stackoverflow.com/questions/53332321/react-hook-warnings-for-async-function-in-useeffect-useeffect-function-must-ret
   useEffect( () => { (async ()=>{
@@ -258,7 +311,7 @@ const DivIconWorking = styled(Div)`
   }) (); // self invoking
     }, [workingPutPlayerMmr, playerMmr]
   )
-  */
+  
   
   return (
   <DivAddingPlayer>
@@ -277,7 +330,7 @@ const DivIconWorking = styled(Div)`
 	      <InputBattletag {...inputBattletag} placeholder="battletag#1234" />
 	      <InputName {...inputName} placeholder="name" />
 	      
-	      { (authority === "viewer") && workingAddPlayer && 
+	      { (authority === "viewer") && workingPutPlayerMmr && 
           <ButtonAdd> 
             <DivIconWorking>
               <IconWorking width={"27px"} height={"24px"} />  
@@ -285,13 +338,13 @@ const DivIconWorking = styled(Div)`
           </ButtonAdd>
         }
         
-        { (authority === "viewer") && !workingAddPlayer &&
+        { (authority === "viewer") && !workingPutPlayerMmr &&
           <ButtonAdd onClick = { async (event)=> onClick_ButtonAdd(event, "pending")} > Apply </ButtonAdd>
         }
         
         
         
-        { (authority === "administrator") && workingAddPlayer && 
+        { (authority === "administrator") && workingPutPlayerMmr && 
           <ButtonAdd> 
             <DivIconWorking>
               <IconWorking width={"27px"} height={"24px"} />  
@@ -299,9 +352,9 @@ const DivIconWorking = styled(Div)`
           </ButtonAdd>
         }
         
-        { (authority === "administrator") && !workingAddPlayer && 
+        { (authority === "administrator") && !workingPutPlayerMmr && 
           <>
-            <ButtonAdd onClick = {  (event)=> onClick_ButtonAdd(event, "confirmed")} > Add </ButtonAdd>
+            <ButtonAdd onClick = { async (event)=> onClick_ButtonAdd(event, "confirmed")} > Add </ButtonAdd>
           </>
         }
 
@@ -328,7 +381,7 @@ function mapStateToProps(state) {
   return { 
    
     workingAddPlayer: state.working.addPlayer
-    //,workingPutPlayerMmr: state.working.putPlayerMmr
+    ,workingPutPlayerMmr: state.working.putPlayerMmr
     
     //,idPlanTeam: state.idPlanTeam
     //,passwordPlanTeam: state.planTeam.password
