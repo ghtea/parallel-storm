@@ -15,7 +15,6 @@ import {ThemeProvider } from 'styled-components';
 import themes from "./styles/themes"
 import { GlobalStyle, Div} from './styles/DefaultStyles';
 
-import './styles/font.css';
 
 // env 사용할때 각변수 앞에 REACT_APP_ 를 붙혀야한다 https://hello-bryan.tistory.com/134
 

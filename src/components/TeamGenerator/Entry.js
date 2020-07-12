@@ -28,6 +28,7 @@ const DivEntry = styled(Div)`
 
 const DivEntryTitle = styled(Div)`
   font-size: 1.2rem;
+  font-weight: bold;
 `
 
 const DivTableEntry = styled(Div)`
@@ -51,18 +52,41 @@ const DivIconLoading = styled(Div)`
 display:grid;
 */
 
+const DivRowHeader = styled(Div)`
+  color: ${props => props.theme.color_weak};
+
+  display: grid;
+  grid-template-columns: 1fr 60px ${30*4}px 40px 40px; /* min entire = 400 - 20*2 = 360 */
+  grid-template-rows: 24px;
+  
+  //background-color: ${props => props.theme.COLOR_normal};
+   
+  //border-radius:  8px;
+`
 
 
-const DivRow = styled(Div)`
+const DivRowPlayer = styled(Div)`
   display: grid;
   grid-template-columns: 1fr 60px ${30*4}px 40px 40px; // min entire = 400 - 20*2 = 360
+  grid-template-rows: 40px;
+  
+  border-bottom: 1px solid ${props => props.theme.color_very_weak};
+  &:last-child {
+    border-bottom-style: none;
+  }
+`
+
+/*
+const DivRowPlayer = styled(Div)`
+  display: grid;
+  grid-template-columns: 1fr 60px ${30*4}px 40px 40px; 
   grid-template-rows: 40px;
   
   background-color: ${props => props.theme.COLOR_normal};
   border-bottom: 1px solid ${props => props.theme.color_very_weak};
   
   
-  &:nth-child(1) {
+  &:nth-child(2) {
     border-top-left-radius:    10px;
     border-top-right-radius:   10px;
     
@@ -75,13 +99,17 @@ const DivRow = styled(Div)`
     border-bottom-style: none;
     
   }
+
+*/
+
+
+const DivBattletagHeader = styled(Div)`
+  padding-left: 10px;
+  text-algin: left;
 `
 
-
-
-
 const DivBattletag = styled(Div)`
-  padding-left: 5px;
+  padding-left: 10px;
   display: block;
   text-algin: left;
   overflow: hidden;
@@ -98,7 +126,7 @@ const RowPlayer = ({battletag, mmr, statusPlayer}) => {
   
   return (
     
-    <DivRow >
+    <DivRowPlayer >
       
       <DivBattletag> 
         {battletag}
@@ -123,7 +151,7 @@ const RowPlayer = ({battletag, mmr, statusPlayer}) => {
         /> 
       </Div>
          
-    </DivRow>
+    </DivRowPlayer>
   )
 }
 
@@ -143,6 +171,15 @@ const Entry = ({listPlayerEntry}) => {
     
     
     <DivTableEntry> 
+    
+    <DivRowHeader> 
+      <DivBattletagHeader>  battletag </DivBattletagHeader>
+      <Div> mmr </Div>
+      <Div> (status) </Div>
+      <Div> (group) </Div>
+       
+      <Div> </Div>
+    </DivRowHeader>
     
     { 
       ( listPlayerEntry ).map( (player, i) =>

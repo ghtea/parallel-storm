@@ -41,6 +41,7 @@ const DivHeader = styled(Div)`
 
 const DivTitle = styled(Div)`
   font-size: 1.6rem;
+  font-weight: bold;
 `
 const DivId = styled(Div)`
   color: ${props => props.theme.color_weak};

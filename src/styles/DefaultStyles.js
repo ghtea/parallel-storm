@@ -4,11 +4,14 @@ import styled, {createGlobalStyle} from 'styled-components';
 
  export const GlobalStyle = createGlobalStyle`
  
+ 
   html, body, #root {
   
     background-color: ${props => props.theme.COLOR_bg};
     color: ${props => props.theme.color_normal};
     
+    font-family: 'Noto Sans KR', 'Noto Sans JP', sans-serif;
+    font-size: 16px;
     
     width: 100%;
     min-width: 300px !important;
