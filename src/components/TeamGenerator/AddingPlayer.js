@@ -1,5 +1,5 @@
 import dotenv from 'dotenv';
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import styled from 'styled-components';
 
 import axios from 'axios';
@@ -19,11 +19,13 @@ import useInput from '../../tools/hooks/useInput';
 import {getTimeStamp} from '../../tools/vanilla/time';
 
 import IconWorking from '../../svgs/IconWorking'
+import IconCopy from '../../svgs/IconCopy'
+
+import {CopyToClipboard} from 'react-copy-to-clipboard';
 
 
 // STYLES
 const DivAddingPlayer = styled(Div)`
-  grid-area: add;
   height:100%;
   
   display: flex;
@@ -43,9 +45,47 @@ const DivTitle = styled(Div)`
   font-size: 1.6rem;
   font-weight: bold;
 `
+
+
+const GroupCopy = styled(Div)`
+  
+  margin-top: 10px;
+  margin-bottom: 10px;
+  
+	height: 24px;
+	display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  
+  & > * {
+  	margin-left: 5px;
+  	margin-right: 5px;
+  }
+`
+
+
+const ButtonCopy = styled(Button)`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+
+  width: 170px;
+  height: 100%;
+  
+  color: ${props => props.theme.color_normal};
+  
+  border-radius: 4px;
+`
+
+
+
+
+/*
 const DivId = styled(Div)`
   color: ${props => props.theme.color_weak};
-`
+`*/
 
 
 const DivBody = styled(Div)`
@@ -59,8 +99,9 @@ const DivBody = styled(Div)`
 
 const DivInputAdd = styled(Div)`
   
-  margin-top: 30px;
+  margin-top: 20px;
   margin-bottom: 20px;
+  
   
 	height: 36px;
 	display: flex;
@@ -75,19 +116,34 @@ const DivInputAdd = styled(Div)`
 `
 
 const InputBattletag = styled(Input)`
-	width: 160px;
+	width: 150px;
 	height: 100%;
+	
+	border-radius: 6px;
+	border: 1px solid ${props => props.theme.color_weak};
 `
 
 const InputName = styled(Input)`
-	width: 120px;
+	width: 110px;
 	height: 100%;
+	
+	border-radius: 6px;
 `
 
 const ButtonAdd = styled(Button)`
   width: 60px;
   height: 100%;
+  
+  border-radius: 6px;
 `
+/*
+const ButtonAddOnly = styled(Button)`
+  width: 60px;
+  height: 100%;
+  
+  border-radius: 4px;
+`
+*/
 
 const DivIconWorking = styled(Div)`
   
@@ -169,97 +225,9 @@ const DivIconWorking = styled(Div)`
    
   }
   
-  /*
-  // workingAddPlayer 가 O -> X 로 바뀌었을 때! <= 예상과 다르게 무한반복된다...
-  useEffect(()=>{
-    if(!workingAddPlayer){
-      const idPlanTeam = planTeam._id;
-      readPlanTeam(idPlanTeam);  // important! need new data in redux for rernedering (ex: entry)
-    }
-  }, [workingAddPlayer]
-  )
-  */
   
-  /*
-      if (status.mmr === true) {
-        try {
-          replaceWorking("addPlayerToListPlayerEntry", true)
-          
-          const requestBody = reqAddPlayerToListPlayerEntry(idPlanTeam, battletag, name, statusPlayer);
-          //console.log(requestBody)
-          await axios.put( `${process.env.REACT_APP_URL_AHR}/plan-team/${idPlanTeam}`, requestBody ); 
-          
-          replaceWorking("addPlayerToListPlayerEntry", false);
-          addRemoveNotification("success", "player has been added!");
-          status.add = true;
-          
-          
-          readPlanTeam(idPlanTeam);
+  // copy: https://www.npmjs.com/package/react-copy-to-clipboard
   
-        }
-        catch(error) {
-          //addRemoveNotification("error", "api of Parallel Storm is not working", 5000);
-          
-          replaceWorking("addPlayerToListPlayerEntry", false)
-          addRemoveNotification("error", "could not add player");
-          
-          status.add = false;
-          
-        }
-      }
-      
-      
-    
-  */
-  
-
-  
-  
-  /*
-  // using async in useEffect is special case (need self invoking)
-  // https://stackoverflow.com/questions/53332321/react-hook-warnings-for-async-function-in-useeffect-useeffect-function-must-ret
-  useEffect( () => { (async ()=>{
-      console.log(playerMmr)
-      console.log(workingPutPlayerMmr)
-      console.log(workingAddPlayer)
-      
-      if (playerMmr && !workingPutPlayerMmr && workingAddPlayer) { // 한번 시도하면 안하고 끝내고 싶은데 두번씩 된다...
-        try {
-          replaceWorking("addPlayerMmrStandardToListPlayerEntry", true)
-          
-          console.log("hi")
-          const requestBody2 = reqPutPlayerMmrStandardToListPlayerEntry(battletag, playerMmr, idPlanTeam);
-          
-          console.log(requestBody2); 
-          
-          const res = await axios.put( `${process.env.REACT_APP_URL_AHR}/plan-team/${idPlanTeam}`, requestBody2 ); 
-          
-          replaceWorking("addPlayerMmrStandardToListPlayerEntry", false);
-          replaceWorking("workingAddPlayer", false);
-          
-          addRemoveNotification("success", "player's mmr has been added!");
-          
-          inputBattletag.setValue("");
-          inputName.setValue("");
-        }
-        catch(error) {
-          //addRemoveNotification("error", "api of Parallel Storm is not working", 5000);
-          
-          replaceWorking("addPlayerMmrStandardToListPlayerEntry", false)
-          replaceWorking("workingAddPlayer", false)
-          
-          addRemoveNotification("error", "could not add mmr to plan");
-          
-        }
-        inputBattletag.setValue("");
-        inputName.setValue("");
-      }
-      
-      
-  }) (); // self invoking
-    }, [workingPutPlayerMmr, playerMmr]
-  )
-  */
   
   return (
   <DivAddingPlayer>
@@ -267,7 +235,34 @@ const DivIconWorking = styled(Div)`
     <DivHeader>
       <DivTitle> {`${planTeam.title}`} </DivTitle>
       
-      <DivId> {`id: ${planTeam._id}`} </DivId>
+      <GroupCopy>
+        
+        <CopyToClipboard 
+          text={`https://ps.avantwing.com/team-generator/${planTeam._id}`}
+          onCopy={ () => { addRemoveNotification("success", "viewer link has been copied") } } >
+          
+          <ButtonCopy> 
+            <IconCopy width={"20px"} height={"20px"} /> 
+            <Div> Copy Viewing Link </Div>
+          </ButtonCopy> 
+          
+        </CopyToClipboard>
+        
+        { (authority === "administrator") && 
+          <CopyToClipboard 
+            text={`https://ps.avantwing.com/team-generator/${planTeam._id}?pw=${planTeam.password}`}
+            onCopy={ () => { addRemoveNotification("success", "administrator link has been copied") } } >
+            
+            <ButtonCopy>
+              <IconCopy width={"20px"} height={"20px"} /> 
+              <Div> Copy editing Link </Div>
+            </ButtonCopy> 
+            
+          </CopyToClipboard>
+        }
+        
+      </GroupCopy>
+      
     </DivHeader>
     
     
@@ -287,7 +282,7 @@ const DivIconWorking = styled(Div)`
         }
         
         { (authority === "viewer") && !workingAddPlayer &&
-          <ButtonAdd onClick = { async (event)=> onClick_ButtonAdd(event, "pending")} > Apply </ButtonAdd>
+          <ButtonAdd onClick = {  (event)=> onClick_ButtonAdd(event, "pending")} > Apply </ButtonAdd>
         }
         
         
@@ -295,7 +290,7 @@ const DivIconWorking = styled(Div)`
         { (authority === "administrator") && workingAddPlayer && 
           <ButtonAdd> 
             <DivIconWorking>
-              <IconWorking width={"27px"} height={"24px"} />  
+              <IconWorking width={"27px"} height={"24px"} />
             </DivIconWorking>
           </ButtonAdd>
         }

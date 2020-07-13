@@ -7,6 +7,9 @@ import styled, {createGlobalStyle} from 'styled-components';
  
   html, body, #root {
   
+    transition: background-color 1s linear; // when light/dark mode changes
+    transition: color 1s linear; // when light/dark mode changes
+    
     background-color: ${props => props.theme.COLOR_bg};
     color: ${props => props.theme.color_normal};
     
@@ -73,7 +76,7 @@ import styled, {createGlobalStyle} from 'styled-components';
  
  /* because of svg */
  .icon.usingHover:hover {
-   fill: ${props => (props.theme.color_normal) };
+   fill: ${props => (props.theme.color_weak) };
  }
  
  /* message UI */
@@ -106,6 +109,11 @@ export const Div = styled.div`
 
  export const Button = styled.button`
   
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+    
   color: ${props => props.theme.color_strong};
   background-color: ${props => props.theme.COLOR_normal};
   

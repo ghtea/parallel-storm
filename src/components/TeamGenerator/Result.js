@@ -16,13 +16,12 @@ import IconLoading from '../../svgs/IconLoading'
 import IconConfirmed from '../../svgs/IconConfirmed'
 import IconPending from '../../svgs/IconPending'
 import IconInfo from '../../svgs/IconInfo'
-import IconStar from '../../svgs/IconStar'
 
 // 이상하게 dotenv.config() 안해도 된다 (오히려 하면 에러 발생...)
 //dotenv.config() ;
 //dotenv.config({ path: path.join(__dirname, '../../.env') });
 
-const DivEntry = styled(Div)`
+const DivResult = styled(Div)`
   width: 100%;
   max-width: 600px;
   
@@ -34,17 +33,13 @@ const DivEntry = styled(Div)`
   padding-bottom: 10px;
 `;
 
-const DivEntryTitle = styled(Div)`
+const DivTitle = styled(Div)`
   font-size: 1.2rem;
   font-weight: bold;
   
   margin-bottom: 10px;
 `
 
-const DivDescription = styled(Div)`
-  font-weight: medium;
-  margin-bottom: 15px;
-`
 
 const DivTableEntry = styled(Div)`
   
@@ -71,7 +66,7 @@ const DivRowHeader = styled(Div)`
   color: ${props => props.theme.color_weak};
 
   display: grid;
-  grid-template-columns: 40px 1fr  minmax(40px, 90px) 60px 40px 40px; /* min entire = 400 - 20*2 = 360 */
+  grid-template-columns: 1fr  minmax(40px, 90px) 60px 40px 40px; /* min entire = 400 - 20*2 = 360 */
   grid-template-rows: 24px;
   
   & > Div {
@@ -85,7 +80,7 @@ const DivRowHeader = styled(Div)`
 
 const DivRowPlayer = styled(Div)`
   display: grid;
-  grid-template-columns: 40px 1fr  minmax(40px, 90px) 60px 40px 40px; // min entire = 400 - 20*2 = 360
+  grid-template-columns: 1fr  minmax(40px, 90px) 60px 40px 40px; // min entire = 400 - 20*2 = 360
   grid-template-rows: 40px;
   
   border-bottom: 1px solid ${props => props.theme.color_very_weak};
@@ -153,14 +148,6 @@ const RowPlayer = ({battletag, mmr, statusPlayer}) => {
     
     <DivRowPlayer >
       
-      <Div> 
-        <IconStar
-          width={"20px"}
-          height={"20px"}
-          isFilled={false}
-        />  
-      </Div>
-      
       <DivBattletag> 
         {battletag}
       </DivBattletag>
@@ -193,23 +180,76 @@ const RowPlayer = ({battletag, mmr, statusPlayer}) => {
 
 
 
-const Entry = ({listPlayerEntry}) => {
+
+
+const Result = ({planTeam, readyPlanTeam}) => {
   
+  const [result, setResult] = useState(0);
   useEffect(()=>{console.log("Entry has been rerendered")})
   
+  const numberTeams = 2;
+  let objTeams = {};
+  
+  for (var i =0; i<numberTeams; i++) {
+    
+  }
+  
+  
+  let orderPlayerEntry= [];
+  
+  useEffect(()=> {
+    if (readyPlanTeam) {
+      const listPlayerEntry = planTeam.listPlayerEntry;
+      
+      orderPlayerEntry = [...listPlayerEntry];
+    
+    }
+  },[readyPlanTeam])
+  
+  
+  
+  const onClick_generateTeams = (event) => {
+    
+    //orderPlayerRemain = (Object.keys(listPlayerEntry)).map(element=>element._id);
+    //listPlayerRemain = Object.keys(listPlayerEntry);
+    
+    orderPlayerEntry = orderPlayerEntry.sort( (player1, player2) => { 
+      return (player2.mmr.standard.NA - player1.mmr.standard.NA);
+      // ex 3333, 222, 1111
+    });
+    
+    //orderPlayer = 
+    console.log(orderPlayerEntry)
+    setResult(result+1)
+  }
   
   return (
   
-  <DivEntry>
+  <DivResult>
     
-    <DivEntryTitle> Entry </DivEntryTitle>
-    <DivDescription> {`${listPlayerEntry.length} players`} </DivDescription>
+    <DivTitle> Result </DivTitle>
+    
+    <Div onClick={onClick_generateTeams}> 
+      button
+    </Div>
     
     
+    
+  </DivResult>
+    
+  )
+}
+
+/*
+{(readyPlanTeam)? orderPlayerEntry[0]["_id"] : "loading..." }
+    {(readyPlanTeam)? orderPlayerEntry[9]["_id"] : "loading..."}
+*/
+
+/*
+
     <DivTableEntry> 
     
     <DivRowHeader> 
-      <Div> leader </Div>
       <DivBattletagHeader>  battletag </DivBattletagHeader>
       <Div> roles </Div>
       <Div> mmr </Div>
@@ -233,22 +273,17 @@ const Entry = ({listPlayerEntry}) => {
       
     </DivTableEntry>
     
-    
-  </DivEntry>
-    
-  )
-}
-
-	  
+*/
 //<button onClick= {refetch} > Refectch </button>
 
 
 
 function mapStateToProps(state) { 
   return { 
-    listPlayerEntry: [...state.planTeam.listPlayerEntry]
+    planTeam: state.planTeam
+    //listPlayerEntry: [...state.planTeam.listPlayerEntry]
     //,workingAddPlayerToListPlayerEntry: state.working.addPlayerToListPlayerEntry
-    //,readyPlanTeam: state.ready.planTeam
+    ,readyPlanTeam: state.ready.planTeam
     //,loading: state.loading
   }; 
 } 
@@ -261,4 +296,4 @@ function mapDispatchToProps(dispatch) {
 
 
 // TableEntry 컴포넌트에서 redux의 state, dispatch 를 일부분 골라서 이용가능하게 된다
-export default connect(mapStateToProps, mapDispatchToProps)(Entry);
+export default connect(mapStateToProps, mapDispatchToProps)(Result);

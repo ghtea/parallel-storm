@@ -31,6 +31,8 @@ const themes =  {
     
         ...common,
         
+        name: "light",
+        
         color_strong: '#000000',
         color_normal: '#222222',
         color_weak: '#777777',
@@ -45,6 +47,8 @@ const themes =  {
     dark: {
     
         ...common,
+        
+        name: "dark",
         
         color_strong: '#ffffff',
         color_normal: '#dddddd',

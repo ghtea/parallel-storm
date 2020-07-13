@@ -11,14 +11,14 @@ const DivContainer = styled(Div)`
 `;
 
 
-const IconInfo = ({width, height, themeName}) => {
+const IconMoon = ({width, height, themeName}) => {
 	
 	return (
 		
 	<DivContainer style= {{ width: `${width}`, height:`${height}` }} >
 		<svg 
 			
-			className="icon usingHover Info"
+			className="icon Sun"
 			xmlns="http://www.w3.org/2000/svg" 
 			
 			
@@ -30,8 +30,8 @@ const IconInfo = ({width, height, themeName}) => {
 			>
 			
 			<path 
-				d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z">
-				</path>
+				d="M283.211 512c78.962 0 151.079-35.925 198.857-94.792 7.068-8.708-.639-21.43-11.562-19.35-124.203 23.654-238.262-71.576-238.262-196.954 0-72.222 38.662-138.635 101.498-174.394 9.686-5.512 7.25-20.197-3.756-22.23A258.156 258.156 0 0 0 283.211 0c-141.309 0-256 114.511-256 256 0 141.309 114.511 256 256 256z">
+			</path>
 				
 		</svg>
 	</DivContainer>
@@ -52,4 +52,4 @@ function mapDispatchToProps(dispatch) {
 }
 */
 
-export default connect(mapStateToProps)(IconInfo);
+export default connect(mapStateToProps)(IconMoon);

@@ -26,6 +26,8 @@ import SearchingPlan from '../components/TeamGenerator/SearchingPlan';
 
 import AddingPlayer from '../components/TeamGenerator/AddingPlayer';
 import Entry from '../components/TeamGenerator/Entry';
+import Option from '../components/TeamGenerator/Option';
+import Result from '../components/TeamGenerator/Result';
 
 import useAxiosGet from '../tools/hooks/useAxiosGet';
 import useInput from '../tools/hooks/useInput';
@@ -50,7 +52,7 @@ const DivTeamGenerator = styled(Div)`
   @media (min-width:  ${props => (props.theme.media.mid_big) }px) {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    grid-template-rows: 300px 1fr;
+    grid-template-rows: 240px 1fr;
     grid-template-areas: 
       "A B"
       "C D";
@@ -190,7 +192,7 @@ const TeamGenerator = ({
       </DivA>
       
       <DivB>
-        option 
+        <Option /> 
       </DivB>
     
     
@@ -200,7 +202,7 @@ const TeamGenerator = ({
     
     
       <DivD>
-        result
+        <Result /> 
       </DivD>
     
     </DivTeamGenerator>

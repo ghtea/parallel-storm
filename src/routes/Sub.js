@@ -1,8 +1,15 @@
 import React from 'react';
 import styled from 'styled-components';
 
+import { connect } from "react-redux";
+import {replaceData} from "../redux/store";
+
+
 import { NavLink } from 'react-router-dom';
 import {Div} from '../styles/DefaultStyles';
+
+import IconSun from '../svgs/IconSun';
+import IconMoon from '../svgs/IconMoon';
 
 
 
@@ -42,10 +49,217 @@ const DivSub = styled(Div)`
 		flex-direction: column;
 		justify-content: flex-start;
 		
+		border-right: 1px solid ${props => props.theme.color_very_weak};
 	 }
   
 `;
 
+
+const DivTitle = styled(Div)`
+	
+	height: 160px;
+	
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	
+	text-align: center;
+	font-size: 1.3rem;
+	font-family: 'Noto Sans KR', 'Noto Sans JP', sans-serif;
+	font-weight: medium;
+	
+  @media (max-width: ${props => (props.theme.media.mid_big -1) }px ) {
+  	display: none;
+	}
+ 
+	@media (min-width:  ${props => (props.theme.media.mid_big) }px) {
+	
+	}
+`
+
+
+
+const DivNavItem = styled(Div)`
+	
+	width:100%;
+	height: auto; 
+	
+	padding-top: 5px;
+  padding-bottom: 5px;
+  
+  margin-top: 5px;
+  margin-bottom: 5px;
+	
+	
+	font-size: 1.1rem;
+
+  @media (max-width: ${props => (props.theme.media.mid_big -1) }px ) {
+  
+	}
+ 
+	@media (min-width:  ${props => (props.theme.media.mid_big) }px) {
+	 }
+`;
+
+
+const activeClassName = 'nav-link-active';
+
+const NavLinkNavItem = styled(NavLink).attrs({ activeClassName })`
+  width: 90%;
+  height: auto;
+  
+  
+	color: ${props => props.theme.color_normal};
+	font-weight: regular;
+	
+	text-decoration: none;
+	text-align: center;
+	
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	
+	&.${activeClassName} {
+		color: ${props => props.theme.color_active};
+		font-weight: medium;
+	}
+	
+`;
+
+const checkActive = () => {
+    
+    return /^(\/team-generator)/.test(window.location.pathname);
+}
+
+
+const DivButtonToggleMode = styled(Div)`
+	height: 120px;
+`
+
+const ContainerSlider = styled(Div)`
+
+	position: relative;
+	height: 30px;
+	width: 72px;
+	
+	border-radius: 15px;
+	
+	background-color: ${props => props.theme.COLOR_bg};
+`
+
+const Slider = styled(Div)`
+	
+	position: absolute;
+	
+	top: -3px;
+	left: 0px;
+	
+	height: 36px;
+	width: 36px;
+	
+	border-radius: 50%;
+	border: 1px solid ${props => props.theme.color_very_weak};
+	background-color: ${props => props.theme.COLOR_normal};
+	
+	cursor: pointer;
+	transition: transform 0.4s linear;
+	transform: ${props => (props.theme.name === "light")? 'translateX(0)' : 'translateX(36px)'};
+	
+`
+//transform: ${ props => (props.themeName === "light")? 'translateX(0)' : 'translateX(36px)'};
+
+
+
+
+
+
+// img (svg) https://www.svgrepo.com/svg/154720/hexagon
+const Sub = ({match, location, replaceData, themeName}) => {
+	
+	const onClick_Slider = (event) => {
+		if (themeName === "light") {
+			replaceData("themeName", "dark")
+		}
+		else {
+			replaceData("themeName", "light")
+		}
+	}
+	
+	
+	return (
+ 
+	
+  <DivSub>
+  	
+  	<DivTitle>
+  		PARALLEL STORM
+  	</DivTitle>
+  	
+  	
+  	
+  	<DivNavItem > <NavLinkNavItem to="/about"> About </NavLinkNavItem> </DivNavItem>
+		<DivNavItem > <NavLinkNavItem to="/" exact={true}> Home </NavLinkNavItem> </DivNavItem>
+		<DivNavItem > <NavLinkNavItem to="/team-generator" isActive={checkActive} > Team Generator </NavLinkNavItem> </DivNavItem>
+		
+		<DivButtonToggleMode>
+		
+			<ContainerSlider onClick={onClick_Slider} >
+			
+				<Slider >
+					
+					<Div
+						style= {{ transform: `${ props => (props.themeName === "dark")? 'translateX(0)' : 'translateX(36px)'}` }}
+					>
+						{
+							(themeName === 'light')? <IconSun width={"25px"} height={"25px"} /> : <IconMoon width={"25px"} height={"25px"} /> 
+						}
+					</Div>
+					
+				</Slider>
+				
+			</ContainerSlider>
+			
+		</DivButtonToggleMode>
+		
+	</DivSub>
+	
+	)
+}
+
+function mapStateToProps(state) { 
+  return { 
+    themeName: state.themeName
+  }; 
+} 
+
+function mapDispatchToProps(dispatch) { 
+  return { 
+    replaceData: (which, newThemeName) => dispatch( replaceData(which, newThemeName) ) 
+  }; 
+}
+
+
+// TableEntry 컴포넌트에서 redux의 state, dispatch 를 일부분 골라서 이용가능하게 된다
+export default connect(mapStateToProps, mapDispatchToProps)(Sub);
+
+
+/*
+
+	<DivNavItem > <NavLinkNavItem to="/team-generator" 
+										isActive={(location) => (location.pathname).match(/^(\/team-generator)/) }
+									> Team Generator </NavLinkNavItem> </DivNavItem>
+*/
+
+
+
+
+
+
+// with logo images
+
+/*
 const DivLogo = styled(Div)`
 
   @media (max-width: ${props => (props.theme.media.mid_big -1) }px ) {
@@ -103,85 +317,20 @@ const DivLogoText = styled(Div)`
 	
 	}
 `;
+*/
 
-
-
-
-const DivNavItem = styled(Div)`
-	
-	width:100%;
-	height: 40px; 
-
-  @media (max-width: ${props => (props.theme.media.mid_big -1) }px ) {
-  
-	}
- 
-	@media (min-width:  ${props => (props.theme.media.mid_big) }px) {
-	 }
-`;
-
-
-const activeClassName = 'nav-link-active';
-
-const NavLinkNavItem = styled(NavLink).attrs({ activeClassName })`
-  width: 90%;
-  height: 100%;
-  
-	color: ${props => props.theme.color_normal};
-	
-	text-decoration: none;
-	text-align: center;
-	
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
-	
-	&.${activeClassName} {
-		color: ${props => props.theme.color_active};
-	}
-	
-`;
-
-
-const checkActive = () => {
-    
-    return /^(\/team-generator)/.test(window.location.pathname);
-}
-
-
-// img (svg) https://www.svgrepo.com/svg/154720/hexagon
-const Sub = ({match, location}) => {
-	return (
- 
-	
-  <DivSub>
-  	
-  	<DivLogo>
-	  	<DivLogoImg> 
-	  	
-	  		<ImgLogo src="" width="100%" height="100%" /> 
-	  	</DivLogoImg>
-	  	
-	  	<DivLogoText> 
-	  		Parallel Storm
-	  	</DivLogoText> 
-  	</DivLogo>
-  	
-  	<DivNavItem > <NavLinkNavItem to="/about"> About </NavLinkNavItem> </DivNavItem>
-		<DivNavItem > <NavLinkNavItem to="/" exact={true}> Home </NavLinkNavItem> </DivNavItem>
-		<DivNavItem > <NavLinkNavItem to="/team-generator" isActive={checkActive} > Team Generator </NavLinkNavItem> </DivNavItem>
-		
-	</DivSub>
-	
-	)
-}
-
-export default Sub;
 
 /*
 
-	<DivNavItem > <NavLinkNavItem to="/team-generator" 
-										isActive={(location) => (location.pathname).match(/^(\/team-generator)/) }
-									> Team Generator </NavLinkNavItem> </DivNavItem>
+<DivLogo>
+	<DivLogoImg> 
+	
+		<ImgLogo src="" width="100%" height="100%" /> 
+	</DivLogoImg>
+	
+	<DivLogoText> 
+		Parallel Storm
+	</DivLogoText> 
+</DivLogo>
+  	
 */

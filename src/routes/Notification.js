@@ -36,7 +36,7 @@ const DivNotification = styled(Div)`
 		width: 360px;
 	  height: auto;
 	  
-	  top: 60px;
+	  top: 10px;
 	 
 		
 	 }
