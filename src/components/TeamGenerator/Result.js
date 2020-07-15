@@ -34,6 +34,7 @@ const DivResult = styled(Div)`
 `;
 
 const DivTitle = styled(Div)`
+  margin-top: 10px;
   font-size: 1.2rem;
   font-weight: bold;
   

@@ -18,13 +18,19 @@ import IconPending from '../../svgs/IconPending'
 import IconInfo from '../../svgs/IconInfo'
 import IconStar from '../../svgs/IconStar'
 
+import IconTank from '../../svgs/roles/IconTank'
+import IconBruiser from '../../svgs/roles/IconBruiser'
+import IconMeleeAssassin from '../../svgs/roles/IconMeleeAssassin'
+import IconRangedAssassin from '../../svgs/roles/IconRangedAssassin'
+import IconHealer from '../../svgs/roles/IconHealer'
+
 // 이상하게 dotenv.config() 안해도 된다 (오히려 하면 에러 발생...)
 //dotenv.config() ;
 //dotenv.config({ path: path.join(__dirname, '../../.env') });
 
 const DivEntry = styled(Div)`
-  width: 100%;
-  max-width: 600px;
+  width: auto;
+  
   
   display: flex;
   flex-direction: column;
@@ -38,24 +44,35 @@ const DivEntryTitle = styled(Div)`
   font-size: 1.2rem;
   font-weight: bold;
   
-  margin-bottom: 10px;
+  margin-top: 10px;
+  height: 20px;
+  margin-bottom: 5px;
 `
 
 const DivDescription = styled(Div)`
   font-weight: medium;
+  margin-top: 5px;
+  height: 15px;
   margin-bottom: 15px;
 `
 
+
+
 const DivTableEntry = styled(Div)`
   
-  padding-left: 20px;
-  padding-right: 20px;
+  margin-left: 10px;
+  margin-right: 10px;
   
   
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  align-items: center;
+  align-items: flex-start;
+  
+  @media (max-width: ${props => (props.theme.media.mid_big -1) }px ) {
+    overflow-y: scroll;
+    height: 320px;
+  }
   
 `
 
@@ -71,8 +88,13 @@ const DivRowHeader = styled(Div)`
   color: ${props => props.theme.color_weak};
 
   display: grid;
-  grid-template-columns: 40px 1fr  minmax(40px, 90px) 60px 40px 40px; /* min entire = 400 - 20*2 = 360 */
+  grid-template-columns: 30px 150px 120px 60px 30px; // 20(padding) + 30 + 150 + 120 + 60 + 30 = 410 => 안전하게 small_mid 420 으로 하자
   grid-template-rows: 24px;
+  
+  @media (max-width: ${props => (props.theme.media.small_mid -1) }px ) {
+    grid-template-columns: 30px 90px minmax(72px, auto) 60px 30px; // 
+    grid-template-rows: 60px;
+  }
   
   & > Div {
     font-weight: thin;
@@ -85,8 +107,14 @@ const DivRowHeader = styled(Div)`
 
 const DivRowPlayer = styled(Div)`
   display: grid;
-  grid-template-columns: 40px 1fr  minmax(40px, 90px) 60px 40px 40px; // min entire = 400 - 20*2 = 360
+  grid-template-columns: 30px 150px 120px 60px 30px; // 20(padding) + 30 + 150 + 120 + 60 + 30 = 410
   grid-template-rows: 40px;
+  
+  @media (max-width: ${props => (props.theme.media.small_mid -1) }px ) {
+    grid-template-columns: 30px 100px 80px 60px 30px; // 
+    grid-template-rows: 60px;
+  }
+  
   
   border-bottom: 1px solid ${props => props.theme.color_very_weak};
   &:last-child {
@@ -120,6 +148,10 @@ const DivRowPlayer = styled(Div)`
 
 */
 
+const DivStar = styled(Div)`
+  
+    
+`
 
 const DivBattletagHeader = styled(Div)`
   padding-left: 10px;
@@ -129,8 +161,41 @@ const DivBattletagHeader = styled(Div)`
 `
 
 const DivBattletag = styled(Div)`
+  justify-self: start;
+  
   padding-left: 10px;
-  display: block;
+  
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  
+  @media (max-width: ${props => (props.theme.media.small_mid -1) }px ) {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+  }
+`
+
+const DivBattletagName = styled(Div)`
+  
+  width: inherit;
+  
+  display: inline;
+  text-algin: left;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+`
+
+const DivBattletagNumber = styled(Div)`
+  font-size: 0.9rem;
+  
+  width: auto;
+   
+  color: ${props => props.theme.color_weak};
+  display: inline;
   text-algin: left;
   overflow: hidden;
   white-space: nowrap;
@@ -138,9 +203,31 @@ const DivBattletag = styled(Div)`
 `
 
 
+const DivRoles = styled(Div)`
+  
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  
+  & > div {
+    width: auto;   // important!!!
+    height: auto;
+  }
+  
+  & > div > div {
+    width: 20px;
+    height: 20px;
+    margin: 2px;
+  }
+`
+const DivMmr = styled(Div)`
+  font-size: 0.9rem;
+`
 
 
-const RowPlayer = ({battletag, mmr, statusPlayer}) => {
+const RowPlayer = ({battletag, mmr, regions, roles, statusPlayer}) => {
   
   useEffect(()=>{console.log("Each row has been rerendered")})
   
@@ -148,43 +235,50 @@ const RowPlayer = ({battletag, mmr, statusPlayer}) => {
     pending: <IconPending width={"20px"} height={"20px"} />
     ,confirmed: <IconConfirmed width={"20px"} height={"20px"} />
   };
+  
+  const regexBattletag = /(#\d*)$/;
+  const listNumberBattletag = battletag.match(regexBattletag);
+  
+  const battletagNumber = listNumberBattletag[0];
+  const battletagName = battletag.replace(regexBattletag, "")
+  
+  
 
   return (
     
     <DivRowPlayer >
       
-      <Div> 
+      <DivStar > 
         <IconStar
           width={"20px"}
           height={"20px"}
           isFilled={false}
         />  
-      </Div>
+      </DivStar >
       
       <DivBattletag> 
-        {battletag}
+        <DivBattletagName> {battletagName} </DivBattletagName>
+        <DivBattletagNumber> {battletagNumber} </DivBattletagNumber>
       </DivBattletag>
       
-      <Div> 
-        (roles)
-      </Div>
+      <DivRoles> 
+        <Div> {(roles.includes("Tank"))? <IconTank width={"20px"} height={"20px"} /> : <Div></Div>} </Div>
+        <Div> {(roles.includes("Bruiser"))? <IconBruiser width={"20px"} height={"20px"} /> : <Div></Div>} </Div>
+        <Div> {(roles.includes("Melee Assassin"))? <IconMeleeAssassin width={"18px"} height={"20px"} /> : <Div></Div>} </Div>
+        <Div> {(roles.includes("Ranged Assassin"))? <IconRangedAssassin width={"20px"} height={"20px"} /> : <Div></Div>} </Div>
+        <Div> {(roles.includes("Healer"))? <IconHealer width={"15px"} height={"20px"} /> : <Div></Div>} </Div>
+      </DivRoles>
       
       
-      <Div> 
+      <DivMmr> 
         {mmr}
-      </Div>
+      </DivMmr>
        
       <Div> 
         {IconStatus[statusPlayer]}
       </Div>
         
        
-      <Div> 
-        <IconInfo
-          width={"20px"}
-          height={"20px"}
-        /> 
-      </Div>
          
     </DivRowPlayer>
   )
@@ -209,23 +303,29 @@ const Entry = ({listPlayerEntry}) => {
     <DivTableEntry> 
     
     <DivRowHeader> 
-      <Div> leader </Div>
+      <Div>  </Div>
       <DivBattletagHeader>  battletag </DivBattletagHeader>
       <Div> roles </Div>
       <Div> mmr </Div>
-      <Div> status </Div>
+      <Div>  </Div>
       
-       
-      <Div> </Div>
     </DivRowHeader>
     
     { 
       ( listPlayerEntry ).map( (player, i) =>
       
         < RowPlayer 
+        
           key={ `${player._id}_${(new Date().getTime()).toString()}` }
+          
           battletag={player._id} 
+          
+          regions ={player.regions}
+          
           mmr={player.mmr.standard.NA} 
+          
+          roles ={player.roles}
+          
           statusPlayer={player.status} 
         /> 
       )

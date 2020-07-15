@@ -18,8 +18,8 @@ import {Div, Input, Button} from '../../styles/DefaultStyles';
 import useInput from '../../tools/hooks/useInput';
 import {getTimeStamp} from '../../tools/vanilla/time';
 
-import IconWorking from '../../svgs/IconWorking'
-import IconCopy from '../../svgs/IconCopy'
+import IconWorking from '../../svgs/IconWorking';
+import IconCopy from '../../svgs/basic/IconCopy';
 
 import {CopyToClipboard} from 'react-copy-to-clipboard';
 
@@ -52,7 +52,7 @@ const GroupCopy = styled(Div)`
   margin-top: 10px;
   margin-bottom: 10px;
   
-	height: 24px;
+	height: 30px;
 	display: flex;
   flex-direction: row;
   justify-content: center;
@@ -71,12 +71,16 @@ const ButtonCopy = styled(Button)`
   justify-content: center;
   align-items: center;
 
-  width: 170px;
+  width: 160px;
   height: 100%;
   
   color: ${props => props.theme.color_normal};
   
   border-radius: 4px;
+  
+  & > div {
+    height: 100%;
+  }
 `
 
 
@@ -157,8 +161,8 @@ const DivIconWorking = styled(Div)`
    
   workingAddPlayer 
   
-  , loadingPlanTeam
-  , readyPlanTeam
+  //, loadingPlanTeam
+  //, readyPlanTeam
   
   , authority
   , planTeam
@@ -180,6 +184,7 @@ const DivIconWorking = styled(Div)`
     let name = inputName.value;
     const idPlanTeam = planTeam._id;
     
+    let listRegionMain;
     //console.log(battletag, name, idPlanTeam, statusPlayer)
     
     if (inputBattletag.value) {
@@ -188,8 +193,8 @@ const DivIconWorking = styled(Div)`
         
         replaceWorking("addPlayer", true) // playermmr 옮기고, playerEntry 를 plan에 추가하고, 이후에 mmrStandar 도 추가하는 전체 작업 시작
         
-        // /add/:battletag/:idPlanTeam/:status
-        await axios.put (`${process.env.REACT_APP_URL_AHR}/player/add`,
+        // listRegionMain (플레이어가 활동하는 지역 목록) 만 가져와서 이후에 이용
+        const res_player_add = await axios.put (`${process.env.REACT_APP_URL_AHR}/player/add`,
           {
             battletag: battletag
             , idPlanTeam: idPlanTeam
@@ -198,20 +203,30 @@ const DivIconWorking = styled(Div)`
           }
         );
         
-        replaceWorking("addPlayer", false)
-        addRemoveNotification("success", "player has been added!");
+        listRegionMain = res_player_add.data;
         
-        inputBattletag.setValue("");
+        //replaceWorking("addPlayer", false)
+        //addRemoveNotification("success", "player has been added!");
+        
+        await axios.put (`${process.env.REACT_APP_URL_AHR}/player/add-roles`,
+          {
+            battletag: battletag
+            , idPlanTeam: idPlanTeam
+            , listRegionMain: listRegionMain
+          }
+        );
+          
+        replaceWorking("addPlayer", false)
+        addRemoveNotification("success", `player has been added!`);
+        readPlanTeam(idPlanTeam);  // important! need new data in redux for rernedering (ex: entry)
+        
+        inputBattletag.setValue("");  
         inputName.setValue("");
         
-        readPlanTeam(idPlanTeam);  // important! need new data in redux for rernedering (ex: entry)
-
-        
-      } //try
-      
+      }
       catch(error) {
         replaceWorking("addPlayer", false)
-        addRemoveNotification("error", "check your battletag");
+        addRemoveNotification("error", "adding player has failed");
         // 1. battlelog 잘못입력
         // 2. 게임수가 극히 적은 battletag
         // 3. 내 백엔드 문제
@@ -222,10 +237,50 @@ const DivIconWorking = styled(Div)`
       addRemoveNotification("error", "type battletag first");
     }
     
+    
+    
+    
    
   }
   
+  /*
+  // when   workingAddPlayer: O -> X
+  useEffect( () => { 
+    (async () => {
+    
+      if (!workingAddPlayer ) {
+        
+        let battletag = inputBattletag.value;
+        const idPlanTeam = planTeam._id;
+        
+        inputBattletag.setValue(""); // 이때 초기화!
+        inputName.setValue("");
+      
+        replaceWorking("addRoleGames", true) // playermmr 옮기고, playerEntry 를 plan에 추가하고, 이후에 mmrStandar 도 추가하는 전체 작업 시작
+          
+        // /add/:battletag/:idPlanTeam/:status
+        try { 
+          await axios.put (`${process.env.REACT_APP_URL_AHR}/player/add-role-games`,
+            {
+              battletag: battletag
+              , idPlanTeam: idPlanTeam
+            }
+          );
+          
+        replaceWorking("addRoleGames", false)
+        addRemoveNotification("success", `${battletag}'s role info has been added!`);
+        } 
+        catch (error) { 
+          replaceWorking("addRoleGames", false)
+          addRemoveNotification("error", `${battletag}'s failed in adding role info`);
+          console.log(error) 
+        }
+      }
+      
+    }) ()
   
+  },[workingAddPlayer])
+  */
   // copy: https://www.npmjs.com/package/react-copy-to-clipboard
   
   
@@ -243,7 +298,7 @@ const DivIconWorking = styled(Div)`
           
           <ButtonCopy> 
             <IconCopy width={"20px"} height={"20px"} /> 
-            <Div> Copy Viewing Link </Div>
+            <Div> Viewing Link </Div>
           </ButtonCopy> 
           
         </CopyToClipboard>
@@ -255,7 +310,7 @@ const DivIconWorking = styled(Div)`
             
             <ButtonCopy>
               <IconCopy width={"20px"} height={"20px"} /> 
-              <Div> Copy editing Link </Div>
+              <Div> Editing Link </Div>
             </ButtonCopy> 
             
           </CopyToClipboard>
@@ -329,8 +384,8 @@ function mapStateToProps(state) {
     //,idPlanTeam: state.idPlanTeam
     //,passwordPlanTeam: state.planTeam.password
     
-    , loadingPlanTeam: state.loading.planTeam
-    , readyPlanTeam: state.ready.planTeam
+    //, loadingPlanTeam: state.loading.planTeam
+    //, readyPlanTeam: state.ready.planTeam
     
     , authority: state.authority
     , planTeam: {...state.planTeam}

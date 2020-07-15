@@ -44,7 +44,11 @@ const stateInitial = {
     ,authority: "unknown" // "administrator" "viewer"
     
     ,idPlanTeam: ""
-    ,planTeam: {}
+    ,planTeam: {
+      _id:"_id"
+      ,password:"password"
+      ,title:"title"
+    }
     
     
     ,themeName: "light"

@@ -18,7 +18,9 @@ const common = {
     
     
     ,media: {
-        mid_big: 920 // 120 + 400 * 2
+        
+        small_mid: 420 // 
+        ,mid_big: 920 // 120 + 400 * 2
     }
     
 }

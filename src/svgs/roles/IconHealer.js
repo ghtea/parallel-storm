@@ -1,37 +1,37 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import themes from "../styles/themes"
+import themes from "../../styles/themes"
 import { connect } from "react-redux";
-import {Div} from '../styles/DefaultStyles';
+import {Div} from '../../styles/DefaultStyles';
 
 
 const DivContainer = styled(Div)`
 	
 `;
 
-
-const IconCopy = ({width, height, themeName}) => {
+// w:h = 7:8
+const IconHealer = ({width, height, themeName}) => {
 	
 	return (
 		
 	<DivContainer style= {{ width: `${width}`, height:`${height}` }} >
 		<svg 
 			
-			className="icon usingHover Info"
+			className="icon"
 			xmlns="http://www.w3.org/2000/svg" 
 			
 			
 			width="100%"
 			height="100%"
-			viewBox="0 0 512 512"
+			viewBox="0 0 448 512" 
 			
 			fill={ themes[themeName]["color_very_weak"] }
 			>
 			
 			<path 
-			d="M464 0H144c-26.51 0-48 21.49-48 48v48H48c-26.51 0-48 21.49-48 48v320c0 26.51 21.49 48 48 48h320c26.51 0 48-21.49 48-48v-48h48c26.51 0 48-21.49 48-48V48c0-26.51-21.49-48-48-48zM362 464H54a6 6 0 0 1-6-6V150a6 6 0 0 1 6-6h42v224c0 26.51 21.49 48 48 48h224v42a6 6 0 0 1-6 6zm96-96H150a6 6 0 0 1-6-6V54a6 6 0 0 1 6-6h308a6 6 0 0 1 6 6v308a6 6 0 0 1-6 6z">				
-			</path>
+	d="M400 32H48C21.5 32 0 53.5 0 80v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V80c0-26.5-21.5-48-48-48zm-32 252c0 6.6-5.4 12-12 12h-92v92c0 6.6-5.4 12-12 12h-56c-6.6 0-12-5.4-12-12v-92H92c-6.6 0-12-5.4-12-12v-56c0-6.6 5.4-12 12-12h92v-92c0-6.6 5.4-12 12-12h56c6.6 0 12 5.4 12 12v92h92c6.6 0 12 5.4 12 12v56z">
+				</path>
 				
 		</svg>
 	</DivContainer>
@@ -52,4 +52,4 @@ function mapDispatchToProps(dispatch) {
 }
 */
 
-export default connect(mapStateToProps)(IconCopy);
+export default connect(mapStateToProps)(IconHealer);

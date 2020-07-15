@@ -7,7 +7,7 @@ import {Div} from '../styles/DefaultStyles';
 
 
 const DivContainer = styled(Div)`
-	
+
 `;
 
 

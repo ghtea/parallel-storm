@@ -1,5 +1,5 @@
 import dotenv from 'dotenv';
-import React from 'react';
+import React, {useState} from 'react';
 import styled from 'styled-components';
 
 import axios from 'axios';
@@ -20,6 +20,11 @@ import {getTimeStamp} from '../../tools/vanilla/time';
 import {generatePassword} from '../../tools/vanilla/password';
 
 import IconWorking from '../../svgs/IconWorking'
+
+import flagNA from '../../images/flags/NA.png';
+import flagEU from '../../images/flags/EU.png';
+import flagKR from '../../images/flags/KR.png';
+import flagCN from '../../images/flags/CN.png';
 
 //import {ahr} from '../api';
 /*
@@ -87,11 +92,24 @@ const DivInput = styled(Div)`
 const InputTitle = styled(Input)`
 	width: 160px;
 	height: 100%;
+	
+	border-radius: 6px;
+	
+	border: 1px solid ${props => props.theme.color_weak};
+`
+
+const ButtonRegion = styled(Button)`
+  width: auto;
+  height: auto;
+  
+  background-color: transparent;
 `
 
 const ButtonCreatePlan = styled(Button)`
   width: 60px;
   height: 100%;
+  
+  border-radius: 6px;
 `
 
 
@@ -111,49 +129,79 @@ const DivIconWorking = styled(Div)`
   const inputTitle = useInput("");
   const history = useHistory(); 
   
+  const [regionCreating, setRegionCreating] = useState("NA");
+  //const [flagCreating, setflagCreating] = useState(flagNA);
+  
+  const objFlag = {
+    NA: flagNA,
+    EU: flagEU,
+    KR: flagKR,
+    CN: flagCN
+  };
+  
+  const onClick_ButtonRegion = (event) => {
+    
+    switch(regionCreating) {
+      case "NA":
+        setRegionCreating("EU");
+        break;
+      case "EU":
+        setRegionCreating("KR");
+        break;
+      case "KR":
+        setRegionCreating("CN");
+        break;
+      case "CN":
+        setRegionCreating("NA");
+        break;
+    }
+
+  }
   
 
   const onClick_ButtonCreatePlan = async (event) => {
     
-    const idPlanTeam = getTimeStamp();
-    const pwPlanTeam = generatePassword(8);  // ex: "5y7o"
-    
-    
-    let titlePlanTeam;
-    if (inputTitle.value) { titlePlanTeam = inputTitle.value }
-    else {titlePlanTeam = "(no title)"}
-    
-    
-    //let status = {};
-    
-    try {
-      replaceWorking("createPlan", true);
-      await axios.post (`${process.env.REACT_APP_URL_AHR}/plan-team`, {
-        _id: idPlanTeam
-        ,password: pwPlanTeam
-        ,title: titlePlanTeam
-      });
+  if (inputTitle.value) {
+      const idPlanTeam = getTimeStamp();
+      const pwPlanTeam = generatePassword(8);  // ex: "5y7o"
       
-      replaceWorking("createPlan", false);
-      addRemoveNotification("success", "new plan has been created!", 3000);
-      //status.createPlan = true; //  작업이 잘되었다고 표시
       
-      // move after 2 seconds because of preparing time
-      //window.location = `/team-generator/${idPlanTeam}?pw=${pwPlanTeam}`;
-      //setTimeout( ()=>{history.push(`/team-generator/${idPlanTeam}?pw=${pwPlanTeam}`)} , 2000)
+      let titlePlanTeam;
+      if (inputTitle.value) { titlePlanTeam = inputTitle.value }
+      else {titlePlanTeam = "(no title)"}
       
-      history.push(`/team-generator/${idPlanTeam}?pw=${pwPlanTeam}`)
-    }
-    catch (error) {
-      replaceWorking("createPlan", false)
-      addRemoveNotification("error", "plan has not been created!", 3000);
-      //status.createPlan = false; //  작업이 정상적으로 끝나지 않았다고 표시 (실제로 에러가 발생하지 않는다)
-    }
-    
+      
+      //let status = {};
+      
+      try {
+        replaceWorking("createPlan", true);
+        await axios.post (`${process.env.REACT_APP_URL_AHR}/plan-team`, {
+          _id: idPlanTeam
+          ,password: pwPlanTeam
+          ,title: titlePlanTeam
+          ,region: regionCreating
+        });
+        
+        replaceWorking("createPlan", false);
+        addRemoveNotification("success", "new plan has been created!");
+        //status.createPlan = true; //  작업이 잘되었다고 표시
+        
+        // move after 2 seconds because of preparing time
+        //window.location = `/team-generator/${idPlanTeam}?pw=${pwPlanTeam}`;
+        //setTimeout( ()=>{history.push(`/team-generator/${idPlanTeam}?pw=${pwPlanTeam}`)} , 2000)
+        
+        history.push(`/team-generator/${idPlanTeam}?pw=${pwPlanTeam}`)
+      }
+      catch (error) {
+        replaceWorking("createPlan", false)
+        addRemoveNotification("error", "plan has not been created!");
+        //status.createPlan = false; //  작업이 정상적으로 끝나지 않았다고 표시 (실제로 에러가 발생하지 않는다)
+      }
+      
+    } else { addRemoveNotification("error", "type title first"); }
   }  
   
-  
-  
+
 
   
   return (
@@ -170,6 +218,11 @@ const DivIconWorking = styled(Div)`
 	   
 		  <DivInput>
 	      <InputTitle {...inputTitle} placeholder="title of plan" />
+	      
+	      <ButtonRegion onClick={onClick_ButtonRegion} > 
+	        <img src={objFlag[regionCreating]} width="48" height="36"/>
+	      </ButtonRegion>
+	      
         {working.createPlan ? 
         <ButtonCreatePlan> 
         

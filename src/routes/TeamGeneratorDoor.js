@@ -14,7 +14,7 @@ import {replaceData} from "../redux/store";
 
 import addRemoveNotification from "../redux/thunks/addRemoveNotification";
 
-import {Div, Input, Button} from '../styles/DefaultStyles';
+import {Div, Input, Button, A} from '../styles/DefaultStyles';
 //import Player from '../components/Player'
 
 
@@ -62,6 +62,8 @@ const DivA = styled(Div)`
 `
 const DivB = styled(Div)`
   grid-area: B;
+  
+  flex-direction: column;
 `
 const DivC = styled(Div)`
   grid-area: C;
@@ -84,6 +86,11 @@ const TeamGeneratorDoor = ({}) => {
       <DivA>
         <CreatingPlan /> 
       </DivA>
+      
+      <DivB>
+        <Div> if you have forgot url, contact me </Div>
+        <Div> <A href="https://twitter.com/mbcat_hots" > @mbcat_hots </A>  </Div>
+      </DivB>
       
       <DivC>
         <SearchingPlan />

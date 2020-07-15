@@ -8,6 +8,7 @@ import {replaceData} from "../redux/store";
 import { NavLink } from 'react-router-dom';
 import {Div} from '../styles/DefaultStyles';
 
+import IconLogo from '../svgs/brand/IconLogo';
 import IconSun from '../svgs/IconSun';
 import IconMoon from '../svgs/IconMoon';
 
@@ -54,7 +55,20 @@ const DivSub = styled(Div)`
   
 `;
 
+const DivLogo = styled(Div)`
+	margin-top: 20px;
+	margin-bottom: 10px;
+	
+	@media (max-width: ${props => (props.theme.media.mid_big -1) }px ) {
+  	display: none;
+	}
+ 
+	@media (min-width:  ${props => (props.theme.media.mid_big) }px) {
+	
+	}
+`
 
+/*
 const DivTitle = styled(Div)`
 	
 	height: 160px;
@@ -77,7 +91,7 @@ const DivTitle = styled(Div)`
 	
 	}
 `
-
+*/
 
 
 const DivNavItem = styled(Div)`
@@ -193,10 +207,12 @@ const Sub = ({match, location, replaceData, themeName}) => {
 	
   <DivSub>
   	
-  	<DivTitle>
-  		PARALLEL STORM
-  	</DivTitle>
   	
+  	<DivLogo>
+  	
+  	<IconLogo width={"50px"} height={"50px"} />
+  	
+  	</DivLogo>
   	
   	
   	<DivNavItem > <NavLinkNavItem to="/about"> About </NavLinkNavItem> </DivNavItem>
@@ -244,6 +260,12 @@ function mapDispatchToProps(dispatch) {
 // TableEntry 컴포넌트에서 redux의 state, dispatch 를 일부분 골라서 이용가능하게 된다
 export default connect(mapStateToProps, mapDispatchToProps)(Sub);
 
+
+/*
+<DivTitle>
+  		PARALLEL STORM
+  	</DivTitle>
+*/
 
 /*
 

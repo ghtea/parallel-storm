@@ -19,7 +19,7 @@ import useInput from '../../tools/hooks/useInput';
 import {getTimeStamp} from '../../tools/vanilla/time';
 
 import IconWorking from '../../svgs/IconWorking'
-import IconCopy from '../../svgs/IconCopy'
+import IconCopy from '../../svgs/basic/IconCopy'
 
 import {CopyToClipboard} from 'react-copy-to-clipboard';
 
@@ -42,6 +42,7 @@ const DivHeader = styled(Div)`
 `
 
 const DivTitle = styled(Div)`
+  margin-top: 10px;
   font-size: 1.2rem;
   font-weight: bold;
 `

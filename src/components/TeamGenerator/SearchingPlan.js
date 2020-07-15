@@ -10,7 +10,7 @@ import {replaceWorking} from "../../redux/store";
 
 import { NavLink, useHistory } from 'react-router-dom';
 
-import {Div, Input, Button} from '../../styles/DefaultStyles';
+import {Div, Input, Button, A} from '../../styles/DefaultStyles';
 
 
 import useInput from '../../tools/hooks/useInput';
@@ -18,7 +18,7 @@ import IconWorking from '../../svgs/IconWorking'
 
 
 const DivSearchingPlan = styled(Div)`
-  
+  height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
@@ -35,7 +35,7 @@ const DivSearchingPlan = styled(Div)`
   return (
   
   <DivSearchingPlan>
-      we can search for existing plan here 
+      
   </DivSearchingPlan>
   
   )

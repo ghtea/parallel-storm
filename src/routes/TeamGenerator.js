@@ -63,15 +63,32 @@ const DivTeamGenerator = styled(Div)`
 
 const DivA = styled(Div)`
   grid-area: A;
+  
+  @media (max-width: ${props => (props.theme.media.mid_big -1) }px ) {
+    height: 240px;
+  }
+  
 `
 const DivB = styled(Div)`
   grid-area: B;
+  
+  @media (max-width: ${props => (props.theme.media.mid_big -1) }px ) {
+    height: 240px;
+  }
 `
 const DivC = styled(Div)`
   grid-area: C;
+  
+  @media (max-width: ${props => (props.theme.media.mid_big -1) }px ) {
+    height: 400px;
+  }
 `
 const DivD = styled(Div)`
   grid-area: D;
+  
+  @media (max-width: ${props => (props.theme.media.mid_big -1) }px ) {
+    height: 400px;
+  }
 `
 
 
