@@ -40,7 +40,7 @@ const themes =  {
         color_weak: '#777777',
         color_very_weak: '#cccccc',
         
-        COLOR_bg: '#f0f0f9',
+        COLOR_bg: '#eeeef3',
         
         COLOR_normal: '#f8f8f8'
         

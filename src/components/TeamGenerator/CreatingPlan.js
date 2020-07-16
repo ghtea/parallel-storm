@@ -181,7 +181,7 @@ const DivIconWorking = styled(Div)`
           ,title: titlePlanTeam
           ,region: regionCreating
         });
-        
+        //console.log(regionCreating);
         replaceWorking("createPlan", false);
         addRemoveNotification("success", "new plan has been created!");
         //status.createPlan = true; //  작업이 잘되었다고 표시

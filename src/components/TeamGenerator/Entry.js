@@ -2,11 +2,16 @@ import dotenv from 'dotenv';
 import React, {useState, useEffect} from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
+
 //import path from 'path'
 import { NavLink, useParams } from 'react-router-dom';
 
 import { connect } from "react-redux";
+import {replacePlayerTags} from "../../redux/store";
+import {replacePlayerStatus} from "../../redux/store";
 import readPlanTeam from "../../redux/thunks/readPlanTeam";
+import addRemoveNotification from "../../redux/thunks/addRemoveNotification";
+
 // https://reacttraining.com/blog/react-router-v5-1/
 
 import {Div, Table, Tr, Td} from '../../styles/DefaultStyles';
@@ -16,13 +21,14 @@ import IconLoading from '../../svgs/IconLoading'
 import IconConfirmed from '../../svgs/IconConfirmed'
 import IconPending from '../../svgs/IconPending'
 import IconInfo from '../../svgs/IconInfo'
-import IconStar from '../../svgs/IconStar'
+import IconLeader from '../../svgs/basic/IconLeader'
 
 import IconTank from '../../svgs/roles/IconTank'
 import IconBruiser from '../../svgs/roles/IconBruiser'
 import IconMeleeAssassin from '../../svgs/roles/IconMeleeAssassin'
 import IconRangedAssassin from '../../svgs/roles/IconRangedAssassin'
 import IconHealer from '../../svgs/roles/IconHealer'
+import {CopyToClipboard} from 'react-copy-to-clipboard';
 
 // 이상하게 dotenv.config() 안해도 된다 (오히려 하면 에러 발생...)
 //dotenv.config() ;
@@ -148,7 +154,7 @@ const DivRowPlayer = styled(Div)`
 
 */
 
-const DivStar = styled(Div)`
+const DivLeader = styled(Div)`
   
     
 `
@@ -168,7 +174,9 @@ const DivBattletag = styled(Div)`
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
-  align-items: center;
+  align-items: flex-end;
+  
+  cursor: pointer;
   
   @media (max-width: ${props => (props.theme.media.small_mid -1) }px ) {
     display: flex;
@@ -180,7 +188,8 @@ const DivBattletag = styled(Div)`
 
 const DivBattletagName = styled(Div)`
   
-  width: inherit;
+  width: auto;
+  max-width: inherit;
   
   display: inline;
   text-algin: left;
@@ -226,10 +235,19 @@ const DivMmr = styled(Div)`
   font-size: 0.9rem;
 `
 
+const DivStatus = styled(Div)`
+  
+`;
 
-const RowPlayer = ({battletag, mmr, regions, roles, statusPlayer}) => {
+
+const RowPlayer = ({
+  idPlanTeam, battletag, mmr, regions, roles, statusPlayer, isLeader
+  , replacePlayerTags, replacePlayerStatus, addRemoveNotification
+}) => {
   
   useEffect(()=>{console.log("Each row has been rerendered")})
+  
+  
   
   const IconStatus = {
     pending: <IconPending width={"20px"} height={"20px"} />
@@ -243,23 +261,132 @@ const RowPlayer = ({battletag, mmr, regions, roles, statusPlayer}) => {
   const battletagName = battletag.replace(regexBattletag, "")
   
   
+  const onClick_DivLeader = async (event) => {
+    
+    if (!isLeader) { 
+      replacePlayerTags(battletag, "leader", true);
+      
+      
+      await axios.put (`${process.env.REACT_APP_URL_AHR}/player/update-tags`,
+        { 
+          idPlanTeam: idPlanTeam
+          , battletag: battletag
+          , tag: "leader"
+          , true_false: true
+        }
+      );
+      
+      if (statusPlayer === "pending") { // 만약 status 가 pending 때는 status 도 confirmed 로 한꺼번에 바꿔주기!
+        replacePlayerStatus(battletag, "confirmed");
+        
+        await axios.put (`${process.env.REACT_APP_URL_AHR}/player/update-status`,
+          { 
+            idPlanTeam: idPlanTeam
+            , battletag: battletag
+            , status: "confirmed"
+          }
+        );
+      }
+      
+    }
+    
+    else {
+      replacePlayerTags(battletag, "leader", false);
+      
+      await axios.put (`${process.env.REACT_APP_URL_AHR}/player/update-tags`,
+        { 
+          idPlanTeam: idPlanTeam
+          , battletag: battletag
+          , tag: "leader"
+          , true_false: false
+        }
+      );
+      
+      
+    }
+    
+  }
+  
+  
+  
+  const onClick_DivStatus = async (event) => {
+    
+    let newStatus;
+    if (statusPlayer === "pending") {
+      replacePlayerStatus(battletag, "confirmed");
+    
+      await axios.put (`${process.env.REACT_APP_URL_AHR}/player/update-status`,
+        { 
+          idPlanTeam: idPlanTeam
+          , battletag: battletag
+          , status: "confirmed"
+        }
+      );
+      
+    }
+    else { // if status was "confirmed"
+      replacePlayerStatus(battletag, "pending");
+    
+      await axios.put (`${process.env.REACT_APP_URL_AHR}/player/update-status`,
+        { 
+          idPlanTeam: idPlanTeam
+          , battletag: battletag
+          , status: "pending"
+        }
+      );
+      
+      if (isLeader === true) {
+        replacePlayerTags(battletag, "leader", false);
+        
+        await axios.put (`${process.env.REACT_APP_URL_AHR}/player/update-tags`,
+          { 
+            idPlanTeam: idPlanTeam
+            , battletag: battletag
+            , tag: "leader"
+            , true_false: false
+          }
+        );
+      }
+    }
+    
+    
+    replacePlayerStatus(battletag, newStatus);
+    
+    await axios.put (`${process.env.REACT_APP_URL_AHR}/player/update-status`,
+      { 
+        idPlanTeam: idPlanTeam
+        , battletag: battletag
+        , status: newStatus
+      }
+    );
+    
+  }
+  
+  
 
   return (
     
     <DivRowPlayer >
       
-      <DivStar > 
-        <IconStar
-          width={"20px"}
-          height={"20px"}
-          isFilled={false}
+      <DivLeader onClick={onClick_DivLeader} > 
+        <IconLeader
+          
+          width={"23px"}
+          height={"18px"}
+          isFilled={isLeader}
         />  
-      </DivStar >
+      </DivLeader >
       
-      <DivBattletag> 
-        <DivBattletagName> {battletagName} </DivBattletagName>
-        <DivBattletagNumber> {battletagNumber} </DivBattletagNumber>
-      </DivBattletag>
+      <CopyToClipboard 
+        text={battletag}
+        onCopy={ () => { addRemoveNotification("success", `'${battletag}' has been copied`) } } >
+        
+        <DivBattletag> 
+          <DivBattletagName> {battletagName} </DivBattletagName>
+          <DivBattletagNumber> {battletagNumber} </DivBattletagNumber>
+        </DivBattletag>
+        
+      </CopyToClipboard>
       
       <DivRoles> 
         <Div> {(roles.includes("Tank"))? <IconTank width={"20px"} height={"20px"} /> : <Div></Div>} </Div>
@@ -274,9 +401,9 @@ const RowPlayer = ({battletag, mmr, regions, roles, statusPlayer}) => {
         {mmr}
       </DivMmr>
        
-      <Div> 
+      <DivStatus onClick={onClick_DivStatus}> 
         {IconStatus[statusPlayer]}
-      </Div>
+      </DivStatus>
         
        
          
@@ -287,9 +414,41 @@ const RowPlayer = ({battletag, mmr, regions, roles, statusPlayer}) => {
 
 
 
-const Entry = ({listPlayerEntry}) => {
+const Entry = ({
+  idPlanTeam, listPlayerEntry
+  , replacePlayerTags, replacePlayerStatus, addRemoveNotification
+  
+}) => {
   
   useEffect(()=>{console.log("Entry has been rerendered")})
+  
+  let listPlayer = (Object.keys(listPlayerEntry)).map(element=>listPlayerEntry[element]._id); // list of battletags
+  
+  
+  
+  const listPlayerConfirmed = listPlayer.filter(battletag => {
+    const objPlayer = listPlayerEntry.find(objPlayer => objPlayer._id === battletag)
+    return objPlayer.status === "confirmed"
+  } )
+  
+  const listPlayerConfirmedLeader = listPlayerConfirmed.filter(battletag => {
+    const objPlayer = listPlayerEntry.find(objPlayer => objPlayer._id === battletag)
+    return objPlayer.tags.includes("leader");
+  } )
+  
+  const listPlayerConfirmedNonLeader= listPlayerConfirmed.filter(battletag => {
+    const objPlayer = listPlayerEntry.find(objPlayer => objPlayer._id === battletag)
+    return !(objPlayer.tags.includes("leader"));
+  } )
+  
+  
+  
+  const listPlayerPending = listPlayer.filter(battletag => {
+    const objPlayer = listPlayerEntry.find(objPlayer => objPlayer._id === battletag)
+    return objPlayer.status === "pending"
+  } )
+  
+  const listPlayerShowing = [...listPlayerConfirmedLeader, ...listPlayerConfirmedNonLeader, ...listPlayerPending];
   
   
   return (
@@ -312,11 +471,16 @@ const Entry = ({listPlayerEntry}) => {
     </DivRowHeader>
     
     { 
-      ( listPlayerEntry ).map( (player, i) =>
-      
-        < RowPlayer 
+      ( listPlayerShowing ).map( (battletag, i) => {
         
+        const player = listPlayerEntry.find(objPlayer => objPlayer._id === battletag);
+      
+      return (
+        < RowPlayer 
+          
           key={ `${player._id}_${(new Date().getTime()).toString()}` }
+          
+          idPlanTeam={idPlanTeam}
           
           battletag={player._id} 
           
@@ -326,9 +490,15 @@ const Entry = ({listPlayerEntry}) => {
           
           roles ={player.roles}
           
+          isLeader = {player.tags.includes("leader")}
           statusPlayer={player.status} 
-        /> 
-      )
+          
+          replacePlayerTags = {replacePlayerTags}
+          replacePlayerStatus = {replacePlayerStatus}
+          addRemoveNotification = {addRemoveNotification}
+        />)
+      }
+      ) 
     }
       
     </DivTableEntry>
@@ -347,6 +517,7 @@ const Entry = ({listPlayerEntry}) => {
 function mapStateToProps(state) { 
   return { 
     listPlayerEntry: [...state.planTeam.listPlayerEntry]
+    ,idPlanTeam: state.planTeam._id
     //,workingAddPlayerToListPlayerEntry: state.working.addPlayerToListPlayerEntry
     //,readyPlanTeam: state.ready.planTeam
     //,loading: state.loading
@@ -355,10 +526,14 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) { 
   return { 
-    
+    replacePlayerTags: (battletag, tag, true_false) => dispatch(replacePlayerTags(battletag, tag, true_false))
+    ,replacePlayerStatus: (battletag, status) => dispatch(replacePlayerStatus(battletag, status))
+    ,addRemoveNotification: (situation, message, time) => dispatch( addRemoveNotification(situation, message, time) )
+
   }; 
 }
 
 
 // TableEntry 컴포넌트에서 redux의 state, dispatch 를 일부분 골라서 이용가능하게 된다
+// connect(mapStateToProps, mapDispatchToProps)(RowPlayer);    https://stackoverflow.com/questions/46276810/what-is-the-necessity-of-export-default-connect-when-you-are-connecting-your-r
 export default connect(mapStateToProps, mapDispatchToProps)(Entry);

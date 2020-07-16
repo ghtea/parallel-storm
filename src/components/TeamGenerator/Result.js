@@ -6,6 +6,8 @@ import axios from 'axios';
 import { NavLink, useParams } from 'react-router-dom';
 
 import { connect } from "react-redux";
+
+import {addResult} from "../../redux/store";
 import readPlanTeam from "../../redux/thunks/readPlanTeam";
 // https://reacttraining.com/blog/react-router-v5-1/
 
@@ -183,46 +185,88 @@ const RowPlayer = ({battletag, mmr, statusPlayer}) => {
 
 
 
-const Result = ({planTeam, readyPlanTeam}) => {
+const Result = ({planTeam, addResult}) => {
   
   const [result, setResult] = useState(0);
-  useEffect(()=>{console.log("Entry has been rerendered")})
+  //useEffect(()=>{console.log("Entry has been rerendered")})
   
+  ///
   const numberTeams = 2;
-  let objTeams = {};
   
   for (var i =0; i<numberTeams; i++) {
     
   }
   
   
-  let orderPlayerEntry= [];
+  ///
+  const listPlayerEntry = planTeam.listPlayerEntry; // list of objPlayer
+  let listPlayer = (Object.keys(listPlayerEntry)).map(element=>listPlayerEntry[element]._id); // list of battletags
   
-  useEffect(()=> {
-    if (readyPlanTeam) {
-      const listPlayerEntry = planTeam.listPlayerEntry;
-      
-      orderPlayerEntry = [...listPlayerEntry];
-    
-    }
-  },[readyPlanTeam])
-  
-  
-  
+  let orderPlayer;
+  let objTeams = {};
+  let listTeamName = [];
+
+  // 1. confirmed - 2. leader - 3. less roles player(2, 1) - 4. rest
   const onClick_generateTeams = (event) => {
     
-    //orderPlayerRemain = (Object.keys(listPlayerEntry)).map(element=>element._id);
-    //listPlayerRemain = Object.keys(listPlayerEntry);
     
-    orderPlayerEntry = orderPlayerEntry.sort( (player1, player2) => { 
-      return (player2.mmr.standard.NA - player1.mmr.standard.NA);
+    orderPlayer = listPlayer.sort( (player1, player2) => {    // mmr 높은순으로 list of battletags
+      
+      const objPlayer1 = listPlayerEntry.find(objPlayer => objPlayer._id === player1)
+      const objPlayer2 = listPlayerEntry.find(objPlayer => objPlayer._id === player2)
+      
+      return (objPlayer2.mmr.standard.NA - objPlayer1.mmr.standard.NA);
       // ex 3333, 222, 1111
     });
     
+    const listPlayerLeader = orderPlayer.filter(
+      battletagPlayer => {
+        const objPlayer = listPlayerEntry.find(objPlayer => objPlayer._id === battletagPlayer)
+        return (objPlayer.tags.includes("leader"))
+      }
+    )
+    
+    console.log(listPlayerLeader);
     //orderPlayer = 
-    console.log(orderPlayerEntry)
-    setResult(result+1)
+    //console.log(orderPlayer)
+    
+    for (var i =0; i<numberTeams; i++) {
+      const teamName = `team${i+1}`;
+      objTeams[teamName] = `it is ${teamName}`
+      listTeamName.push(teamName);
+    }
+    
+    setResult(result+1);
+    console.log(result)
+    console.log(objTeams);
+    
+    /*
+    {
+      _id: String,
+      listPlayerBattletag: [String],
+      name: String,
+      group: String
+    }
+    */
+    
+    let team1 = {
+      _id: Date.now()
+      ,listPlayerBattletag: ["mbcat#1234", "mbcat#1703"]
+      ,name: "dragon team"
+    }
+    
+    let resultTeam = {
+      added: Date.now()
+      ,listTeam: [
+        team1
+        
+      ]
+    }
+    
+    addResult(resultTeam);
   }
+  
+  
   
   return (
   
@@ -233,7 +277,10 @@ const Result = ({planTeam, readyPlanTeam}) => {
     <Div onClick={onClick_generateTeams}> 
       button
     </Div>
-    
+  
+    {result && listTeamName.map(element=>
+      <Div> {element} </Div>
+    )}
     
     
   </DivResult>
@@ -284,14 +331,14 @@ function mapStateToProps(state) {
     planTeam: state.planTeam
     //listPlayerEntry: [...state.planTeam.listPlayerEntry]
     //,workingAddPlayerToListPlayerEntry: state.working.addPlayerToListPlayerEntry
-    ,readyPlanTeam: state.ready.planTeam
+    //,readyPlanTeam: state.ready.planTeam
     //,loading: state.loading
   }; 
 } 
 
 function mapDispatchToProps(dispatch) { 
   return { 
-    
+    addResult: (resultTeam) => dispatch( addResult(resultTeam) ) 
   }; 
 }
 

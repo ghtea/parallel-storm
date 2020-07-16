@@ -40,7 +40,7 @@ const DivSub = styled(Div)`
   	height: 50px; 
   	
   	flex-direction: row;
-  	
+  	border-bottom: 1px solid ${props => props.theme.color_very_weak};
 	}
  
 	@media (min-width:  ${props => (props.theme.media.mid_big) }px) {
@@ -107,6 +107,7 @@ const DivNavItem = styled(Div)`
 	
 	
 	font-size: 1.1rem;
+	line-height: 1.1rem;
 
   @media (max-width: ${props => (props.theme.media.mid_big -1) }px ) {
   

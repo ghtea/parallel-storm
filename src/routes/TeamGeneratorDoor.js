@@ -93,7 +93,7 @@ const TeamGeneratorDoor = ({}) => {
       </DivB>
       
       <DivC>
-        <SearchingPlan />
+        
       </DivC>
     
     </DivTeamGenerator>

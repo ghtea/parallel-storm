@@ -16,6 +16,11 @@ const REPLACE_DATA = "REPLACE_DATA";
 const ADD_NOTIFICATION = "ADD_NOTIFICATION";
 const REMOVE_NOTIFICATION = "REMOVE_NOTIFICATION";
 
+const ADD_RESULT = "ADD_RESULT";
+const REPLACE_PLAYER_TAGS = "REPLACE_PLAYER_TAGS";
+const REPLACE_PLAYER_STATUS = "REPLACE_PLAYER_STATUS";
+const REPLACE_REGION = "REPLACE_REGION";
+
 
 
 // fundamental action creator
@@ -75,7 +80,36 @@ export const removeNotification = (idNotification) => {
   }
 }
 
+export const addResult = (result) => {
+  return {
+    type: ADD_RESULT,
+    result: result
+  }
+}
 
+export const replacePlayerTags = (battletag, tag, true_false) => {
+  return {
+    type: REPLACE_PLAYER_TAGS,
+    battletag: battletag,
+    tag: tag,
+    true_false: true_false
+  }
+}
+
+export const replacePlayerStatus = (battletag, status) => {
+  return {
+    type: REPLACE_PLAYER_STATUS,
+    battletag: battletag,
+    status: status
+  }
+}
+
+export const replaceRegion = (region) => {
+  return {
+    type: REPLACE_REGION,
+    region: region
+  }
+}
 
 
 

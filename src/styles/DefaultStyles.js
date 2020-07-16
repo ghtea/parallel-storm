@@ -7,8 +7,7 @@ import styled, {createGlobalStyle} from 'styled-components';
  
   html, body, #root {
   
-    transition: background-color 1s linear; // when light/dark mode changes
-    transition: color 1s linear; // when light/dark mode changes
+    
     
     background-color: ${props => props.theme.COLOR_bg};
     color: ${props => props.theme.color_normal};
@@ -76,7 +75,8 @@ import styled, {createGlobalStyle} from 'styled-components';
  
  /* because of svg */
  .icon.usingHover:hover {
-   fill: ${props => (props.theme.color_weak) };
+   //fill: ${props => (props.theme.color_weak) };
+   cursor: pointer;
  }
  
  /* message UI */
@@ -90,7 +90,15 @@ import styled, {createGlobalStyle} from 'styled-components';
   color: ${props => props.theme.color_success};
  }
  
+ 
+ 
+ /* it's pressure to browser :(
+ html, body, div, button, a, input, p, span {
+  transition: background-color 0.5s linear; // when light/dark mode changes
+  transition: color 0.5s linear; // when light/dark mode changes 
+ } */
 `
+
 
 export const Div = styled.div`
  display: flex;
