@@ -302,7 +302,6 @@ const RowPlayer = ({
         }
       );
       
-      
     }
     
   }
@@ -349,16 +348,6 @@ const RowPlayer = ({
       }
     }
     
-    
-    replacePlayerStatus(battletag, newStatus);
-    
-    await axios.put (`${process.env.REACT_APP_URL_AHR}/player/update-status`,
-      { 
-        idPlanTeam: idPlanTeam
-        , battletag: battletag
-        , status: newStatus
-      }
-    );
     
   }
   
@@ -415,15 +404,25 @@ const RowPlayer = ({
 
 
 const Entry = ({
-  idPlanTeam, listPlayerEntry
+  idPlanTeam, listPlayerEntry, option
   , replacePlayerTags, replacePlayerStatus, addRemoveNotification
   
 }) => {
+  
+  const region = option.region;
   
   useEffect(()=>{console.log("Entry has been rerendered")})
   
   let listPlayer = (Object.keys(listPlayerEntry)).map(element=>listPlayerEntry[element]._id); // list of battletags
   
+  listPlayer = listPlayer.sort( (player1, player2) => {    // mmr 높은순으로 list of battletags
+      
+      const objPlayer1 = listPlayerEntry.find(objPlayer => objPlayer._id === player1)
+      const objPlayer2 = listPlayerEntry.find(objPlayer => objPlayer._id === player2)
+      
+      return (objPlayer2.mmr.standard[region] - objPlayer1.mmr.standard[region]);
+      // ex 3333, 222, 1111
+    });
   
   
   const listPlayerConfirmed = listPlayer.filter(battletag => {
@@ -486,7 +485,7 @@ const Entry = ({
           
           regions ={player.regions}
           
-          mmr={player.mmr.standard.NA} 
+          mmr={player.mmr.standard[region]} 
           
           roles ={player.roles}
           
@@ -518,6 +517,7 @@ function mapStateToProps(state) {
   return { 
     listPlayerEntry: [...state.planTeam.listPlayerEntry]
     ,idPlanTeam: state.planTeam._id
+    ,option: state.planTeam.option
     //,workingAddPlayerToListPlayerEntry: state.working.addPlayerToListPlayerEntry
     //,readyPlanTeam: state.ready.planTeam
     //,loading: state.loading

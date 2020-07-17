@@ -20,16 +20,19 @@ const ADD_RESULT = "ADD_RESULT";
 const REPLACE_PLAYER_TAGS = "REPLACE_PLAYER_TAGS";
 const REPLACE_PLAYER_STATUS = "REPLACE_PLAYER_STATUS";
 const REPLACE_REGION = "REPLACE_REGION";
+const REPLACE_NUMBER = "REPLACE_NUMBER";
 
 
 
 // fundamental action creator
+/*
 export const replaceRerender = (which) => {
   return {
     type: REPLACE_RERENDER
     ,which: which
   }
 }
+*/
 
 export const replaceReady = (which, true_false) => {
   return {
@@ -108,6 +111,15 @@ export const replaceRegion = (region) => {
   return {
     type: REPLACE_REGION,
     region: region
+  }
+}
+
+export const replaceNumber = (pairNumber, which, how) => {
+  return {
+    type: REPLACE_NUMBER
+    ,which: which
+    ,how: how
+    ,pairNumber: pairNumber
   }
 }
 

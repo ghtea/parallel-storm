@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import axios from 'axios';
 
 import { connect } from "react-redux";
-import {replaceWorking, replaceRegion} from "../../redux/store";
+import {replaceWorking, replaceRegion, replaceNumber} from "../../redux/store";
 import readPlanTeam from "../../redux/thunks/readPlanTeam";
 import addRemoveNotification from "../../redux/thunks/addRemoveNotification";
 
@@ -135,6 +135,7 @@ const ButtonNumberSide = styled(Button)`
   
   , addRemoveNotification
   , replaceRegion
+  ,replaceNumber
    
  }) => {
 
@@ -149,32 +150,40 @@ const ButtonNumberSide = styled(Button)`
   
   const onClick_ButtonRegion = async (event) => {
     
+    let newRegion;
+    
     switch(option.region) {
       case "NA":
-        replaceRegion("EU");
+        newRegion = "EU";
         break;
       case "EU":
-        replaceRegion("KR");
+        newRegion = "KR";
         break;
       case "KR":
-        replaceRegion("CN");
+        newRegion = "CN";
         break;
       case "CN":
-        replaceRegion("NA");
+        newRegion = "NA";
         break;
     }
-  
-  await axios.put (`${process.env.REACT_APP_URL_AHR}/plan-team/${idPlanTeam}`,
-    {
-      filter: {_id: idPlanTeam}
-      , update : {
-        $set: { "option.region": option.region }
+    
+    replaceRegion(newRegion);
+    await axios.put (`${process.env.REACT_APP_URL_AHR}/plan-team/`,
+      {
+        filter: {_id: idPlanTeam}
+        , update : {
+          $set: { "option.region": newRegion }
+        }
       }
-    }
-  );
+    );
   
-}
+  }
   
+  
+  const onClick_ButtonNumber = (event, pairNumber, which, how) => {
+    replaceNumber(pairNumber, which, how);
+    
+  }
   
   // copy: https://www.npmjs.com/package/react-copy-to-clipboard
   
@@ -202,22 +211,21 @@ const ButtonNumberSide = styled(Button)`
     <GroupNumber>
       <Div> number of teams: </Div>
       
-      <ButtonNumberSide> <IconMinus width={"20px"} height={"20px"} />  </ButtonNumberSide>
-      <ButtonNumberCenter>
-        {(option.numberTeams)? `${option.numberTeams}` : `auto`}
+      <ButtonNumberSide
+        onClick={(event)=>onClick_ButtonNumber(event, [option.numberTeams, option.numberGroups], "team", "minus")}
+        > <IconMinus width={"20px"} height={"20px"} />  </ButtonNumberSide>
+        
+      <ButtonNumberCenter
+        onClick={(event)=>onClick_ButtonNumber(event, [option.numberTeams, option.numberGroups], "team", "center")}
+        > {(option.numberTeams === 0)? `auto` : `${option.numberTeams}` }
       </ButtonNumberCenter>
-      <ButtonNumberSide> <IconPlus width={"20px"} height={"20px"} /> </ButtonNumberSide>
+      
+      <ButtonNumberSide
+        onClick={(event)=>onClick_ButtonNumber(event, [option.numberTeams, option.numberGroups], "team", "plus")}
+        > <IconPlus width={"20px"} height={"20px"} /> </ButtonNumberSide>
 	  </GroupNumber>
 	 
-	 <GroupNumber>
-      <Div> number of groups: </Div>
-      
-      <ButtonNumberSide> <IconMinus width={"20px"} height={"20px"} /> </ButtonNumberSide>
-      <ButtonNumberCenter>
-        {(option.numberTeams)? `${option.numberTeams}` : `none`}
-      </ButtonNumberCenter>
-      <ButtonNumberSide> <IconPlus width={"20px"} height={"20px"} /> </ButtonNumberSide>
-	  </GroupNumber>
+	 
 	   
 	   
    </DivBody>
@@ -229,6 +237,27 @@ const ButtonNumberSide = styled(Button)`
 
 }
   
+  
+  /*
+  
+  <GroupNumber>
+      <Div> number of groups: </Div>
+      
+      <ButtonNumberSide
+        onClick={(event)=>onClick_ButtonNumber(event, [option.numberTeams, option.numberGroups], "group", "minus")}
+      > <IconMinus width={"20px"} height={"20px"} /> </ButtonNumberSide>
+      
+      <ButtonNumberCenter
+        onClick={(event)=>onClick_ButtonNumber(event, [option.numberTeams, option.numberGroups], "group", "center")}
+      > {(option.numberGroups ===0)? `none` : `${option.numberGroups }`}
+      </ButtonNumberCenter>
+      
+      <ButtonNumberSide
+        onClick={(event)=>onClick_ButtonNumber(event, [option.numberTeams, option.numberGroups], "group", "plus")}
+      > <IconPlus width={"20px"} height={"20px"} /> </ButtonNumberSide>
+	  </GroupNumber>
+  
+  */
 	  
 /*
 
@@ -274,7 +303,7 @@ function mapDispatchToProps(dispatch) {
     
     addRemoveNotification: (situation, message, time) => dispatch( addRemoveNotification(situation, message, time) )
     ,replaceRegion: (regionName) => dispatch(replaceRegion(regionName))
-    
+    ,replaceNumber: (pairNumber, which, how) => dispatch(replaceNumber(pairNumber, which, how))
     //,readPlanTeam: (idPlanTeam) => dispatch(readPlanTeam(idPlanTeam)) 
 
   }; 

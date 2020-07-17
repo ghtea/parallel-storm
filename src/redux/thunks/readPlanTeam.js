@@ -2,7 +2,7 @@ import axios from 'axios';
 import dotenv from 'dotenv';
 
 import {REPLACE_READY, REPLACE_LOADING, REPLACE_DATA, ADD_NOTIFICATION, REMOVE_NOTIFICATION} from '../store';
-import {replaceRerender, replaceReady, replaceLoading, replaceData, addNotification, removeNotification} from '../store'
+import { replaceReady, replaceLoading, replaceData, addNotification, removeNotification} from '../store'
 import addRemoveNotification from "./addRemoveNotification";
 
 
@@ -20,7 +20,7 @@ const readPlanTeam = (idPlanTeam) => {
       dispatch( replaceReady("planTeam", true) );
       dispatch( replaceLoading("planTeam", false) ); 
       
-      dispatch( replaceRerender("idPlanTeam") );
+      
     } 
 
 

@@ -1,7 +1,7 @@
 import {getTimeStamp} from '../tools/vanilla/time'
 import {toggleArrayElement} from '../tools/vanilla/array'
 
-const REPLACE_RERENDER = "REPLACE_RERENDER";
+//const REPLACE_RERENDER = "REPLACE_RERENDER";
 const REPLACE_READY = "REPLACE_READY";
 const REPLACE_LOADING = "REPLACE_LOADING";
 const REPLACE_WORKING = "REPLACE_WORKING";
@@ -16,16 +16,18 @@ const ADD_RESULT = "ADD_RESULT";
 const REPLACE_PLAYER_TAGS = "REPLACE_PLAYER_TAGS";
 const REPLACE_PLAYER_STATUS = "REPLACE_PLAYER_STATUS";
 const REPLACE_REGION = "REPLACE_REGION";
+const REPLACE_NUMBER = "REPLACE_NUMBER";
 
 
 const stateInitial = { 
     
     // foundamental 
+    /*
     rerender: {
       planTeam: ""
-    }
+    }*/
     
-    ,ready : {
+    ready : {
       planTeam: false
     }
     
@@ -82,6 +84,7 @@ const reducer = (
     
   switch (action.type) {
     
+    /*
     case REPLACE_RERENDER:
       return {
       	...state, 
@@ -90,6 +93,7 @@ const reducer = (
       	  ,[action.which]: getTimeStamp()
       	}
       };
+      */
       
     case REPLACE_DATA:
       
@@ -188,6 +192,73 @@ const reducer = (
       	}
       	
       };
+      
+    case REPLACE_NUMBER:
+      
+      let whichNumber;
+      let valueCurrent;
+      
+      if (action.which === "team") {
+        whichNumber = "numberTeams"
+        valueCurrent = action.pairNumber[0];
+      }
+      else if (action.which === "group") {
+        whichNumber = "numberGroups"
+        valueCurrent = action.pairNumber[1];
+      }
+      
+      
+        
+      
+      if (action.how === "center") {
+        return {
+          ...state,
+          planTeam: {
+            ...state.planTeam
+        	  , option: {
+        	    ...state.planTeam.option
+        	    , [whichNumber]: 0
+        	  }
+          }
+        }
+      }
+      else if  (action.how === "plus") {
+        return {
+          ...state,
+          planTeam: {
+            ...state.planTeam
+        	  , option: {
+        	    ...state.planTeam.option
+        	    , [whichNumber]: ( (state.planTeam.option)[whichNumber] + 1)
+        	  }
+          }
+        }
+      }
+      else if  (action.how === "minus" && !(valueCurrent == 0)) {
+        return {
+          ...state,
+          planTeam: {
+            ...state.planTeam
+        	  , option: {
+        	    ...state.planTeam.option
+        	    , [whichNumber]: ( (state.planTeam.option)[whichNumber] - 1)
+        	  }
+          }
+        }
+      }
+      else if  (action.how === "minus" && (valueCurrent == 0)) {
+        return {
+          ...state,
+          planTeam: {
+            ...state.planTeam
+        	  , option: {
+        	    ...state.planTeam.option
+        	    , [whichNumber]: 0
+        	  }
+          }
+        }
+      }
+       
       
     case REPLACE_PLAYER_TAGS:
       

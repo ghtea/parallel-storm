@@ -7,7 +7,7 @@ import { NavLink, useHistory } from 'react-router-dom';
 import { connect } from "react-redux";
 import readPlanTeam from "../redux/thunks/readPlanTeam";
 
-import {replaceRerender} from "../redux/store";
+//import {replaceRerender} from "../redux/store";
 import {replaceWorking} from "../redux/store";
 import {replaceLoading} from "../redux/store";
 import {replaceReady} from "../redux/store";
@@ -101,7 +101,7 @@ const TeamGenerator = ({
   , readyPlanTeam
   , idPlanTeam, passwordPlanTeam
   
-  , rerenderPlanTeamA
+  //, rerenderPlanTeamA
   
   , readPlanTeam
   , replaceData
@@ -242,7 +242,7 @@ function mapStateToProps(state) {
     , loadingPlanTeam: state.loading.planTeam
     , readyPlanTeam: state.ready.planTeam
     
-    , rerenderPlanTeamA: state.rerender.planTeam.A
+    //, rerenderPlanTeamA: state.rerender.planTeam.A
     
     //,loading: state.loading
     //,authority: state.authority

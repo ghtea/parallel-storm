@@ -71,7 +71,7 @@ const ButtonCopy = styled(Button)`
   justify-content: center;
   align-items: center;
 
-  width: 160px;
+  width: 150px;
   height: 100%;
   
   color: ${props => props.theme.color_normal};
