@@ -26,7 +26,7 @@ const IconMagic = ({width, height, themeName}) => {
 			height="100%"
 			viewBox="0 0 512 512"
 			
-			fill={ themes[themeName]["color_weak"] }
+			fill={ themes[themeName]["color_active"] }
 			>
 			
 			<path 
