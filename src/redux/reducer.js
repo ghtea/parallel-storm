@@ -145,7 +145,10 @@ const reducer = (
       };
       
     case ADD_NOTIFICATION:
-      return {
+      
+      const listIdNotification = state.notification.map(element => element.idNotification); // list of idNotification
+      if ( !(listIdNotification.includes(action.idNotification)) ) {  // 기존에 동일한 아이디의 알림이 없어야 추가
+        return {
       	...state, 
       	
       	notification: [
@@ -157,7 +160,11 @@ const reducer = (
       	  , ...state.notification
       	]
       	
-      };
+        };
+      }
+      else {return state}
+      
+      
     
     case REMOVE_NOTIFICATION:
       return {

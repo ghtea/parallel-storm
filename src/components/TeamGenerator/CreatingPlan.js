@@ -184,6 +184,7 @@ const DivIconWorking = styled(Div)`
         //console.log(regionCreating);
         replaceWorking("createPlan", false);
         addRemoveNotification("success", "new plan has been created!");
+        addRemoveNotification("tip", "please save the link!", 6000);
         //status.createPlan = true; //  작업이 잘되었다고 표시
         
         // move after 2 seconds because of preparing time

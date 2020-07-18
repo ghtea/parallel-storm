@@ -9,6 +9,8 @@ import { NavLink, useParams } from 'react-router-dom';
 import { connect } from "react-redux";
 import {replacePlayerTags} from "../../redux/store";
 import {replacePlayerStatus} from "../../redux/store";
+import {addNotification, removeNotification} from "../../redux/store";
+
 import readPlanTeam from "../../redux/thunks/readPlanTeam";
 import addRemoveNotification from "../../redux/thunks/addRemoveNotification";
 
@@ -55,10 +57,26 @@ const DivEntryTitle = styled(Div)`
 `
 
 const DivDescription = styled(Div)`
-  font-weight: medium;
-  margin-top: 5px;
-  height: 15px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  
   margin-bottom: 15px;
+  margin-top: 10px;
+  
+  & > div {
+
+    width: auto;
+    
+    margin-left: 4px;
+    margin-right: 4px;
+    
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-start;
+  }
 `
 
 
@@ -239,19 +257,29 @@ const DivStatus = styled(Div)`
 `;
 
 
+
+
+
+
 const RowPlayer = ({
-  idPlanTeam, battletag, mmr, regions, roles, statusPlayer, isLeader
+  authority
+  ,idPlanTeam, battletag, mmr, regions, roles, statusPlayer, isLeader
   , replacePlayerTags, replacePlayerStatus, addRemoveNotification
 }) => {
   
-  useEffect(()=>{console.log("Each row has been rerendered")})
-  
-  
-  
+  // for icon which depends on variable
   const IconStatus = {
     pending: <IconPending width={"20px"} height={"20px"} />
     ,confirmed: <IconConfirmed width={"20px"} height={"20px"} />
   };
+  
+  // 관리자 권한이 필요한 버튼을 클릭했을 때!
+  const onClick_NotAdministrator = (event) => {
+    addRemoveNotification("error", "You are not administrator")
+  }
+  
+  
+  
   
   const regexBattletag = /(#\d*)$/;
   const listNumberBattletag = battletag.match(regexBattletag);
@@ -356,7 +384,7 @@ const RowPlayer = ({
     
     <DivRowPlayer >
       
-      <DivLeader onClick={onClick_DivLeader} > 
+      <DivLeader onClick={(authority==="administrator")?onClick_DivLeader: onClick_NotAdministrator}> 
         <IconLeader
           
           width={"23px"}
@@ -389,7 +417,7 @@ const RowPlayer = ({
         {mmr}
       </DivMmr>
        
-      <DivStatus onClick={onClick_DivStatus}> 
+      <DivStatus onClick={(authority==="administrator")?onClick_DivStatus: onClick_NotAdministrator}> 
         {IconStatus[statusPlayer]}
       </DivStatus>
         
@@ -403,8 +431,10 @@ const RowPlayer = ({
 
 
 const Entry = ({
-  idPlanTeam, listPlayerEntry, option
-  , replacePlayerTags, replacePlayerStatus, addRemoveNotification
+  authority
+  ,idPlanTeam, listPlayerEntry, option
+  
+  , replacePlayerTags, replacePlayerStatus, addRemoveNotification, addNotification, removeNotification
   
 }) => {
   
@@ -454,7 +484,24 @@ const Entry = ({
   <DivEntry>
     
     <DivEntryTitle> Entry </DivEntryTitle>
-    <DivDescription> {`${listPlayerEntry.length} players`} </DivDescription>
+    
+    <DivDescription> 
+    
+      <Div> {`${listPlayerEntry.length} players`} </Div>
+      
+      <Div> 
+        <IconConfirmed width={"20px"} height={"20px"} /> {` : ${listPlayerConfirmed.length}`} 
+      </Div>
+      
+      <Div> 
+        <IconPending width={"20px"} height={"20px"} /> {` : ${listPlayerEntry.length - listPlayerConfirmed.length}`} 
+      </Div>
+      
+      <Div> 
+        <IconLeader width={"23px"} height={"18px"} isFilled={true} /> {` : ${listPlayerConfirmedLeader.length}`} 
+      </Div>
+      
+    </DivDescription>
     
     
     <DivTableEntry> 
@@ -478,6 +525,7 @@ const Entry = ({
           
           key={ `${player._id}_${(new Date().getTime()).toString()}` }
           
+          authority={authority}
           idPlanTeam={idPlanTeam}
           
           battletag={player._id} 
@@ -514,7 +562,8 @@ const Entry = ({
 
 function mapStateToProps(state) { 
   return { 
-    listPlayerEntry: [...state.planTeam.listPlayerEntry]
+    authority: state.authority
+    ,listPlayerEntry: [...state.planTeam.listPlayerEntry]
     ,idPlanTeam: state.planTeam._id
     ,option: state.planTeam.option
     //,workingAddPlayerToListPlayerEntry: state.working.addPlayerToListPlayerEntry
@@ -528,7 +577,9 @@ function mapDispatchToProps(dispatch) {
     replacePlayerTags: (battletag, tag, true_false) => dispatch(replacePlayerTags(battletag, tag, true_false))
     ,replacePlayerStatus: (battletag, status) => dispatch(replacePlayerStatus(battletag, status))
     ,addRemoveNotification: (situation, message, time) => dispatch( addRemoveNotification(situation, message, time) )
-
+    
+    ,addNotification: (situation, message, idNotification) => dispatch(addNotification(situation, message, idNotification))
+    ,removeNotification: (idNotification) => dispatch(removeNotification(idNotification))
   }; 
 }
 

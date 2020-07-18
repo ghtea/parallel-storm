@@ -20,6 +20,8 @@ import {getTimeStamp} from '../../tools/vanilla/time';
 
 import IconWorking from '../../svgs/IconWorking';
 import IconCopy from '../../svgs/basic/IconCopy';
+import IconAdministrator from '../../svgs/basic/IconAdministrator';
+import IconViewer from '../../svgs/basic/IconViewer';
 
 import {CopyToClipboard} from 'react-copy-to-clipboard';
 
@@ -44,6 +46,19 @@ const DivHeader = styled(Div)`
 const DivTitle = styled(Div)`
   font-size: 1.6rem;
   font-weight: bold;
+  
+  height: 30px;
+  
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  
+  & > div {
+    width: auto;
+    margin-left: 8px;
+    margin-right: 8px;
+  }
 `
 
 
@@ -174,14 +189,14 @@ const DivIconWorking = styled(Div)`
  }) => {
 
   const inputBattletag = useInput("");
-  const inputName = useInput("");
+  //const inputName = useInput("");
   
   
   // heroes profile 에서 mmr 가져오기, cPlanTeam 에 플레이어 추가, cPlanTeam 의 플레이의 mmr 추가 모두
   const onClick_ButtonAdd = async (event, statusPlayer) => {
     
     let battletag = inputBattletag.value;
-    let name = inputName.value;
+    //let name = inputName.value;
     const idPlanTeam = planTeam._id;
     
     let listRegionMain;
@@ -198,7 +213,7 @@ const DivIconWorking = styled(Div)`
           {
             battletag: battletag
             , idPlanTeam: idPlanTeam
-            , name: name
+            //, name: name
             , status: statusPlayer
           }
         );
@@ -221,7 +236,7 @@ const DivIconWorking = styled(Div)`
         readPlanTeam(idPlanTeam);  // important! need new data in redux for rernedering (ex: entry)
         
         inputBattletag.setValue("");  
-        inputName.setValue("");
+        //inputName.setValue("");
         
       }
       catch(error) {
@@ -288,7 +303,15 @@ const DivIconWorking = styled(Div)`
   <DivAddingPlayer>
         
     <DivHeader>
-      <DivTitle> {`${planTeam.title}`} </DivTitle>
+      <DivTitle> 
+        <Div> {`${planTeam.title}`}  </Div>
+        
+        {(authority==="administrator")?
+          <IconAdministrator width={"30px"} height={"24px"} /> 
+          : <IconViewer width={"27px"} height={"24px"} /> 
+        }
+      
+      </DivTitle>
       
       <GroupCopy>
         
@@ -326,7 +349,7 @@ const DivIconWorking = styled(Div)`
 
 	    <DivInputAdd>
 	      <InputBattletag {...inputBattletag} placeholder="battletag#1234" />
-	      <InputName {...inputName} placeholder="name" />
+	      
 	      
 	      { (authority === "viewer") && workingAddPlayer && 
           <ButtonAdd> 
@@ -359,9 +382,7 @@ const DivIconWorking = styled(Div)`
         
 	    </DivInputAdd>
 	    
-	    <Div>
-	      * name is not necessary
-	    </Div>
+	    
 	    
    </DivBody>
   
@@ -371,7 +392,8 @@ const DivIconWorking = styled(Div)`
   )
 
 }
-  
+
+// <InputName {...inputName} placeholder="name" />
 	  
 
 

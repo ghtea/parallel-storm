@@ -18,6 +18,7 @@ import IconConfirmed from '../../svgs/IconConfirmed'
 import IconPending from '../../svgs/IconPending'
 import IconInfo from '../../svgs/IconInfo'
 import IconMagic from  '../../svgs/basic/IconMagic'
+import IconUpload from  '../../svgs/basic/IconUpload'
 
 import IconTank from '../../svgs/roles/IconTank'
 import IconBruiser from '../../svgs/roles/IconBruiser'
@@ -52,18 +53,28 @@ const DivResultTitle = styled(Div)`
   margin-bottom: 10px;
 `
 
-const DivGenerate = styled(Div)`
+const GroupButtonMain = styled(Div)`
   margin-top: 10px;
   margin-bottom: 10px;
+  
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  
+  & > * {
+    margin: 5px;
+  }
+  
 `
 
-const ButtonMagic = styled(Button)`
+const ButtonGenerate = styled(Button)`
   width: 130px;
   height: 50px;
   
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  justify-content: space-evenly;
   align-items: center;
   
   border-radius: 10px;
@@ -73,6 +84,25 @@ const ButtonMagic = styled(Button)`
     height: 100%;
   }
 `
+
+const ButtonSave = styled(Button)`
+  width: 130px;
+  height: 50px;
+  
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+  
+  border-radius: 10px;
+  
+  & > div {
+    
+    height: 100%;
+  }
+`
+
+
 
 const DivAllTeams = styled(Div)`
   display: flex;
@@ -288,6 +318,7 @@ const TableTeam = ({objTeam, listPlayerEntry, addRemoveNotification, region}) =>
          
          return(
             <RowPlayer 
+              key={battletag}
               battletag={battletag}
               roles={cObjPlayer.roles}
               isLeader={isLeader}
@@ -315,7 +346,8 @@ const TableTeam = ({objTeam, listPlayerEntry, addRemoveNotification, region}) =>
 
 
 const Result = ({
-  option, listPlayerEntry
+  authority
+  ,option, listPlayerEntry
   , addRemoveNotification
 }) => {
   
@@ -462,7 +494,7 @@ const Result = ({
     for ( let i  =0; i  < numberTeamsResult; i++) {
       listTeamsTemp[i] = {};
       
-      listTeamsTemp[i]['name'] = `team ${i+1}`;
+      listTeamsTemp[i]['name'] = `TEAM ${i+1}`;
       listTeamsTemp[i]['listPlayerBattletag'] = [];
     }
     
@@ -544,21 +576,29 @@ const Result = ({
     
     <DivResultTitle> Result </DivResultTitle>
     
-    
-    <DivGenerate>
-    
-      <ButtonMagic onClick={onClick_generateTeams}>
-        <Div> Generate Teams </Div>
-        <IconMagic width={"40px"} height={"40px"} />   
-      </ButtonMagic>
-    
-    </DivGenerate>
+    {(authority==="administrator")?
+      <GroupButtonMain>
+      
+        <ButtonGenerate onClick={onClick_generateTeams}>
+          <Div> Generate Teams </Div>
+          <IconMagic width={"40px"} height={"40px"} />   
+        </ButtonGenerate>
+        
+        <ButtonSave>
+          <Div> Save Result </Div>
+          <IconUpload width={"50px"} height={"40px"} /> 
+        </ButtonSave>
+      
+      </GroupButtonMain>
+      : <Div> </Div>
+    }
   
     <DivAllTeams>
      {(listTeams.length)?
       
       listTeams.map( (team, index)=>
         < TableTeam 
+          key = {team.name}
           objTeam = {team}
           listPlayerEntry ={listPlayerEntry}
           addRemoveNotification = {addRemoveNotification}
@@ -580,7 +620,8 @@ const Result = ({
 
 function mapStateToProps(state) { 
   return { 
-    option: state.planTeam.option
+    authority: state.authority
+    ,option: state.planTeam.option
     ,listPlayerEntry: state.planTeam.listPlayerEntry
     //listPlayerEntry: [...state.planTeam.listPlayerEntry]
     //,workingAddPlayerToListPlayerEntry: state.working.addPlayerToListPlayerEntry

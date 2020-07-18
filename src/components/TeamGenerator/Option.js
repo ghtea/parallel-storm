@@ -133,6 +133,12 @@ const ButtonNumberSide = styled(Button)`
    
  }) => {
 
+  
+  // 관리자 권한이 필요한 버튼을 클릭했을 때!
+  const onClick_NotAdministrator = (event) => {
+    addRemoveNotification("error", "You are not administrator")
+  }
+  
 
 
   const objFlag = {
@@ -195,29 +201,39 @@ const ButtonNumberSide = styled(Button)`
    
     <DivRegion>
       <Div> region:  </Div>
-      <ButtonRegion onClick={onClick_ButtonRegion} > 
+      <ButtonRegion onClick={(authority==="administrator")?onClick_ButtonRegion:onClick_NotAdministrator}> 
   	     <img src={objFlag[option.region]} width="48" height="36"/>
   	  </ButtonRegion>
   	</DivRegion>
    
-   
-    <GroupNumber>
-      <Div> number of teams: </Div>
-      
-      <ButtonNumberSide
-        onClick={(event)=>onClick_ButtonNumber(event, [option.numberTeams, option.numberGroups], "team", "minus")}
-        > <IconMinus width={"20px"} height={"20px"} />  </ButtonNumberSide>
+   {(authority==="administrator")?
+      <GroupNumber>
+        <Div> number of teams: </Div>
         
-      <ButtonNumberCenter
-        onClick={(event)=>onClick_ButtonNumber(event, [option.numberTeams, option.numberGroups], "team", "center")}
-        > {(option.numberTeams === 0)? `auto` : `${option.numberTeams}` }
-      </ButtonNumberCenter>
-      
-      <ButtonNumberSide
-        onClick={(event)=>onClick_ButtonNumber(event, [option.numberTeams, option.numberGroups], "team", "plus")}
-        > <IconPlus width={"20px"} height={"20px"} /> </ButtonNumberSide>
-	  </GroupNumber>
-	 
+        <ButtonNumberSide
+          onClick={(event)=>onClick_ButtonNumber(event, [option.numberTeams, option.numberGroups], "team", "minus")}
+          > <IconMinus width={"20px"} height={"20px"} />  </ButtonNumberSide>
+          
+        <ButtonNumberCenter
+          onClick={(event)=>onClick_ButtonNumber(event, [option.numberTeams, option.numberGroups], "team", "center")}
+          > {(option.numberTeams === 0)? `auto` : `${option.numberTeams}` }
+        </ButtonNumberCenter>
+        
+        <ButtonNumberSide
+          onClick={(event)=>onClick_ButtonNumber(event, [option.numberTeams, option.numberGroups], "team", "plus")}
+          > <IconPlus width={"20px"} height={"20px"} /> </ButtonNumberSide>
+  	  </GroupNumber>
+  	  
+  	 : <GroupNumber>
+        <Div> number of teams: </Div>
+        
+        <ButtonNumberCenter
+          onClick={onClick_NotAdministrator}
+          > {(option.numberTeams === 0)? `auto` : `${option.numberTeams}` }
+        </ButtonNumberCenter>
+      </GroupNumber>
+   }
+	      
 	 
 	   
 	   

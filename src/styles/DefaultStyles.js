@@ -90,6 +90,18 @@ import styled, {createGlobalStyle} from 'styled-components';
   color: ${props => props.theme.color_success};
  }
  
+ .warning {
+  background-color: ${props => props.theme.COLOR_warning};
+  color: ${props => props.theme.color_warning};
+ }
+ 
+ .tip {
+  background-color: ${props => props.theme.COLOR_tip};
+  color: ${props => props.theme.color_tip};
+ }
+ 
+ 
+ 
  
  
  /* it's pressure to browser :(
