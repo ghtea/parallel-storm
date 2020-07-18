@@ -18,6 +18,7 @@ import addRemoveNotification from "../redux/thunks/addRemoveNotification";
 
 import {Div, Input, Button} from '../styles/DefaultStyles';
 //import Player from '../components/Player'
+import IconLoading from '../svgs/basic/IconLoading'
 
 
 
@@ -37,8 +38,10 @@ const DivTeamGenerator = styled(Div)`
   width: 100%;
   height: 100%;
   
+  display: grid;
+  align-items: start;
+  
   @media (max-width: ${props => (props.theme.media.mid_big -1) }px ) {
-    display: grid;
     grid-template-columns: 1fr;
     grid-template-rows: 240px 240px 400px 400px;
     grid-template-areas: 
@@ -50,7 +53,7 @@ const DivTeamGenerator = styled(Div)`
  
 
   @media (min-width:  ${props => (props.theme.media.mid_big) }px) {
-    display: grid;
+    
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 240px 1fr;
     grid-template-areas: 
@@ -63,6 +66,8 @@ const DivTeamGenerator = styled(Div)`
 
 const DivA = styled(Div)`
   grid-area: A;
+  
+  align-self: center;
   
   @media (max-width: ${props => (props.theme.media.mid_big -1) }px ) {
     height: 240px;
@@ -91,6 +96,23 @@ const DivD = styled(Div)`
   }
 `
 
+const DivLoading = styled(Div)`
+  width: 100%;
+  height: 100%;
+  
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`
+
+const Loading = () => {
+  return (
+    <DivLoading>   
+      <IconLoading width={"30px"} height={"30px"} />
+    </DivLoading>
+  )
+}
 
 
 // https://ps.avantwing.com/team-generator/sss?ooo 들어가 보기
@@ -178,22 +200,22 @@ const TeamGenerator = ({
     return (
       <DivTeamGenerator>
         
-        <DivA>
-          loading...
+        <DivA style={{alignSelf:  "center"}} >
+          < Loading />
         </DivA>
         
-        <DivB>
-          loading...
+        <DivB style={{alignSelf:  "center"}} >
+          < Loading />
         </DivB>
       
       
-        <DivC>
-          loading...
+        <DivC style={{alignSelf:  "center"}} >
+          < Loading />
         </DivC>
       
       
-        <DivD>
-          loading...
+        <DivD style={{alignSelf:  "center"}} >
+          < Loading />
         </DivD>
         
       </DivTeamGenerator>

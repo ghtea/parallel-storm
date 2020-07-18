@@ -14,9 +14,8 @@ import addRemoveNotification from "../../redux/thunks/addRemoveNotification";
 
 // https://reacttraining.com/blog/react-router-v5-1/
 
-import {Div, Table, Tr, Td} from '../../styles/DefaultStyles';
+import {Div} from '../../styles/DefaultStyles';
 
-import IconLoading from '../../svgs/IconLoading'
 
 import IconConfirmed from '../../svgs/IconConfirmed'
 import IconPending from '../../svgs/IconPending'
@@ -36,7 +35,7 @@ import {CopyToClipboard} from 'react-copy-to-clipboard';
 
 const DivEntry = styled(Div)`
   width: auto;
-  
+  height: 100%;
   
   display: flex;
   flex-direction: column;
@@ -50,7 +49,7 @@ const DivEntryTitle = styled(Div)`
   font-size: 1.2rem;
   font-weight: bold;
   
-  margin-top: 10px;
+  margin-top: 20px;
   height: 20px;
   margin-bottom: 5px;
 `

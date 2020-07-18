@@ -33,7 +33,6 @@ import flagCN from '../../images/flags/CN.png';
 
 // STYLES
 const DivOption = styled(Div)`
-  height:100%;
   
   display: flex;
   flex-direction: column;
@@ -41,15 +40,10 @@ const DivOption = styled(Div)`
   align-items: center;
 `;
 
-const DivHeader = styled(Div)`
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-`
 
-const DivTitle = styled(Div)`
-  margin-top: 10px;
+
+const DivOptionTitle = styled(Div)`
+  margin-top: 20px;
   font-size: 1.2rem;
   font-weight: bold;
 `
@@ -191,10 +185,9 @@ const ButtonNumberSide = styled(Button)`
   return (
   <DivOption>
         
-    <DivHeader>
-      <DivTitle> Option </DivTitle>
+    
+    <DivOptionTitle> Option </DivOptionTitle>
       
-    </DivHeader>
 
     
     
