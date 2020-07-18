@@ -26,7 +26,7 @@ const IconUpload = ({width, height, themeName}) => {
 			height="100%"
 			viewBox="0 0 640 512"
 			
-			fill={ themes[themeName]["color_normal"] }
+			fill={ themes[themeName]["color_weak"] }
 			>
 			
 			<path 

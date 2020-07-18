@@ -489,15 +489,24 @@ const Entry = ({
     
       <Div> {`${listPlayerEntry.length} players`} </Div>
       
-      <Div> 
+      <Div
+        onMouseEnter={(event)=>addNotification("tip", "only confirmed players can join teams", "tip-confirmed")}
+        onMouseLeave={(event)=>removeNotification("tip-confirmed")}
+      > 
         <IconConfirmed width={"20px"} height={"20px"} /> {` : ${listPlayerConfirmed.length}`} 
       </Div>
       
-      <Div> 
+      <Div
+        onMouseEnter={(event)=>addNotification("tip", "pending players can't join teams", "tip-pending")}
+        onMouseLeave={(event)=>removeNotification("tip-pending")}
+      >  
         <IconPending width={"20px"} height={"20px"} /> {` : ${listPlayerEntry.length - listPlayerConfirmed.length}`} 
       </Div>
       
-      <Div> 
+      <Div
+        onMouseEnter={(event)=>addNotification("tip", "leaders join teams first, being separated into different teams",  "tip-leader")}
+        onMouseLeave={(event)=>removeNotification("tip-leader")}
+      >  
         <IconLeader width={"23px"} height={"18px"} isFilled={true} /> {` : ${listPlayerConfirmedLeader.length}`} 
       </Div>
       

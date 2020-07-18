@@ -1,5 +1,7 @@
 import dotenv from 'dotenv';
 import React, {useState, useEffect} from 'react';
+import useInput from '../../tools/hooks/useInput';
+
 import styled from 'styled-components';
 import axios from 'axios';
 import { NavLink, useParams } from 'react-router-dom';
@@ -11,7 +13,7 @@ import readPlanTeam from "../../redux/thunks/readPlanTeam";
 import addRemoveNotification from "../../redux/thunks/addRemoveNotification";
 // https://reacttraining.com/blog/react-router-v5-1/
 
-import {Div, Button} from '../../styles/DefaultStyles';
+import {Div, Button, Input} from '../../styles/DefaultStyles';
 
 
 import IconConfirmed from '../../svgs/IconConfirmed'
@@ -58,19 +60,26 @@ const GroupButtonMain = styled(Div)`
   margin-bottom: 10px;
   
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   
-  & > * {
-    margin: 5px;
+  & > div {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    
+    margin-top: 5px;
+    margin-bottom: 5px;
   }
   
 `
 
 const ButtonGenerate = styled(Button)`
-  width: 130px;
-  height: 50px;
+  width: 180px;
+  height: 36px;
+  
   
   display: flex;
   flex-direction: row;
@@ -84,10 +93,24 @@ const ButtonGenerate = styled(Button)`
     height: 100%;
   }
 `
+
+const InputTitleResult = styled(Input)`
+	width: 150px;
+	height: 36px;
+	
+	border-radius: 10px;
+	
+	margin-left: 5px;
+  margin-right: 5px;
+`
+
 
 const ButtonSave = styled(Button)`
-  width: 130px;
-  height: 50px;
+  width: 100px;
+  height: 36px;
+  
+  margin-left: 5px;
+  margin-right: 5px;
   
   display: flex;
   flex-direction: row;
@@ -96,12 +119,23 @@ const ButtonSave = styled(Button)`
   
   border-radius: 10px;
   
+  
+  
   & > div {
     
     height: 100%;
   }
 `
 
+const ListTitleResult = styled(Div)`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+  
+  overflow-x: scroll;
+  width: 100%;
+`
 
 
 const DivAllTeams = styled(Div)`
@@ -347,11 +381,13 @@ const TableTeam = ({objTeam, listPlayerEntry, addRemoveNotification, region}) =>
 
 const Result = ({
   authority
-  ,option, listPlayerEntry
+  ,idPlanTeam ,option, listPlayerEntry, listResult
   , addRemoveNotification
 }) => {
   
-  const [listTeams, setListTeams] = useState([]);
+  const inputTitleResult = useInput("");
+  
+  const [listTeam, setListTeam] = useState([]);
   
   const region = option.region;
   const numberTeamsPlanned = option.numberTeams;
@@ -490,12 +526,12 @@ const Result = ({
     
     
     
-    let listTeamsTemp = new Array(numberTeamsResult);
+    let listTeamTemp = new Array(numberTeamsResult);
     for ( let i  =0; i  < numberTeamsResult; i++) {
-      listTeamsTemp[i] = {};
+      listTeamTemp[i] = {};
       
-      listTeamsTemp[i]['name'] = `TEAM ${i+1}`;
-      listTeamsTemp[i]['listPlayerBattletag'] = [];
+      listTeamTemp[i]['name'] = `TEAM ${i+1}`;
+      listTeamTemp[i]['listPlayerBattletag'] = [];
     }
     
     
@@ -505,11 +541,11 @@ const Result = ({
       const cBattletag = listBattletagPlayingSorted[iBattletag];
       const indexTeamToPush = listIndexTeam[iBattletag];
       
-      listTeamsTemp[ indexTeamToPush ]['listPlayerBattletag'].push( cBattletag );
+      listTeamTemp[ indexTeamToPush ]['listPlayerBattletag'].push( cBattletag );
     }
     
-    console.log("listTeamsTemp")
-    console.log(listTeamsTemp)
+    console.log("listTeamTemp")
+    console.log(listTeamTemp)
     
     
     let listTeamSumOfMmr =  Array.from(Array(numberTeamsResult), (_, i) => 0);  // numberTeamsResult 개의  0 으로 이루어진 리스트
@@ -520,7 +556,7 @@ const Result = ({
       
       for ( let iMember =0; iMember < 4; iMember++) {
         
-        const cBattletag = listTeamsTemp[iTeam]['listPlayerBattletag'][iMember];
+        const cBattletag = listTeamTemp[iTeam]['listPlayerBattletag'][iMember];
         const cObjPlayer = listPlayerEntry.find(objPlayer => objPlayer._id === cBattletag);
         
         listTeamSumOfMmr[iTeam] += cObjPlayer.mmr.standard[region];
@@ -549,7 +585,7 @@ const Result = ({
       const cBattletag = listBattletagPlayingSorted[numberTeamsResult * 4 + jTeam];
       const cObjPlayer = listPlayerEntry.find(objPlayer => objPlayer._id === cBattletag);
 
-      (listTeamsTemp[cIndexTeam]['listPlayerBattletag']).push(cBattletag);
+      (listTeamTemp[cIndexTeam]['listPlayerBattletag']).push(cBattletag);
       
       listTeamSumOfMmr[cIndexTeam] += cObjPlayer.mmr.standard[region];
     }
@@ -561,13 +597,62 @@ const Result = ({
       
     }
     
-    console.log(listTeamsTemp);
+    console.log(listTeamTemp);
     
     console.log("final average of mmr each team: ")
     console.log(listTeamAverageOfMmr)
 
-    setListTeams(listTeamsTemp);
+    setListTeam(listTeamTemp);
   }
+  
+  
+/*
+const inputTitleResult = useInput("");
+
+const [listTeams, setListTeams] = useState([]);
+
+const region = option.region;
+const numberTeamsPlanned = option.numberTeams;
+const listPlayerBattletag = (Object.keys(listPlayerEntry)).map(element=>listPlayerEntry[element]._id); // list of battletags, this can be modified by .sort
+
+*/
+
+// 1
+  const onClick_SaveResult = async (event) => {
+    
+    if(listTeam.length>0) {
+      try {
+        console.log(listTeam);
+        
+        const newResult = {
+          title: inputTitleResult.value
+          , added: Date.now()
+          , listTeam: listTeam
+        }
+        
+        addResult(newResult);
+        //replaceRegion(newRegion);
+        await axios.put (`${process.env.REACT_APP_URL_AHR}/plan-team/`,
+          {
+            filter: {_id: idPlanTeam}
+            , update : {
+              $push: { "listResult": newResult }
+            }
+          }
+        );
+        
+        addRemoveNotification("success", "this result has been saved!");
+      }
+      catch(error) {
+        addRemoveNotification("error", "failed in saving result");
+      }
+    }
+    else {
+      addRemoveNotification("error", "there is no result yet");
+    }
+    
+  }
+  
   
   
   return (
@@ -578,25 +663,38 @@ const Result = ({
     
     {(authority==="administrator")?
       <GroupButtonMain>
-      
-        <ButtonGenerate onClick={onClick_generateTeams}>
-          <Div> Generate Teams </Div>
-          <IconMagic width={"40px"} height={"40px"} />   
-        </ButtonGenerate>
         
-        <ButtonSave>
-          <Div> Save Result </Div>
-          <IconUpload width={"50px"} height={"40px"} /> 
-        </ButtonSave>
+        <Div>
+          <ButtonGenerate onClick={onClick_generateTeams}>
+            <Div> Generate Teams </Div>
+            <IconMagic width={"28px"} height={"28px"} />   
+          </ButtonGenerate>
+        </Div>
+        
+        <Div>
+          <InputTitleResult {...inputTitleResult} placeholder="title of result" />
+          <ButtonSave onClick={onClick_SaveResult}>
+            <Div> Save </Div>
+            <IconUpload width={"40px"} height={"32px"} /> 
+          </ButtonSave>
+        </Div>
       
       </GroupButtonMain>
       : <Div> </Div>
     }
+    
+    
+    <ListTitleResult >
+      {listResult.map(element=>
+        <Button key={element._id}> {element.title} </Button>
+      )}
+    </ListTitleResult>
+    
   
     <DivAllTeams>
-     {(listTeams.length)?
+     {(listTeam.length)?
       
-      listTeams.map( (team, index)=>
+      listTeam.map( (team, index)=>
         < TableTeam 
           key = {team.name}
           objTeam = {team}
@@ -621,8 +719,10 @@ const Result = ({
 function mapStateToProps(state) { 
   return { 
     authority: state.authority
+    ,idPlanTeam: state.planTeam._id
     ,option: state.planTeam.option
     ,listPlayerEntry: state.planTeam.listPlayerEntry
+    ,listResult: state.planTeam.listResult
     //listPlayerEntry: [...state.planTeam.listPlayerEntry]
     //,workingAddPlayerToListPlayerEntry: state.working.addPlayerToListPlayerEntry
     //,readyPlanTeam: state.ready.planTeam

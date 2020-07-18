@@ -14,7 +14,7 @@ const awaitTime = (ms) => {
 const addRemoveNotification =  (situation, message, time=3000) => 
   async (dispatch, getState) => {   
   
-    const idNotification = Date.now();
+    const idNotification = Date.now().toString();
     
     
     dispatch( addNotification(situation, message, idNotification) );  
