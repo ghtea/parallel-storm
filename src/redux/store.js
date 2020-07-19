@@ -17,6 +17,8 @@ const ADD_NOTIFICATION = "ADD_NOTIFICATION";
 const REMOVE_NOTIFICATION = "REMOVE_NOTIFICATION";
 
 const ADD_RESULT = "ADD_RESULT";
+const DELETE_RESULT = "DELETE_RESULT";
+
 const REPLACE_PLAYER_TAGS = "REPLACE_PLAYER_TAGS";
 const REPLACE_PLAYER_STATUS = "REPLACE_PLAYER_STATUS";
 const REPLACE_REGION = "REPLACE_REGION";
@@ -83,12 +85,22 @@ export const removeNotification = (idNotification) => {
   }
 }
 
+
 export const addResult = (result) => {
   return {
     type: ADD_RESULT,
     result: result
   }
 }
+export const deleteResult = (idResult) => {
+  return {
+    type: DELETE_RESULT,
+    idResult: idResult
+  }
+}
+
+
+
 
 export const replacePlayerTags = (battletag, tag, true_false) => {
   return {

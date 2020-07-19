@@ -16,11 +16,13 @@ import addRemoveNotification from "../redux/thunks/addRemoveNotification";
 
 import {Div, Input, Button, A} from '../styles/DefaultStyles';
 //import Player from '../components/Player'
-
+import IconHandsHeart from '../svgs/basic/IconHandsHeart'
+import IconLink from '../svgs/basic/IconLink';
 
 
 import CreatingPlan from '../components/TeamGenerator/CreatingPlan';
 import SearchingPlan from '../components/TeamGenerator/SearchingPlan';
+import Guide from '../components/TeamGenerator/Guide';
 
 import AddingPlayer from '../components/TeamGenerator/AddingPlayer';
 import Entry from '../components/TeamGenerator/Entry';
@@ -65,11 +67,44 @@ const DivB = styled(Div)`
   
   flex-direction: column;
 `
+
 const DivC = styled(Div)`
   grid-area: C;
+  
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  
 `
+
 const DivD = styled(Div)`
   grid-area: D;
+  
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`
+
+
+const ButtonContact = styled(Button)`
+  margin-top: 5px;
+  
+  width: 160px;
+  height: 30px;
+  
+  border-radius: 9px;
+  
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+`
+
+const DivThanksTo = styled(Div)`
+  color: ${props => props.theme.color_weak};
+
 `
 
 
@@ -88,13 +123,29 @@ const TeamGeneratorDoor = ({}) => {
       </DivA>
       
       <DivB>
-        <Div> if you have forgot url, contact me </Div>
-        <Div> <A href="https://twitter.com/mbcat_hots" > @mbcat_hots </A>  </Div>
+        <Div> if you have forgotten url, contact me </Div>
+        
+        <ButtonContact> 
+          <IconLink width={"20px"} height={"20px"} />
+          <A href="https://twitter.com/mbcat_hots" > @mbcat_hots </A>  
+        </ButtonContact>
+        
       </DivB>
       
+      
+      
       <DivC>
-        
+        <Guide />
       </DivC>
+      
+      
+      <DivD>
+        <IconHandsHeart width={"80px"} height={"64px"} />
+        <DivThanksTo> thanks to </DivThanksTo>
+        <Div> Heroes Profile API </Div>
+      </DivD>
+      
+      
     
     </DivTeamGenerator>
     )

@@ -13,6 +13,8 @@ const ADD_NOTIFICATION = "ADD_NOTIFICATION";
 const REMOVE_NOTIFICATION = "REMOVE_NOTIFICATION";
 
 const ADD_RESULT = "ADD_RESULT";
+const DELETE_RESULT = "DELETE_RESULT";
+
 const REPLACE_PLAYER_TAGS = "REPLACE_PLAYER_TAGS";
 const REPLACE_PLAYER_STATUS = "REPLACE_PLAYER_STATUS";
 const REPLACE_REGION = "REPLACE_REGION";
@@ -172,19 +174,43 @@ const reducer = (
       	notification: state.notification.filter(element => element.idNotification !== action.idNotification)
       };
     
+    
     case ADD_RESULT:
+      
+      // 같은 id의 result 가 이미 존재하면 그거 먼저 빼놓기
+      
+      const listResultAlreday = state.planTeam.listResult.filter(element => element._id === action.result._id);
+      const listResultOthers = state.planTeam.listResult.filter(element => element._id !== action.result._id);
+      
+    
+      const listResultAll = [action.result, ...listResultOthers];
+      
+      const listResultLocal = listResultAll.filter(element => element._id === "local");
+      const listResultNotLocal = listResultAll.filter(element => element._id !== "local");
+      
+      const listResultAllSorted = [...listResultLocal, ...listResultNotLocal];
+      
       return {
       	...state, 
-      	
       	planTeam: {
       	  ...state.planTeam
-      	  , listResult: [
-      	    ...state.planTeam.listResult
-      	    , action.result
-      	  ]
+      	  , listResult: [...listResultAllSorted]
       	}
-      	
-      };
+      } // return
+      
+      
+    case DELETE_RESULT:
+      
+      const listResultFiltered = state.planTeam.listResult.filter(element => element._id !== action.idResult);
+      
+      return {
+      	...state, 
+      	planTeam: {
+      	  ...state.planTeam
+      	  , listResult: [...listResultFiltered]
+      	}
+      } // return
+      
       
     case REPLACE_REGION:
       return {

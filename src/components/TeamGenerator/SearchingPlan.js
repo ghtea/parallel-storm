@@ -55,7 +55,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) { 
   return { 
-    addRemoveNotification: (situation, message, time) => dispatch( addRemoveNotification(situation, message, time) )
+    addRemoveNotification: (situation, message, time, idNotification) => dispatch( addRemoveNotification(situation, message, time, idNotification) )
     ,replaceWorking: (which, true_false) => dispatch(replaceWorking(which, true_false))
   }; 
 }

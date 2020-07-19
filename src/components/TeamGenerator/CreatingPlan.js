@@ -218,7 +218,7 @@ const DivIconWorking = styled(Div)`
     <DivBody>
 	   
 		  <DivInput>
-	      <InputTitle {...inputTitle} placeholder="title of plan" />
+	      <InputTitle {...inputTitle} placeholder="ex) friday match" />
 	      
 	      <ButtonRegion onClick={onClick_ButtonRegion} > 
 	        <img src={objFlag[regionCreating]} width="48" height="36"/>
@@ -297,7 +297,7 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) { 
   return { 
     readPlanTeam: (idPlanTeam) => dispatch(readPlanTeam(idPlanTeam)) 
-    ,addRemoveNotification: (situation, message, time) => dispatch( addRemoveNotification(situation, message, time) )
+    ,addRemoveNotification: (situation, message, time, idNotification) => dispatch( addRemoveNotification(situation, message, time, idNotification) )
     ,replaceWorking: (which, true_false) => dispatch(replaceWorking(which, true_false))
   }; 
 }

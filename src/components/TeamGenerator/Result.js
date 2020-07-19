@@ -8,7 +8,7 @@ import { NavLink, useParams } from 'react-router-dom';
 
 import { connect } from "react-redux";
 
-import {addResult} from "../../redux/store";
+import {addResult, deleteResult} from "../../redux/store";
 import readPlanTeam from "../../redux/thunks/readPlanTeam";
 import addRemoveNotification from "../../redux/thunks/addRemoveNotification";
 // https://reacttraining.com/blog/react-router-v5-1/
@@ -21,6 +21,8 @@ import IconPending from '../../svgs/IconPending'
 import IconInfo from '../../svgs/IconInfo'
 import IconMagic from  '../../svgs/basic/IconMagic'
 import IconUpload from  '../../svgs/basic/IconUpload'
+import IconDelete from  '../../svgs/basic/IconDelete'
+
 
 import IconTank from '../../svgs/roles/IconTank'
 import IconBruiser from '../../svgs/roles/IconBruiser'
@@ -56,8 +58,8 @@ const DivResultTitle = styled(Div)`
 `
 
 const GroupButtonMain = styled(Div)`
-  margin-top: 10px;
-  margin-bottom: 10px;
+  margin-top: 3px;
+  margin-bottom: 3px;
   
   display: flex;
   flex-direction: column;
@@ -100,13 +102,16 @@ const InputTitleResult = styled(Input)`
 	
 	border-radius: 10px;
 	
+	margin-top: 3px;
+  margin-bottom: 3px;
+  
 	margin-left: 5px;
   margin-right: 5px;
 `
 
 
 const ButtonSave = styled(Button)`
-  width: 100px;
+  width: 90px;
   height: 36px;
   
   margin-left: 5px;
@@ -120,22 +125,53 @@ const ButtonSave = styled(Button)`
   border-radius: 10px;
   
   
-  
   & > div {
-    
     height: 100%;
   }
 `
 
-const ListTitleResult = styled(Div)`
+const ButtonDelete = styled(Button)`
+  width: 90px;
+  height: 36px;
+  
+  margin-left: 5px;
+  margin-right: 5px;
+  
   display: flex;
   flex-direction: row;
   justify-content: space-evenly;
   align-items: center;
   
-  overflow-x: scroll;
-  width: 100%;
+  border-radius: 10px;
+  
+  
+  & > div {
+    height: 100%;
+  }
 `
+
+const ListTitleResult = styled(Div)`
+  
+  width: 90%; 
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  
+  overflow-x: auto;
+  width: 100%;
+ 
+`
+
+const ButtonChooseResult = styled(Button)`
+  color: ${props => (props.isActive)?props.theme.color_active:props.theme.color_normal };
+  width:auto;
+  height: 30px;
+  border-radius: 6px;
+  margin-left: 3px;
+  margin-right: 3px;
+`
+
 
 
 const DivAllTeams = styled(Div)`
@@ -147,8 +183,8 @@ const DivAllTeams = styled(Div)`
   flex-wrap: wrap;
   
   @media (max-width: ${props => (props.theme.media.mid_big -1) }px ) {
-    overflow-y: scroll;
-    height: 320px;
+    overflow-y: auto;
+    height: 360px;
   }
 `
 
@@ -382,24 +418,36 @@ const TableTeam = ({objTeam, listPlayerEntry, addRemoveNotification, region}) =>
 const Result = ({
   authority
   ,idPlanTeam ,option, listPlayerEntry, listResult
-  , addRemoveNotification
+  , addRemoveNotification, addResult, deleteResult
 }) => {
+  
+  
+  
+  
   
   const inputTitleResult = useInput("");
   
-  const [listTeam, setListTeam] = useState([]);
+  const [listTeamLocal, setListTeamLocal] = useState([]);
+  const [resultShowing, setResultShowing] = useState( {listTeam:[]} );
   
   const region = option.region;
   const numberTeamsPlanned = option.numberTeams;
   const listPlayerBattletag = (Object.keys(listPlayerEntry)).map(element=>listPlayerEntry[element]._id); // list of battletags, this can be modified by .sort
   
-
+  
+  
+  
+  
   // 1. confirmed - 2. leader - 3. less roles player(2, 1) - 4. rest
   const onClick_generateTeams = (event) => {
     
     let numberTeamsResult;
     let listBattletagPlaying = [];
     let listBattletagPlayingSorted = [];
+    
+    
+    
+    
     
     //  많이 쓸 정렬 함수
     const sortListBattletagByMmrHigherFirst = (battletag1, battletag2) => {    // mmr 높은순으로 list of battletags
@@ -502,10 +550,29 @@ const Result = ({
     // finally
     listBattletagPlayingSorted = [...listBattletagPlayingLeader, ...listBattletagPlayingLessRoles, ...listBattletagPlayingTheOthers];
     
-   console.log(`listBattletagPlayingSorted`) 
-  console.log(listBattletagPlayingSorted) 
     
     
+    
+    
+    let listBattletagPlayingSortedShuffeld = [];
+    
+    let listGroupSameClass = new Array(5);
+    for (let iGroup = 0; iGroup < 5; iGroup++) {
+      
+      const start = numberTeamsResult * iGroup;
+      const end =  numberTeamsResult * iGroup + numberTeamsResult;
+      console.log(`${start}, ${end}`)
+      
+      listGroupSameClass[iGroup] = listBattletagPlayingSorted.slice(start, end);
+      listGroupSameClass[iGroup] = getRandomSubArray(listGroupSameClass[iGroup], numberTeamsResult); // 같은 class (비슷한 mmr) 안에서 shuffle!
+      listBattletagPlayingSortedShuffeld = listBattletagPlayingSortedShuffeld.concat(listGroupSameClass[iGroup]);
+    }
+    console.log(`listGroupSameClass`) 
+    console.log(listGroupSameClass) 
+    
+    /*
+    
+    */
     
    // C. 정렬된 플레이러들을, (example of 3 teams)
    // team:  0 1 2    2 1 0   0 1 2    2 1 0  마지막 주기는  mmr 총합 낮은 팀에 mmr 높은 사람 넣는 식으로!
@@ -534,18 +601,21 @@ const Result = ({
       listTeamTemp[i]['listPlayerBattletag'] = [];
     }
     
+    console.log("here")
+    console.log(listBattletagPlayingSorted.length)
+    console.log(listBattletagPlayingSortedShuffeld.length)
     
-    
-    for ( let iBattletag =0; iBattletag < (listBattletagPlayingSorted.length - numberTeamsResult) ; iBattletag++) {
+    for ( let iBattletag =0; iBattletag < (listBattletagPlayingSortedShuffeld.length - numberTeamsResult) ; iBattletag++) {
       
-      const cBattletag = listBattletagPlayingSorted[iBattletag];
+      const cBattletag = listBattletagPlayingSortedShuffeld[iBattletag];
       const indexTeamToPush = listIndexTeam[iBattletag];
+      
+      console.log('indexTeamToPush')
+      console.log(indexTeamToPush)
       
       listTeamTemp[ indexTeamToPush ]['listPlayerBattletag'].push( cBattletag );
     }
     
-    console.log("listTeamTemp")
-    console.log(listTeamTemp)
     
     
     let listTeamSumOfMmr =  Array.from(Array(numberTeamsResult), (_, i) => 0);  // numberTeamsResult 개의  0 으로 이루어진 리스트
@@ -582,7 +652,7 @@ const Result = ({
     for ( let jTeam =0; jTeam < numberTeamsResult; jTeam++) {
       
       const cIndexTeam = listIndexTeamWhichNeedHighMmrPlayer[jTeam];
-      const cBattletag = listBattletagPlayingSorted[numberTeamsResult * 4 + jTeam];
+      const cBattletag = listBattletagPlayingSortedShuffeld[numberTeamsResult * 4 + jTeam];
       const cObjPlayer = listPlayerEntry.find(objPlayer => objPlayer._id === cBattletag);
 
       (listTeamTemp[cIndexTeam]['listPlayerBattletag']).push(cBattletag);
@@ -602,8 +672,22 @@ const Result = ({
     console.log("final average of mmr each team: ")
     console.log(listTeamAverageOfMmr)
 
-    setListTeam(listTeamTemp);
-  }
+    setListTeamLocal(listTeamTemp);
+    
+    const newResult = {
+      title: "local"
+      , _id: "local"
+      , added: Date.now()
+      , listTeam: listTeamTemp
+    }
+    
+    
+    // 이미 list에 있는 _id = "local" 인걸 없애야 한다
+    addResult(newResult);
+    
+    //  표시
+    setResultShowing(newResult);
+  } //onClick_generateTeams
   
   
 /*
@@ -620,14 +704,25 @@ const listPlayerBattletag = (Object.keys(listPlayerEntry)).map(element=>listPlay
 // 1
   const onClick_SaveResult = async (event) => {
     
-    if(listTeam.length>0) {
+    if(listTeamLocal.length>0) {
       try {
-        console.log(listTeam);
+        
+        let titleResult;
+        if (inputTitleResult.value) {titleResult = inputTitleResult.value}
+        else {
+          const now = new Date();
+          const date = now.getDate();
+          const hour = now.getHours();
+          const min = now.getMinutes();
+          
+          titleResult = `${date}_${hour}:${min}`;
+        }
         
         const newResult = {
-          title: inputTitleResult.value
+          title: titleResult
+          , _id: Date.now().toString()
           , added: Date.now()
-          , listTeam: listTeam
+          , listTeam: listTeamLocal
         }
         
         addResult(newResult);
@@ -641,7 +736,7 @@ const listPlayerBattletag = (Object.keys(listPlayerEntry)).map(element=>listPlay
           }
         );
         
-        addRemoveNotification("success", "this result has been saved!");
+        addRemoveNotification("success", "result has been saved!");
       }
       catch(error) {
         addRemoveNotification("error", "failed in saving result");
@@ -651,6 +746,47 @@ const listPlayerBattletag = (Object.keys(listPlayerEntry)).map(element=>listPlay
       addRemoveNotification("error", "there is no result yet");
     }
     
+  }
+  
+  
+  const onClick_DeleteResult = async (event) => {
+    
+    if (resultShowing._id && resultShowing._id === "local") {
+      addRemoveNotification("error", "just generate another result");
+    }
+    else if (resultShowing.listTeam.length) { // 표시중인 result 가 있어야 진행
+      try {
+        deleteResult(resultShowing._id);
+        //replaceRegion(newRegion);
+        await axios.put (`${process.env.REACT_APP_URL_AHR}/plan-team/`,
+          {
+            filter: {_id: idPlanTeam}
+            , update : {
+              $pull: { "listResult": { "_id": resultShowing._id } }
+            }
+          }
+        );
+  
+        
+        addRemoveNotification("success", "result has been deleted!");
+      }
+      catch(error) {
+        addRemoveNotification("error", "failed in deleting result");
+      }
+    }
+    else {
+      addRemoveNotification("error", "plese click result first");
+    }
+    
+  }
+  
+  
+  
+  const onClick_ChooseResult = (event, idChosen) => {
+    
+    const resultChosen = listResult.find(element => element._id === idChosen)
+    setResultShowing(resultChosen);
+    console.log(resultChosen);
   }
   
   
@@ -673,10 +809,17 @@ const listPlayerBattletag = (Object.keys(listPlayerEntry)).map(element=>listPlay
         
         <Div>
           <InputTitleResult {...inputTitleResult} placeholder="title of result" />
+          
           <ButtonSave onClick={onClick_SaveResult}>
             <Div> Save </Div>
             <IconUpload width={"40px"} height={"32px"} /> 
           </ButtonSave>
+          
+          <ButtonDelete onClick={onClick_DeleteResult} >
+            <Div> Delete </Div>
+            <IconDelete width={"28px"} height={"32px"} /> 
+          </ButtonDelete>
+          
         </Div>
       
       </GroupButtonMain>
@@ -685,16 +828,22 @@ const listPlayerBattletag = (Object.keys(listPlayerEntry)).map(element=>listPlay
     
     
     <ListTitleResult >
+    
       {listResult.map(element=>
-        <Button key={element._id}> {element.title} </Button>
+        <ButtonChooseResult 
+          isActive = {element._id === resultShowing._id}
+          key={element._id}
+          onClick={(event)=>onClick_ChooseResult(event, element._id)}
+          > {element.title} </ButtonChooseResult>
       )}
+      
     </ListTitleResult>
     
   
     <DivAllTeams>
-     {(listTeam.length)?
+     {(resultShowing.listTeam.length)?
       
-      listTeam.map( (team, index)=>
+      resultShowing.listTeam.map( (team, index)=>
         < TableTeam 
           key = {team.name}
           objTeam = {team}
@@ -704,7 +853,7 @@ const listPlayerBattletag = (Object.keys(listPlayerEntry)).map(element=>listPlay
         /> 
       )
      
-     : "no result yet"}
+     : "choose or generate result"}
     
     </DivAllTeams>
     
@@ -733,6 +882,7 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) { 
   return { 
     addResult: (resultTeam) => dispatch( addResult(resultTeam) ) 
+    , deleteResult: (idResult) => dispatch( deleteResult(idResult) )
     ,  addRemoveNotification: (situation, message, time) => dispatch( addRemoveNotification(situation, message, time) )
   }; 
 }

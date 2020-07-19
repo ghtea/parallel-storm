@@ -93,8 +93,8 @@ const DivTableEntry = styled(Div)`
   align-items: flex-start;
   
   @media (max-width: ${props => (props.theme.media.mid_big -1) }px ) {
-    overflow-y: scroll;
-    height: 320px;
+    overflow-y: auto;
+    height: 360px;
   }
   
 `
@@ -264,7 +264,7 @@ const DivStatus = styled(Div)`
 const RowPlayer = ({
   authority
   ,idPlanTeam, battletag, mmr, regions, roles, statusPlayer, isLeader
-  , replacePlayerTags, replacePlayerStatus, addRemoveNotification
+  , replacePlayerTags, replacePlayerStatus, addRemoveNotification, addNotification, removeNotification
 }) => {
   
   // for icon which depends on variable
@@ -378,13 +378,33 @@ const RowPlayer = ({
     
   }
   
-  
+/*
+onMouseEnter={(event)=>{
+          removeNotification("tip-leader");
+          addRemoveNotification("tip", "leaders join teams first, being separated into different teams", undefined,  "tip-leader")
+          }
+        }
+        onMouseLeave={(event)=>removeNotification("tip-leader")}
+        
+*/
 
   return (
     
     <DivRowPlayer >
       
-      <DivLeader onClick={(authority==="administrator")?onClick_DivLeader: onClick_NotAdministrator}> 
+      <DivLeader 
+        onClick={ (event) => {
+            
+            if (authority==="administrator") { 
+              onClick_DivLeader(event); 
+            }
+            else {
+              onClick_NotAdministrator(event);
+            }
+            
+          }
+        }
+        > 
         <IconLeader
           
           width={"23px"}
@@ -417,7 +437,20 @@ const RowPlayer = ({
         {mmr}
       </DivMmr>
        
-      <DivStatus onClick={(authority==="administrator")?onClick_DivStatus: onClick_NotAdministrator}> 
+      <DivStatus 
+        onClick={ (event) => {
+            
+            if (authority==="administrator") { 
+              onClick_DivStatus(event); 
+            }
+            else {
+              onClick_NotAdministrator(event);
+            }
+            
+          }
+        }
+        > 
+        
         {IconStatus[statusPlayer]}
       </DivStatus>
         
@@ -427,7 +460,23 @@ const RowPlayer = ({
   )
 }
 
-
+/*
+onMouseEnter={ (event)=>
+          { 
+            removeNotification("tip-pending");
+            removeNotification("tip-confirmed");
+            addRemoveNotification("tip", "pending players can't join teams", undefined, "tip-pending");    
+            addRemoveNotification("tip", "only confirmed players can join teams", undefined, "tip-confirmed");     
+          }
+        }
+        
+        onMouseLeave={(event)=>
+          {
+            removeNotification("tip-pending");
+            removeNotification("tip-confirmed");
+          }
+        }
+*/
 
 
 const Entry = ({
@@ -490,21 +539,34 @@ const Entry = ({
       <Div> {`${listPlayerEntry.length} players`} </Div>
       
       <Div
-        onMouseEnter={(event)=>addNotification("tip", "only confirmed players can join teams", "tip-confirmed")}
+        onMouseEnter={(event)=>{
+          removeNotification("tip-confirmed");
+          addRemoveNotification("tip", "only confirmed players can join teams", undefined,  "tip-confirmed");
+          }
+        }
         onMouseLeave={(event)=>removeNotification("tip-confirmed")}
+        
       > 
         <IconConfirmed width={"20px"} height={"20px"} /> {` : ${listPlayerConfirmed.length}`} 
       </Div>
       
       <Div
-        onMouseEnter={(event)=>addNotification("tip", "pending players can't join teams", "tip-pending")}
+        onMouseEnter={(event)=>{
+          removeNotification("tip-pending");
+          addRemoveNotification("tip", "pending players can't join teams", undefined, "tip-pending")
+          }
+        }
         onMouseLeave={(event)=>removeNotification("tip-pending")}
       >  
         <IconPending width={"20px"} height={"20px"} /> {` : ${listPlayerEntry.length - listPlayerConfirmed.length}`} 
       </Div>
       
       <Div
-        onMouseEnter={(event)=>addNotification("tip", "leaders join teams first, being separated into different teams",  "tip-leader")}
+        onMouseEnter={(event)=>{
+          removeNotification("tip-leader");
+          addRemoveNotification("tip", "leaders join teams first, being separated into different teams", undefined,  "tip-leader")
+          }
+        }
         onMouseLeave={(event)=>removeNotification("tip-leader")}
       >  
         <IconLeader width={"23px"} height={"18px"} isFilled={true} /> {` : ${listPlayerConfirmedLeader.length}`} 
@@ -551,6 +613,9 @@ const Entry = ({
           replacePlayerTags = {replacePlayerTags}
           replacePlayerStatus = {replacePlayerStatus}
           addRemoveNotification = {addRemoveNotification}
+          
+          addNotification = {addNotification}
+          removeNotification = {removeNotification}
         />)
       }
       ) 
@@ -585,7 +650,7 @@ function mapDispatchToProps(dispatch) {
   return { 
     replacePlayerTags: (battletag, tag, true_false) => dispatch(replacePlayerTags(battletag, tag, true_false))
     ,replacePlayerStatus: (battletag, status) => dispatch(replacePlayerStatus(battletag, status))
-    ,addRemoveNotification: (situation, message, time) => dispatch( addRemoveNotification(situation, message, time) )
+    ,addRemoveNotification: (situation, message, time, idNotification) => dispatch( addRemoveNotification(situation, message, time, idNotification) )
     
     ,addNotification: (situation, message, idNotification) => dispatch(addNotification(situation, message, idNotification))
     ,removeNotification: (idNotification) => dispatch(removeNotification(idNotification))

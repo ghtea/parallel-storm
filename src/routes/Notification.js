@@ -90,7 +90,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) { 
   return { 
-    addRemoveNotification: (situation, message, time) => dispatch( addRemoveNotification(situation, message, time) )
+    addRemoveNotification: (situation, message, time, idNotification) => dispatch( addRemoveNotification(situation, message, time, idNotification) )
     ,addNotification: (situation, message, idNotification) => dispatch( addNotification(situation, message, idNotification) )
     ,removeNotification: (idNotification) => dispatch(removeNotification(idNotification))
   }; 

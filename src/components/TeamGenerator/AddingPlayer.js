@@ -12,7 +12,7 @@ import addRemoveNotification from "../../redux/thunks/addRemoveNotification";
 
 import { NavLink, useHistory } from 'react-router-dom';
 
-import {Div, Input, Button} from '../../styles/DefaultStyles';
+import {Div, Input, Button, A} from '../../styles/DefaultStyles';
 
 
 import useInput from '../../tools/hooks/useInput';
@@ -22,6 +22,7 @@ import IconWorking from '../../svgs/IconWorking';
 import IconCopy from '../../svgs/basic/IconCopy';
 import IconAdministrator from '../../svgs/basic/IconAdministrator';
 import IconViewer from '../../svgs/basic/IconViewer';
+import IconLink from '../../svgs/basic/IconLink';
 
 import {CopyToClipboard} from 'react-copy-to-clipboard';
 
@@ -163,6 +164,23 @@ const ButtonAddOnly = styled(Button)`
   border-radius: 4px;
 `
 */
+const ButtonLinkToHeroesProfile = styled(Button)`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+  
+  font-size: 0.9rem;
+  
+  width: 300px;
+  height: 30px;
+  
+  border-radius: 9px;
+  
+  & span {
+    font-weight: bold;
+  }
+`
 
 const DivIconWorking = styled(Div)`
   
@@ -232,7 +250,7 @@ const DivIconWorking = styled(Div)`
         );
           
         replaceWorking("addPlayer", false)
-        addRemoveNotification("success", `player has been added!`);
+        addRemoveNotification("success", `'${battletag}' has been added!`);
         readPlanTeam(idPlanTeam);  // important! need new data in redux for rernedering (ex: entry)
         
         inputBattletag.setValue("");  
@@ -382,7 +400,15 @@ const DivIconWorking = styled(Div)`
         
 	    </DivInputAdd>
 	    
+	    <ButtonLinkToHeroesProfile> 
 	    
+	      <IconLink width={"20px"} height={"20px"} />
+	      
+        <A href="https://api.heroesprofile.com/upload" target="_blank" rel="noopener noreferrer"> 
+	        please <span> upload replays </span> for better data 
+	     </A> 
+	       
+	     </ButtonLinkToHeroesProfile>
 	    
    </DivBody>
   
@@ -418,7 +444,7 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) { 
   return { 
     
-    addRemoveNotification: (situation, message, time) => dispatch( addRemoveNotification(situation, message, time) )
+    addRemoveNotification: (situation, message, time, idNotification) => dispatch( addRemoveNotification(situation, message, time, idNotification) )
     ,replaceWorking: (which, true_false) => dispatch(replaceWorking(which, true_false))
     
     ,readPlanTeam: (idPlanTeam) => dispatch(readPlanTeam(idPlanTeam)) 

@@ -216,7 +216,7 @@ const Sub = ({match, location, replaceData, themeName}) => {
   	</DivLogo>
   	
   	
-  	<DivNavItem > <NavLinkNavItem to="/about"> About </NavLinkNavItem> </DivNavItem>
+
 		<DivNavItem > <NavLinkNavItem to="/" exact={true}> Home </NavLinkNavItem> </DivNavItem>
 		<DivNavItem > <NavLinkNavItem to="/team-generator" isActive={checkActive} > Team Generator </NavLinkNavItem> </DivNavItem>
 		

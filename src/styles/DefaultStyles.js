@@ -16,6 +16,7 @@ import styled, {createGlobalStyle} from 'styled-components';
     font-size: 16px;
     
     width: 100%;
+    height: 100%;
     min-width: 300px !important;
     
     /*height: 100%;*/
@@ -183,7 +184,7 @@ following doesn't work...
 
 export const A = styled.a`
 	color: ${props => props.theme.color_normal};
-	
+	text-decoration: none;
 	
 		
 `

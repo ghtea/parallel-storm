@@ -43,7 +43,7 @@ const DivTeamGenerator = styled(Div)`
   
   @media (max-width: ${props => (props.theme.media.mid_big -1) }px ) {
     grid-template-columns: 1fr;
-    grid-template-rows: 240px 240px 400px 400px;
+    grid-template-rows: 240px 240px 480px 480px;
     grid-template-areas: 
       "A"
       "B"
@@ -85,14 +85,14 @@ const DivC = styled(Div)`
   grid-area: C;
   
   @media (max-width: ${props => (props.theme.media.mid_big -1) }px ) {
-    height: 400px;
+    height: 480px;
   }
 `
 const DivD = styled(Div)`
   grid-area: D;
   
   @media (max-width: ${props => (props.theme.media.mid_big -1) }px ) {
-    height: 400px;
+    height: 480px;
   }
 `
 
@@ -278,7 +278,7 @@ function mapDispatchToProps(dispatch) {
     ,replaceData: (which, newData) => dispatch(replaceData(which, newData))
     ,replaceLoading: (which, true_false) => dispatch(replaceLoading(which, true_false)) 
     ,replaceReady: (which, true_false) => dispatch(replaceReady(which, true_false)) 
-    ,addRemoveNotification: (situation, message, time) => dispatch( addRemoveNotification(situation, message, time) )
+    ,addRemoveNotification: (situation, message, time, idNotification) => dispatch( addRemoveNotification(situation, message, time, idNotification) )
   }; 
 }
 

@@ -21,6 +21,14 @@ import fonts from './styles/fonts';
 
 const DivContent = styled(Div)`
   
+  width: 100%;
+  height: 100%;
+  
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  
   @media (max-width: ${props => (props.theme.media.mid_big -1) }px ) {
     margin-top: 50px; /* height of sub */
   	

@@ -11,16 +11,21 @@ const awaitTime = (ms) => {
 };
 
 // functions that dispatch actions which are from return fundamental action creators
-const addRemoveNotification =  (situation, message, time=3000, idNotification) => 
+const addRemoveNotification =  (situation, message, time=3000, idNotification="none") => 
   async (dispatch, getState) => {   
     
-    idNotification = idNotification || Date.now().toString();
+    let idNotificationUsing;
+    if (idNotification ==="none") {
+       idNotificationUsing = Date.now().toString();
+    }
+    else {idNotificationUsing = idNotification}
     
-    dispatch( addNotification(situation, message, idNotification) );  
+    
+    dispatch( addNotification(situation, message, idNotificationUsing) );  
     
     await awaitTime(time);
     
-    dispatch( removeNotification(idNotification) );
+    dispatch( removeNotification(idNotificationUsing) );
         
 } // addRemoveNotification
     

@@ -310,7 +310,7 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) { 
   return { 
     
-    addRemoveNotification: (situation, message, time) => dispatch( addRemoveNotification(situation, message, time) )
+    addRemoveNotification: (situation, message, time, idNotification) => dispatch( addRemoveNotification(situation, message, time, idNotification) )
     ,replaceRegion: (regionName) => dispatch(replaceRegion(regionName))
     ,replaceNumber: (pairNumber, which, how) => dispatch(replaceNumber(pairNumber, which, how))
     //,readPlanTeam: (idPlanTeam) => dispatch(readPlanTeam(idPlanTeam)) 
