@@ -92,6 +92,8 @@ const DivD = styled(Div)`
   justify-content: space-evenly;
   align-items: center;
   
+  padding-bottom: 20px;
+  
   & > div {
     display: flex;
     flex-direction: column;
@@ -127,8 +129,7 @@ const DivWho = styled(Div)`
 
 const DivPeople = styled(Div)`
   width: 100%;
-  max-width: 480px;
-
+  
 `
 
 
@@ -174,7 +175,8 @@ const TeamGeneratorDoor = ({}) => {
         <Div>
           <IconHandsHeart width={"80px"} height={"64px"} />
           <DivWho> thanks to </DivWho>
-          <DivPeople> Heroes Profile API, Madosan </DivPeople>
+          <DivPeople> Heroes Profile API </DivPeople>
+          <DivPeople>  Madosan </DivPeople>
         </Div>
         
       </DivD>

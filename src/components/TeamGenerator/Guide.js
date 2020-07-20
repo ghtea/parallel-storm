@@ -48,9 +48,11 @@ const DivBody = styled(Div)`
   justify-content: center;
   align-items: center;
   
+  overflow-x: auto;
 `
 
 const Part = styled(Div)`
+  
   
   margin-top: 6px;
   margin-bottom: 6px;
@@ -74,8 +76,15 @@ border-bottom: 1px solid ${props => props.theme.color_weak};
 const DivTitlePart = styled(Div)`
   
   width: 60px;
-  height: 100%;
+  
 `
+
+/*
+following doesn't work... :(
+height: 100%;
+  
+  background-color: ${props => props.theme.COLOR_middle};
+*/
 
 const DivGroupSentence = styled(Div)`
   font-size: 0.9rem;
@@ -120,32 +129,33 @@ const DivGroupSentence = styled(Div)`
     <Part>
       <DivTitlePart> LINK </DivTitlePart>
       <DivGroupSentence>
-        <Div> viewer link: for players who request to join </Div>
-        <Div> editing link: for administrator who manage event </Div>
+        <Div> what you do in this app are <strong> automatically saved </strong> in cloud </Div>
+        <Div> viewer link: for <strong> players</strong> who request to join </Div>
+        <Div> editing link: for <strong> administrator</strong> who manage event </Div>
       </DivGroupSentence>
     </Part>
     
     <Part>
       <DivTitlePart> TEAMS </DivTitlePart>
       <DivGroupSentence>
-        <Div> automatically generated teams using data of mmr, roles, leaders, ... </Div>
-        <Div> leaders (crown) join teams first, being separated into different teams </Div>
+        <Div> automatically generate teams using data of mmr, roles, leaders, ... </Div>
+        <Div> <strong>leaders</strong> (crown) join teams first, being separated into different teams </Div>
       </DivGroupSentence>
     </Part>
     
     <Part>
       <DivTitlePart> JOIN </DivTitlePart>
       <DivGroupSentence>
-        <Div> pending (clock): not confirmed for joining </Div>
-        <Div> confirmed (check): confirmed for joining </Div>
+        <Div> pending (clock): <strong>not confirmed</strong> for joining </Div>
+        <Div> confirmed (check): <strong>confirmed</strong> for joining </Div>
       </DivGroupSentence>
     </Part>
     
     <Part>
       <DivTitlePart> MMR </DivTitlePart>
       <DivGroupSentence>
-        <Div> required games: 100 (> 40 > 10) </Div>
-        <Div> Storm League in current region > Quick Match in current region > Storm League in other region > ... </Div>
+        <Div> required games: <strong>100</strong> (> 40 > 10) </Div>
+        <Div> <strong>Storm League in current region</strong> > Quick Match in current region > Storm League in other region > ... </Div>
       </DivGroupSentence>
     </Part>
     
@@ -153,7 +163,7 @@ const DivGroupSentence = styled(Div)`
       <DivTitlePart> ROLES </DivTitlePart>
       <DivGroupSentence>
         <Div> choose main roles for each playe based on game number of each role</Div>
-        <Div> the players who play less roles are separated into different teams </Div>
+        <Div> the players who play <strong>less roles are separated</strong> into different teams </Div>
       </DivGroupSentence>
     </Part>
     
