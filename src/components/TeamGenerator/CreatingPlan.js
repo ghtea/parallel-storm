@@ -90,7 +90,7 @@ const DivInput = styled(Div)`
 `
 
 const InputTitle = styled(Input)`
-	width: 160px;
+	width: 180px;
 	height: 100%;
 	
 	border-radius: 6px;
@@ -110,6 +110,19 @@ const ButtonCreatePlan = styled(Button)`
   height: 100%;
   
   border-radius: 6px;
+`
+
+const DivCaution = styled(Div)`
+  color: ${props => props.theme.color_weak};
+  
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  
+  
+  padding-left: 20px;
+  padding-right: 20px;
 `
 
 
@@ -213,12 +226,13 @@ const DivIconWorking = styled(Div)`
     
       <DivTitle> Team Generator </DivTitle>
       
+      
     </DivHeader>
     
     <DivBody>
 	   
 		  <DivInput>
-	      <InputTitle {...inputTitle} placeholder="ex) friday match" />
+	      <InputTitle {...inputTitle} placeholder="ex) friday event games" />
 	      
 	      <ButtonRegion onClick={onClick_ButtonRegion} > 
 	        <img src={objFlag[regionCreating]} width="48" height="36"/>
@@ -239,6 +253,12 @@ const DivIconWorking = styled(Div)`
        : <ButtonCreatePlan onClick = {onClick_ButtonCreatePlan} > START </ButtonCreatePlan> }
         
 		  </DivInput>
+	    
+	    <DivCaution>
+  	    <Div> enter any title first, and click start! </Div>
+        <Div> 우선 아무 제목이나 입력한 후 start! </Div>
+  	    <Div> 適当なタイトル入力してstart! </Div>
+	    </DivCaution>
 	    
 	   </DivBody>
   
