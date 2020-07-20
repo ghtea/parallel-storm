@@ -17,6 +17,7 @@ import addRemoveNotification from "../redux/thunks/addRemoveNotification";
 import {Div, Input, Button, A} from '../styles/DefaultStyles';
 //import Player from '../components/Player'
 import IconHandsHeart from '../svgs/basic/IconHandsHeart'
+import IconPenBrush from '../svgs/basic/IconPenBrush'
 import IconLink from '../svgs/basic/IconLink';
 
 
@@ -34,6 +35,11 @@ import useInput from '../tools/hooks/useInput';
 const DivTeamGenerator = styled(Div)`
   width: 100%;
   height: 100%;
+  
+  & > div {
+    margin-left: 10px;
+    margin-right: 10px;
+  }
   
   @media (max-width: ${props => (props.theme.media.mid_big -1) }px ) {
     display: grid;
@@ -82,9 +88,16 @@ const DivD = styled(Div)`
   grid-area: D;
   
   display: flex;
-  flex-direction: column;
-  justify-content: center;
+  flex-direction: row;
+  justify-content: space-evenly;
   align-items: center;
+  
+  & > div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
 `
 
 
@@ -102,8 +115,19 @@ const ButtonContact = styled(Button)`
   align-items: center;
 `
 
-const DivThanksTo = styled(Div)`
+
+
+const DivWho = styled(Div)`
   color: ${props => props.theme.color_weak};
+  
+  margin-top: 3px;
+  margin-bottom: 3px;
+
+`
+
+const DivPeople = styled(Div)`
+  width: 100%;
+  max-width: 480px;
 
 `
 
@@ -140,9 +164,19 @@ const TeamGeneratorDoor = ({}) => {
       
       
       <DivD>
-        <IconHandsHeart width={"80px"} height={"64px"} />
-        <DivThanksTo> thanks to </DivThanksTo>
-        <Div> Heroes Profile API </Div>
+        
+        <Div>
+          <IconPenBrush width={"72px"} height={"72px"} />
+          <DivWho> developed & designed by </DivWho>
+          <DivPeople> <A href="https://twitter.com/mbcat_hots" > @mbcat_hots </A>  </DivPeople>
+        </Div>
+        
+        <Div>
+          <IconHandsHeart width={"80px"} height={"64px"} />
+          <DivWho> thanks to </DivWho>
+          <DivPeople> Heroes Profile API, Madosan </DivPeople>
+        </Div>
+        
       </DivD>
       
       

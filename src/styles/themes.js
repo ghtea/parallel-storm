@@ -1,13 +1,15 @@
 
+//https://convertacolor.com/
+
 const common = {
     
-    color_active: '#00B9FF'
+    color_active: '#00A6E6'
     ,color_neutral: '#888888'
     
     ,color_error: '#c86765'
     ,COLOR_error: '#fac7c6'
     
-    ,color_success: '#4c906b'
+    ,color_success: '#37A569'
     ,COLOR_success: '#dbf2d6'
     
     ,color_warning: '#eabe5c'
@@ -26,40 +28,43 @@ const common = {
 }
 
 
-
+// white to black https://www.colorhexa.com/ffffff
 const themes =  {
 
     light: {
     
-        ...common,
+        ...common
         
-        name: "light",
+        ,name: "light"
         
-        color_strong: '#000000',
-        color_normal: '#222222',
-        color_weak: '#777777',
-        color_very_weak: '#cccccc',
+        ,color_strong: 'hsl(240, 2%, 0%)'   
+        ,color_normal: 'hsl(240, 2%, 12%)'   // 15% down
+        ,color_weak: 'hsl(240, 2%, 50%)'       // 38% down
+        ,color_very_weak: 'hsl(240, 2%, 80%)'   // 30% down
         
-        COLOR_bg: '#eeeef3',
+        ,COLOR_normal: 'hsl(240, 20%, 100%)'  // 2% 씩
+        ,COLOR_middle: 'hsl(240, 20%, 98%)'
+        ,COLOR_bg: 'hsl(240, 20%, 96%)'
         
-        COLOR_normal: '#f8f8f8'
         
     },
 
     dark: {
     
-        ...common,
+        ...common
         
-        name: "dark",
+        ,name: "dark"
         
-        color_strong: '#ffffff',
-        color_normal: '#dddddd',
-        color_weak: '#888888',
-        color_very_weak: '#333333',
+        ,color_strong: 'hsl(240, 5%, 100%)'   
+        ,color_normal: 'hsl(240, 5%, 82%)'         // 18% down
+        ,color_weak: 'hsl(240, 5%, 50%)'           // 32% down
+        ,color_very_weak: 'hsl(240, 5%, 20%)'      // 30% down
         
-        COLOR_bg: '#000000',
         
-        COLOR_normal: '#191920'
+        ,COLOR_normal: 'hsl(240, 5%, 10%)'   // 5% 씩
+        ,COLOR_middle: 'hsl(240, 5%, 5%)'
+        ,COLOR_bg: 'hsl(240, 5%, 0%)'
+        
     
     }
     
